@@ -1,0 +1,75 @@
+{
+  "retrieved": "2026-11-06",
+  "files": [
+    {
+      "name": "pi0",
+      "url": "https://www.pi.website/download/pi0.pdf",
+      "path": "raw/papers/pi-series/pi0.pdf",
+      "sha256": "75667e62ba43f153805f2330b55966d0ff51abd03aa0ab76ef2d62ab201cc1fd",
+      "bytes": 7873003
+    },
+    {
+      "name": "pi05",
+      "url": "https://www.pi.website/download/pi05.pdf",
+      "path": "raw/papers/pi-series/pi05.pdf",
+      "sha256": "f5d0aa0b652f188e6649a83a54d704e14393299676754c01525e3964767db7c8",
+      "bytes": 5079459
+    },
+    {
+      "name": "pi06",
+      "url": "https://www.pi.website/download/pistar06.pdf",
+      "path": "raw/papers/pi-series/pi06.pdf",
+      "sha256": "6b37590a1f17e415df93b456a65ad399788126c5a610e85122e69e471a509223",
+      "bytes": 6043825
+    },
+    {
+      "name": "pi07",
+      "url": "https://www.pi.website/download/pi07.pdf",
+      "path": "raw/papers/pi-series/pi07.pdf",
+      "sha256": "d718dbcfcf294f87a2179052dcd2e783ea1f542f484d05dfa2ce139bc00d7d5b",
+      "bytes": 5357105
+    },
+    {
+      "name": "fast",
+      "url": "https://arxiv.org/pdf/2501.09747",
+      "path": "raw/papers/pi-series/fast.pdf",
+      "sha256": "3739b31f5fecdde371509ff5bb13619979734e894a255a9b264253f4cc53934a",
+      "bytes": 7468382
+    },
+    {
+      "name": "ki",
+      "url": "https://www.pi.website/download/pi05_KI.pdf",
+      "path": "raw/papers/pi-series/ki.pdf",
+      "sha256": "9ddcecfb7c023eca357bfe2f20e74600bd8de9856eb8944634bcb64124fdb25d",
+      "bytes": 7317039
+    },
+    {
+      "name": "rtc",
+      "url": "https://www.pi.website/download/real_time_chunking.pdf",
+      "path": "raw/papers/pi-series/rtc.pdf",
+      "sha256": "f18818262bb107a266a83bd968b4e3171d4dfc13d70736648b13a99836a111ff",
+      "bytes": 951040
+    },
+    {
+      "name": "human",
+      "url": "https://www.pi.website/download/human_to_robot.pdf",
+      "path": "raw/papers/pi-series/human.pdf",
+      "sha256": "3ecb7136a6ef4726abaf3ce7fb2f3485c4cde5c919b9f4c010624af4452f82a1",
+      "bytes": 5085083
+    },
+    {
+      "name": "mem",
+      "url": "https://www.pi.website/download/Mem.pdf",
+      "path": "raw/papers/pi-series/mem.pdf",
+      "sha256": "63413aa32bb2b070ae0a0cbc5d5a2eb77686308725e48f15bcaa338bd3d644aa",
+      "bytes": 9037715
+    },
+    {
+      "name": "rlt",
+      "url": "https://www.pi.website/download/rlt.pdf",
+      "path": "raw/papers/pi-series/rlt.pdf",
+      "sha256": "feecf0f5799bcb3775f42d5de5d5832e61eb379bd47b627ad9a0f6c86f3ebf31",
+      "bytes": 13752520
+    }
+  ]
+}

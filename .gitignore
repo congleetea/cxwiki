@@ -1,0 +1,45 @@
+# Generated HTML and copied assets. Rebuild with:
+# python scripts/build_blog.py
+/site/
+/index.html
+/wiki/index.html
+/wiki/series/
+
+# Python bytecode, test caches, and local virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Local secrets and machine-specific settings
+.env
+.env.*
+!.env.example
+/.vscode/
+/.idea/
+
+# OS metadata, editor backups, and incomplete downloads
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+*.part
+*.crdownload
+
+# Keep wiki Markdown, raw evidence/PDFs, figures,
+# scripts/vendor assets, skills, and documentation under version control.
+
+# Redundant landing page and local implementation plans
+/README.html
+/docs/plans/
+/docs/superpowers/plans/
+
+# Code checkouts are local-only; retain the directory placeholder.
+/raw/codes/*
+!/raw/codes/.gitkeep

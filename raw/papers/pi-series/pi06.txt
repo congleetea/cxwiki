@@ -1,0 +1,1077 @@
+               ∗
+              π0.6 : a VLA That Learns From Experience
+                                                               Physical Intelligence
+     Ali Amin, Raichelle Aniceto, Ashwin Balakrishna, Kevin Black, Ken Conley, Grace Connors, James Darpinian, Karan Dhabalia, Jared DiCarlo,
+     Danny Driess, Michael Equi, Adnan Esmail, Yunhao Fang, Chelsea Finn, Catherine Glossop, Thomas Godden, Ivan Goryachev, Lachy Groom,
+          Hunter Hancock, Karol Hausman, Gashon Hussein, Brian Ichter, Szymon Jakubczak, Rowan Jen, Tim Jones, Ben Katz, Liyiming Ke,
+   Chandra Kuchi, Marinda Lamb, Devin LeBlanc, Sergey Levine, Adrian Li-Bell, Yao Lu, Vishnu Mano, Mohith Mothukuri, Suraj Nair, Karl Pertsch,
+       Allen Z. Ren, Charvi Sharma, Lucy Xiaoyang Shi, Laura Smith, Jost Tobias Springenberg, Kyle Stachowicz, Will Stoeckle, Alex Swerdlow,
+     James Tanner, Marcel Torne, Quan Vuong, Anna Walling, Haohuan Wang, Blake Williams, Sukwon Yoo, Lili Yu, Ury Zhilinsky, Zhiyuan Zhou
+                                                           https://pi.website/blog/pistar06
+
+
+
+
+Fig. 1: R ECAP enables training VLAs with reward feedback and interventions. Our system starts with a pre-trained VLA that incorporates advantage
+conditioning, allowing the model to learn effectively from real-world experience. For each task, we deploy the model and collect both autonomous rollouts and
+online human corrections. We then fine-tune the value function on this online data, improving its estimates of how actions influence performance. Fine-tuning
+and conditioning the VLA on these updated advantage estimates in turn improves policy behavior.
+
+
+
+   Abstract—We study how vision-language-action (VLA) models                    we can flexibly specify tasks for generalist robots through
+can improve through real-world deployments via reinforcement                    prompts. But just like people, these models will need to
+learning (RL). We present a general-purpose method, RL with                     practice a skill to achieve mastery. This means leveraging not
+Experience and Corrections via Advantage-conditioned Policies
+(R ECAP), that provides for RL training of VLAs via advantage                   only on demonstration data, but also autonomously collected
+conditioning. Our method incorporates heterogeneous data into                   experiential data that allows the policy to correct the mistakes
+the self-improvement process, including demonstrations, data                    that it actually makes in deployment, improve speed and
+from on-policy collection, and expert teleoperated interventions                robustness beyond the level of human teleoperation, and adapt
+provided during autonomous execution. R ECAP starts by pre-                     to new deployment conditions. The foundations of learning
+                                                             ∗
+training a generalist VLA with offline RL, which we call π0.6  ,
+that can then be specialized to attain high performance on                      through autonomous practice, as formalized with reinforce-
+downstream tasks through on-robot data collection. We show                      ment learning (RL) [1], have been known for decades, but
+           ∗
+that the π0.6  model trained with the full R ECAP method can                    instantiating these principles in a general and scalable robotic
+fold laundry in real homes, reliably assemble boxes, and make                   learning system presents significant challenges: designing
+espresso drinks using a professional espresso machine. On some                  scalable and stable RL methods for large models, handling
+of the hardest tasks, R ECAP more than doubles task throughput
+and roughly halves the task failure rate.                                       heterogeneous data from different policies, and setting up RL
+                                                                                training with reward feedback in the real world, where reward
+                          I. I NTRODUCTION                                      signals might be ambiguous or stochastic.
+          It’s amazing what you can learn if you’re not afraid to try.             In this paper, we present R ECAP, a method that enables
+                     Robert A. Heinlein, Have Space Suit–Will Travel            VLA models to incorporate reward feedback in all stages
+                                                                                of the training pipeline, from pre-training all the way to
+   Practice makes perfect: while people are remarkably flexible                 training on data from autonomous execution. R ECAP aims
+in acquiring new skills, mastery invariably requires learning                   to address this problem with a general-purpose recipe that
+from repeated attempts. With general-purpose robotic founda-                    combines demonstrations, autonomous experience, and expert
+tion models, such as vision-language-action (VLA) models,                       interventions. Starting from the training recipe for a general-
+Fig. 2: Some of the tasks learned by R ECAP. π0.6∗ trained with R ECAP can make espresso drinks, assemble cardboard boxes, and fold diverse and realistic
+laundry with a high success rate. Each task involves realistic variability – flattened unfolded boxes stick together and bend, making espresso drinks requires
+pouring liquids, and folding laundry requires generalization to a wide range of clothing items.
+
+
+
+purpose VLA and training on diverse data from many different                    show, for the first time, that a general-purpose reinforcement
+robotic platforms, R ECAP first pre-trains the VLA with offline                 learning recipe with human reward feedback and interventions
+RL, followed by additional training on data collected through                   can significantly improve both the robustness and throughput
+deployments. During these deployments, the robot receives                       of VLA models with experience collected through deployment.
+(sparse) reward feedback based on the outcome of each trial,
+and potentially additional expert interventions that correct                                              II. R ELATED W ORK
+mistakes. The training process follows an offline RL [2, 3]                        Policies trained with imitation learning are known to suffer
+recipe: we train a value function that evaluates progress toward                from compounding errors [7] and, at best, can only be as
+successful task completion, and then use this value function                    performant as the demonstration data. The goal of this work
+to estimate the advantage of each action in the dataset. By                     is to improve the reliability and speed of vision-language-
+conditioning the policy on an improvement indicator based on                    action policies by going beyond imitation learning from offline
+this advantage [4], we can obtain an improved policy. Figure 1                  demonstrations. Prior works have used online interventions to
+provides a high-level overview of R ECAP.                                       improve robotic manipulation policies [8–11]. We adopt a form
+   We can use R ECAP to train policies for complex tasks,                       of such interventions, called human-gated DAgger [10, 12].
+such as folding diverse laundry, assembling boxes, or making                    In contrast to these works, our method uses both expert
+espresso drinks. We illustrate some of these tasks in Figure 2.                 interventions and fully autonomous experience, resulting in
+                                          ∗
+The method starts by pre-training the π0.6    model with offline                an RL-based framework that integrates multiple data sources.
+                                                            ∗
+RL on a diverse multi-task and multi-robot dataset. π0.6       is               There is a large body of work on using RL for autonomous
+an adaptation of the π0.6 model for RL, and π0.6 is an                          improvement of robotic manipulation policies [13–21], in-
+improvement on π0.5 [5], adding a larger backbone and more                      cluding methods using diffusion-based policies [22–24], in
+                              ∗
+diverse conditioning [6]. π0.6    adds the ability to condition                 multi-task settings [25, 26], and using pre-trained multi-task
+on binarized advantage values, which makes it possible to                       policies [27–29]. Unlike these works, we study how to scale
+incorporate a value function to improve the policy. After pre-                  real-world RL to large VLA policies for long-horizon, fine-
+           ∗                    ∗
+training π0.6  finetunes the π0.6  model to a downstream task                   grained manipulation tasks.
+with demonstrations, and then performs one or more iterations                      Many recent works have studied how to improve a base
+of on-robot data collection to improve the model with RL.                       VLA model through RL. Several works directly apply the
+            ∗
+Training π0.6   with R ECAP on autonomous experience more                       proximal policy optimization (PPO) algorithm and variations
+than doubles the throughput on some of the hardest tasks,                       thereof to VLA fine-tuning [30–34], yielding approaches that
+and can decrease failure rates by 2× or more. This enables                      are difficult to extend to real-world RL in an efficient and
+  ∗
+π0.6  to reach practically useful levels of robustness: we were                 scalable fashion. Another line of research has explored RL
+able to run it to make espresso drinks for 13 hours straight,                   fine-tuning on top of pre-trained VLA models, where RL
+fold novel laundry items in a new home for over two hours                       either trains a residual policy [35, 36], fine-tunes an action
+without interruptions, and assemble boxes that are used for                     head network [37], selects or refines actions proposed by the
+real packaging in a factory.                                                    VLA [38–40], or optimizes a policy acting in the noise space
+   While R ECAP is based on individual algorithmic compo-                       of a diffusion-based VLA [41]. Some of these works have also
+nents that have been explored in prior works, the particular                    explored ways to distill the learned behavior back into the
+combination of these components is novel, and the results                       VLA for end-to-end iterative improvement [35, 36, 38, 42].
+                                                                                      QT −1
+These prior works generally use discrete actions or simple            ρπ (τ ) = p(o0 ) t=0 π(at |ot )p(ot+1 |ot , at ).1 The reward
+Gaussian continuous action distributions. A critical distinction      function is given by r(ot , at ), and we abbreviate it to rt
+is that we train an entire VLA end-to-end using (iterated)            to shorten notation, where rT is the terminal reward. We
+offline RL, with an expressive flow matching VLA model.               can define PTthe discounted cumulative reward, or return, as
+This is made possible by a simple and scalable advantage-             R(τ ) = t=0 rt (we do not use a discount factor, though one
+conditioned policy extraction method, which removes much of           could easily be added). The goal of RL is to maximize the
+the complexity of using policy gradient style objectives with         cumulative reward (or return), learning
+                                                                                                          PT a policy that maximizes
+large VLA models. In our comparisons, we show that this               J (π) = Eτ ∼ρπ [R(τ )] = Eτ ∼ρπ [ t=0 rt ]. The value function
+                                                                                                                                   PT
+significantly outperforms a more traditional policy gradient          for a policy π is then defined as V π (ot ) = Eτt+1:T [ t=t rt ].
+based extraction scheme.                                              We can then calculate P   an advantage value for an action at as
+                                                                                                   t+N −1
+   More closely related to R ECAP in terms of methodology,            Aπ (ot , at ) = Eρπ (τ ) [ t′ =t rt′ + V π (ot+N )] − V π (ot ),
+a number of prior works have integrated value functions               corresponding to an n-step estimate.
+and end-to-end RL training of VLAs on real robots [43–                Regularized reinforcement learning. Instead of maximizing
+46]. For example, Huang et al. [43] apply calibrated Q-               J (π), it is common to use regularization in RL, optimizing
+learning to an offline demonstration dataset for grasping tasks,      for a policy that maximizes reward while remaining close
+without an online improvement phase. Zhang et al. [44] use            to some reference policy πref [66–70]. This is important,
+direct preference optimization (DPO) to optimize pick-and-            for example, when we want to train for many gradient
+place skills from human preferences, using online rollouts            steps on the same data, in which case πref typically cor-
+from a VLA. Finally, Zhai et al. [45], Ghasemipour et al.             responds to the behavior policy that collected the training
+[46] use PPO and REINFORCE respectively with time-to-                 data. ThisPTcan be formalized via the objective J (π, πref ) =
+completion value functions to train VLAs for tasks like moving        Eτ ∼ρπθ [ t=0 γ t rt ] − βEo∼ρπθ [D(π(·|o)∥πref (·|o))], where
+a bowl, unfolding a mat, and pushing objects on a table.              D denotes some divergence metric. For the case where
+In contrast to these prior works, we describe an iterated             D is the KL divergence, we have the well-known result
+offline RL framework for VLAs with multiple advantages.               that π̂(a|o) ∝ πref (a|o) exp(Aπref (o, a)/β) is the solution to
+First, our method supports high-capacity diffusion and flow-          maxπ J(π, πref ), with Lagrange multiplier β [67–70]. Our
+based VLAs, unlike the discrete-action models studied in              advantage-conditioned policy extraction method is based on
+prior works. Second, we avoid the need for on-policy PPO              a closely related but less well-known result: if we de-
+                                                                                                                       πref
+or REINFORCE by using an advantage conditioning strategy              fine the policy π̂(a|o) ∝ πref (a|o)p(I|A             (o, a))β , where
+                                                                             πref                πref                πref
+                                                                                                             R
+for policy extraction, which can utilize all prior (off-policy        p(I|A (o, a)) = g(A (o, a))/ g(A (o, a′ ))da′ is the
+or offline) data. Lastly, our evaluation consists of complex,         probability of any action a improving over πref as measured
+dexterous, and temporally extended tasks, where our method            by a monotonically increasing function g, then π̂ is guaranteed
+increases throughput by about 2× while handling deformable            to improve over πref , i.e., J (π̂) ≥ J (πref ) [4, 71]. We will use
+objects, liquids, and multi-stage tasks.                              this property in deriving our policy extraction method in Sec-
+   Prior works have explored the idea of conditioning the             tion IV-B. Using this definition we can then obtain a paramet-
+policy on rewards, values, and advantages [47–56], including          ric policy from the closed form definition of π̂ by solving the
+methods that use classifier-free guidance [4]. We extend this         following minimization problem: minθ Es∼ρπref [KL(π̂, πθ )].
+approach to pre-train and fine-tune a large-scale generalist
+VLA policy [5], incorporating a variety of data sources (in-               IV. RL WITH E XPERIENCE AND C ORRECTIONS VIA
+cluding demonstrations, interventions, and autonomous policy                 A DVANTAGE - CONDITIONED P OLICIES (R ECAP )
+roll-outs) to learn real robotic manipulation tasks. Recent             Our method consists of the follow steps, which can be
+research has also studied how to effectively train multi-             repeated one or more times to improve a base VLA model:
+task, language-conditioned reward functions [57–63] and value           1) Data collection. We run the VLA on the task, labeling
+functions [45, 64, 65]. Building on these works, we also train              each episode with task outcome labels (which determine
+a language-conditioned distributional value function, which al-             the reward), and optionally providing human interven-
+lows us to estimate state-action advantages for our advantage-              tions to provide examples of corrections for mistakes in
+conditioned VLA training framework.                                         the earlier iterations.
+                                                                        2) Value function training. We use all of the data collected
+                                                                            so far to train a large, multi-task value function, which
+                     III. P RELIMINARIES
+                                                                            we refer to as V πref , that can detect failures and judge
+                                                                            the expected time to task completion.
+Reinforcement learning. We consider the standard RL
+                                                                        3) Advantage conditioned training. To improve the VLA
+setting in which an agent, given by a policy π(at |ot ),
+                                                                            policy with this value function, we include an optimality
+selects actions at given an observation ot ∈ O. We
+                                                                            indicator based on advantage values derived from this
+define a trajectory as τ = (o0 , a0 , · · · , oT ) ∈ O × A · · · O.
+A distribution over trajectories ρπ (τ ) is induced by the               1 For simplicity, we assume the observation o constitutes a valid Markovian
+                                                                                                                      t
+policy π(at |ot ) and the stochastic dynamics p(ot+1 |ot , at ):      state. While not true in general, it is a common simplification in robotic RL.
+       value function in the VLA prefix. This “advantage
+       conditioned” recipe provides a simple and effective way
+       to extract a more optimal policy from our value function
+       with suboptimal data.
+Figure 1 illustrates the overall structure of the training pro-
+cess, while Figure 3 provides more detailed specifics of the
+value function and policy architectures. Our pre-training phase
+consists of performing steps (2) and (3) above on our entire
+pre-training dataset, which consists of tens of thousands of
+hours of demonstrations from numerous tasks and a variety of
+different robots. Then, we perform steps (1), (2), and (3) one
+or more times to further improve the VLA with autonomously
+collected data. We describe the value function training and
+policy training steps below, and then present our specific
+                                             ∗
+instantiation of this approach for training π0.6 in Section V.
+
+A. Distributional value function training
+                                                                        Fig. 3: Interaction between the π0.6   ∗   VLA and value function during
+   To train a value function that can act as a reliable critic          R ECAP training. The π0.6∗ VLA uses a pre-trained VLM backbone. Training
+for any task in our pre-training or post-training stages, we            follows the KI recipe [73], with next-token prediction on many data sources in
+represent V πref with a multi-task distributional value function        pre-training, and an flow-matching action-expert with stop gradient. The VLA
+                                                                        is conditioned on a binarized advantage indicator, obtained from a separate
+pϕ (V |ot , ℓ) ∈ ∆B [72], mapping the observations ot and               value function initialized from a pre-trained but smaller VLM model.
+language command ℓ to a distribution over B discretized
+value bins. In our implementation, this value function uses the
+same architecture as the VLA     PTpolicy, but with a smaller VLM       it needs to effectively utilize diverse off-policy data, compris-
+backbone. Using Rt (τ ) = t′ =t rt′ to denote the empirical
+                                                                        ing the initial demonstrations, the expert interventions, and
+return of a trajectory τ from time step t until the end, we
+                                                                        autonomous episodes from both the latest policy and older
+train pϕ (V |ot , ℓ) by first discretizing the empirical return value
+                                                                        policies. This is closely related to the challenge faced by
+Rt (τ ) into B = 201 bins (using RtB to denote the discretized
+                                                                        offline RL methods [2, 3]. Second, it needs to be scalable
+returns), and then minimizing the cross-entropy H over the
+                                                                        and easily to apply to large VLA models, including models
+trajectories in the current dataset D:
+                        "                                 #             that use flow matching or diffusion to generate actions. Third,
+                          X                                             it needs to effectively utilize both good (near-optimal) and bad
+                                     B
+            min Eτ ∈D           H(Rt (τ ), pϕ (V |ot , ℓ)) .      (1)   (suboptimal) data, which is important if we want to improve
+            ϕ
+                        ot ∈τ                                           the policy using autonomous experience.
+This is a Monte Carlo estimator for the value function of                  Among the existing methods for policy extraction, pol-
+the policy represented by the dataset D (i.e., the behavior             icy gradient methods (including regularized policy gradients
+policy πref ). We can extract a continuous value function (and          and reparameterized gradients) are perhaps the most widely
+thus an advantage)
+                 P from the learned value distribution using            used [66, 74], but these methods are difficult to apply to flow
+V πref (ot , ℓ) = b∈[0,B] pϕ (V = b|ot )v(b), where v(b) denotes        matching models, which do not readily provide a tractable
+the value corresponding to bin b. During the pre-training phase,        log-likelihood, making them hard to scale up to modern VLA
+the dataset D corresponds to the human demonstrations, and              architectures (see comparisons in Section VI). An alternative is
+the value function captures the expected return for the task            to use weighted regression methods, such as AWR [68, 75, 76],
+and metadata we condition on, while on subsequent iterations,           which implicitly provide for regularization to the behavior
+it skews toward a weighted combination of the return of the             policy and use a simple (importance-weighted) supervised
+demonstrations and the learned policy.                                  learning objective. However, these methods discard or signifi-
+   While this on-policy estimator is less optimal than a more           cantly downweight a significant portion of the data, effectively
+classic off-policy Q-function estimator, we found it to be              implementing a kind of filtered imitation technique. Instead,
+simple and highly reliable, while still allowing for substantial        we use a variant of advantage conditioning [48], where the
+improvement over imitation learning. Our method could be                policy is trained on all of the data with supervised learning,
+extended to accommodate off-policy estimators in future work.           but with an additional input indicating how optimal the action
+                                                                        is based on the advantage. This is closely related to a variety of
+B. Policy extraction via advantage conditioning                         methods in the literature that propose to condition the policy
+   Once we have the value function V πref , we need a way               on some function of the resulting trajectory [47, 50].
+to train an improved policy using this value function. This                The specific formulation in our method is most closely re-
+is called policy extraction. An effective policy extraction             lated to CFGRL [4]. Building on the formulation in Section III,
+method in our setting needs to satisfy several criteria. First,         we can apply Bayes rule to rewrite the probability of policy
+                        Successful Episode: Folding Laundry                                                 Failure Episode: Open Fridge and Take Out Water Filter
+
+
+
+
+          Left arm swings up and crumples the folded shirt                Recovers and folds    Attempts to open fridge door   Successfully opens fridge door   Tips over water filter
+
+
+
+
+                                            Time (s)                                                                                        Time (s)
+
+
+Fig. 4: Visualization of the value functions. We train a multi-task value function to predict the number of steps to success, normalized by maximum task
+length to (−1, 0), where 0 corresponds to successful completion. We visualize the value function output on a folding task that finished successfully (left),
+and an unsuccessful example of a manipulation task from the pre-training dataset (right). The red parts highlight a drop in value, and green parts highlight
+increases; images on top show the corresponding frames of the episode. The visualization shows that the VF correctly identifies mistakes in the episode, as
+well as the speed of progress.
+
+
+
+improvement as p(I|Aπref (o, a)) = πref (a|I, o)/πref (a|o). Ap-                               deployed policies. To include human corrections, we found it
+plying this to our setting and including language conditioning,                                useful to force It = True (i.e., positive) for actions provided
+we can obtain an alternative closed form for the improved                                      as human corrections during autonomous rollouts. This choice
+regularized policy described in Section III as                                                 is reasonable if we assume that human experts always provide
+                                                        β                                    good corrective actions. As we will discuss in Section V, in
+                                        πref (a|I, o, ℓ)                                       practice our VLA model produces both discrete and continu-
+         π̂(a, |o, ℓ) ∝ πref (a|o, ℓ)                       . (2)
+                                         πref (a|o, ℓ)                                         ous outputs, with the continuous distribution represented via
+For the special case β = 1, π̂(a, |o, ℓ) = πref (a|I, o, ℓ).                                   flow matching. Therefore, the real training objective combines
+   We can therefore represent π̂ without needing to explicitly                                 likelihoods for the discrete values with the flow matching
+represent the improvement probability p(I|Aπref (o, a)), if we                                 objective for the continuous values.
+train the policy so that it can represent both πref (a|o, ℓ) and                                  In practice, we pre-train one model to represent
+πref (a|I, o, ℓ). This principle is similar to the approach in                                 πθ (at |It , ot , ℓ) on our entire pre-training dataset, and then
+classifier-free guidance, where a diffusion model is trained                                   perform one or more iterations of our method with on-policy
+to model the data both with and without a conditioning                                         rollouts (and, optionally, expert corrective interventions) for
+variable [4]. We assume the improvement indicator I follows                                    each task.
+a delta distribution                                                                           C. Method summary
+                       πref                         πref
+             p(I|A            (o, a, ℓ) = δ(A              (o, a, ℓ) > ϵℓ ),                      We provide an overview of our full method in Algorithm 1.
+                                                                                               As summarized at the beginning of this section, the method
+with a task dependent improvement threshold ϵℓ . This thresh-
+                                                                                               can be fully defined through application of three subroutines:
+old allows us to control the optimality indicator, and mini-
+                                                                                               collecting data through autonomous rollouts (with optional
+mizes the need for finding an attenuation factor β to sharpen
+                                                                                               corrective interventions from an expert), training a value func-
+the improvement conditioned distribution after training.2 The
+                                                                                               tion according to Equation 1, and training a policy according
+policy objective then corresponds to minimizing the following
+                                                                                               to Equation 3. The only thing that changes between different
+negative log-likelihood:
+             h                                                 i                               steps of the method is the data provided to each subroutine:
+  min EDπref − log πθ (at |ot , ℓ) − α log πθ (at |It , ot , ℓ) ,                              the pre-training stage uses all prior demonstration data, and
+    θ                                                             (3)                          the training process for the specialists for each skill ℓ(i)
+       where It = 1 Aπref (ot , at , ℓ) > ϵℓ .
+                                            
+                                                                                               uses additional autonomous data. In practice, the specialists
+The advantage values Aπref (ot , at , ℓ) are obtained from the                                 are fine-tuned from the pre-trained model, while the final
+value function in the previous section, and α is a trade-                                      generalist is trained from scratch. Additional details on the
+off hyperparameter. In practice, the dataset Dπref consists of                                 method are provided in Appendix F.
+all of the data collected so far, including all demonstrations                                    V. I MPLEMENTATION , M ODEL , AND S YSTEM D ETAILS
+and autonomous task attempts, and the reference policy πref                                                                                            ∗     ∗
+                                                                                                  We instantiate R ECAP with a VLA that we call π0.6      . π0.6
+is therefore a mixture of human behavior and previously
+                                                                                               is based on the π0.6 VLA, which is an evolution of the π0.5
+   2 Prior work [4] instead uniformly chose ϵ = 0 and tuned β at test time, as                 VLA [5] with a few improvements that we detail in the ac-
+                                                                                                                               ∗
+in classifier-free guidance (CFG). However, high CFG weights can drive the                     companying model card [6]. π0.6     additionally adds the ability
+action distribution to the corners of its support (leading to aggressive behavior)             condition on the binarized advantage indicator It , making it
+and would not affect the autoregressive part of the model. We found it easier to
+obtain good results by instead using the threshold ϵℓ to trade off regularization              suitable for RL training with R ECAP. The model architecture
+and optimality.                                                                                is illustrated in Figure 3. We train a value function alongside
+Algorithm 1 RL with Experience and Corrections via                  sub-task prediction runs at a lower frequency than action gen-
+Advantage-conditioned Policies (R ECAP)                             eration. During training, the model also predicts a tokenized
+Require: multi-task demonstration dataset Ddemo                     representation of the action chunk at:t+H , using the FAST
+ 1: Train Vpre on Ddemo using Eq. 1                                 tokenizer [77], as part of the KI recipe [73]. We denote these
+ 2: Train πpre on Ddemo using Eq. 3 and Vpre                        discretized actions aℓt:t+H . The action expert does not receive
+ 3: Initialize Dℓ with demonstrations for ℓ                         these as input, such that discrete and continuous actions are
+ 4: Train Vℓ0 from Vpre on Dℓ using Eq. 1                           predicted independently. This results in the final training log-
+ 5: Train πℓ0 from πpre on Dℓ using Eq. 3 and Vℓ0                   likelihood log πθ (at:t+H , aℓt:t+H , ℓ̂|ot , ℓ). Since we predict ℓ̂
+ 6: for k = 1 to K do                                               first, we can factorize this log-likelihood according to:
+ 7:    Collect data with πℓk−1 , add it to Dℓ
+                                                                      log πθ at:t+H , aℓt:t+H , ℓ̂|ot , ℓ = log πθ ℓ̂|ot , ℓ
+                                                                                                                            
+ 8:    Train Vℓk from Vpre on Dℓ using Eq. 1
+                                                                              + log πθ aℓt:t+H |ot , ℓ, ℓ̂ + log πθ at:t+H |ot , ℓ, ℓ̂ .
+                                                                                                                                     
+ 9:    Train πℓk from πpre on Dℓ using Eq. 3 and Vℓk
+10: end for                                                                          ∗
+                                                                    B. From π0.6 to π0.6 with advantage conditioning
+                                                                       To incorporate information about the advantage into the
+                                                                    policy, we expand the model inputs to contain an additional
+the VLA, following the method described in Section IV-A.
+                                                                    improvement indicator as an additional text input, inputting
+This value function is also initialized from a VLM. Training
+                                                                    “Advantage: positive” when It = True, and “Advantage:
+this value function and VLA with R ECAP results in our final
+                         ∗                                          negative” otherwise. The VLA model is otherwise the same
+model, which we call π0.6  . In this section, we first elaborate
+                                                                    as described in Section V-A. The advantage indicator appears
+on the design of our model and how it can be extended to use
+                                                                    in the training sequence after ℓ̂ but before the (discretized and
+advantage values from the value function, then describe the
+                                                                    continuous) actions, such that only the action log-likelihoods
+reward function and value function, and then elaborate on the
+                                                                    are affected. The continuous part of the log-likelihood cannot
+training and data collection process in our implementation.
+                                                                    be evaluated exactly, and instead is trained via the flow match-
+A. The π0.6 model                                                   ing loss [79]. It is possible to draw a close parallel between
+   The π0.6 model [6] is derived from the π0.5 model, which         flow matching and diffusion (under some assumptions), and
+can flexibly represent chunked action distributions via flow        the latter in turn can be interpreted as a lower bound on the
+matching and produce intermediate text for high-level policy        log-likelihood [80], so we can roughly motivate the sum of the
+reasoning. It uses the Knowledge Insulation (KI) training           log-likelihood of the discrete actions and the flow matching
+procedure [73], which trains the entire model end-to-end on         loss on the continuous actions as a lower bound on the overall
+continuous actions and discretized tokens (including actions        action likelihood:
+discretized via FAST [77]), while using a stop gradient to             log πθ (at:t+H , aℓt:t+H |It , ot , ℓ, ℓ̂) ≥
+prevent the flow-matching action expert from impacting the                   h
+                                                                        Eη,ω log pθ (aℓt:t+H |It , ot , ℓ, ℓ̂)−                     ,   (4)
+rest of the model. Pre-training uses both robot data and vision-
+language co-training data from the web.                                                                                        2i
+                                                                               αη ω − at:t+H − fθ (aη,ω
+                                                                                                    t:t+H , It , ot , ℓ, ℓ̂)
+   π0.6 improves on π0.5 in several ways: (i) The pre-training
+dataset is augmented with additional data from multiple robot       with aη,ω
+                                                                           t:t+H = ηat:t+H + (1 − η)ω, ω ∼ N (0, I) denoting
+platforms. (ii) The base VLM is Gemma 3 [78] 4B model. (iii)        the noised action, where η ∈ [0, 1] is the flow matching time
+The size of the action expert is increased to 860M parameters.      index and fθ denotes the continuous outputs of the diffusion
+   The model can be written as πθ (at:t+H , ℓ̂|ot , ℓ), where       expert. αη is a loss weighting term (which can optionally
+ot = [X1t , ..., Xnt , qt ] contains camera images X, the robot’s   be noise dependent). Full details for the loss are provided in
+configuration q, and ℓ = ℓt +s is the language input consisting     Appendix C.
+of the overall task prompt ℓt (e.g., “make me an espresso”),           During training, we randomly omit the indicator It instead
+as well as additional language inputs s providing metadata          of tuning the loss multiplier α to allow us to either directly
+that further modulates how the task is performed. The model         sample from the policy with It = True (which corresponds to
+produces action chunks at:t+H , which consists of joint angles      setting β = 1 in Equation (2)), or to use both a conditional
+and gripper commands at 50 Hz, using a separate “action             and unconditional model to implement classifier-free guidance
+expert” — a dedicated set of weights (860M parameters)              (CFG), which enables inference with β > 1. See Appendix E
+that are trained with flow matching specifically for action         for details.
+generation, but can attend to the activations in the rest of the
+model. The model also produces tokenized discrete outputs ℓ̂,       C. Reward definition and value function training
+which includes a textual representation of the next predicted          Since our aim is to develop a general and broadly applicable
+sub-task (such as “pick up the coffee cup”) used for high-          method for training VLAs from experience, we use a general
+level decision-making. Since the actions are generated after ℓ̂,    sparse reward definition that can be applied to essentially any
+action generation is effectively conditioned on this predicted      task. For each episode, we obtain a label indicating whether
+sub-task, providing high-level guidance. At inference time, the     that episode was successful. We derive the reward from
+this episode-level success label such that the value function
+corresponds to the (negative) number of steps until successful
+completion of the episode. This is equivalent to the following
+reward function, where T corresponds to the last step in the
+episode, and Cfail is a large constant that is chosen so as to
+ensure that failed episodes have low values:
+                  
+                  0
+                             if t = T and success
+             rt = −Cfail if t = T and failure              (5)
+                  
+                    −1        otherwise.
+                  
+
+   With this reward function, we train the value function to
+predict the (negative of the) number of remaining steps until        Fig. 5: The robot setup used in our experiments. π0.6  ∗  is trained on data
+success for successful episodes, and a large negative value for      from many different robots in pre-training. For the iterative improvement
+failed episodes. In practice, we normalize the values predicted      experiments, we use a static bimanual system with two 6 DoF arms with
+                                                                     parallel jaw grippers. The arms are controlled at 50 Hz with joint positions.
+to be between (−1, 0). Since we train on diverse tasks that          Observations consist of joint and gripper positions, as well as images from
+have very different typical lengths, we normalize the values         three cameras: a base camera mounted between the arms, and a wrist-mounted
+per task based on the maximum episode length of the task.            camera on each arm. The setup can be mounted flexibly, e.g. on a table.
+   The value function takes as input the same language inputs
+        ∗
+as the π0.6 VLA, and uses the same architecture design, with a
+smaller 670M parameter VLM backbone that is also initialized         provide corrections. These corrections can show the policy
+from Gemma 3 (see Figure 3). To prevent overfitting, we also         how to avoid catastrophic failures or how to recover from
+co-train the value function on a small mixture of multi-modal        mistakes. Note, however, that the corrections alone are unlikely
+web data. Figure 4 show visualizations of the value function         to fix all issues: intervening during autonomous execution is
+on some examples of successful and failure episodes, with            a disruptive event, and even expert human operators cannot
+additional visualizations in Figure 13 in Appendix B.                guarantee a consistent quality of interventions nor improve
+                                                                     subtle aspects of the behavior, such as overall speed. Thus,
+D. Pre-training, data collection, and learning from experience       the corrections serve more to fix large mistakes and overcome
+                                                                     challenges with exploration, and do not by themselves provide
+   The data mixture used in the pre-training phase of our
+                                                                     for optimal supervision, in contrast to theory [7]. Recall from
+model largely follows the recipe used by π0.5 [5], with vision-
+                                                                     Section IV-B that we force It = True for all corrections,
+language data from the web, prediction of subtasks ℓ̂, and
+                                                                     but otherwise the entire episode (both the autonomous parts
+prediction of low-level actions on a variety of tasks from
+                                                               ∗     and the corrections) are optionally added to the dataset Dℓ
+many different robots. We note that, after pre-training, π0.6
+                                                                     regardless of whether or not a correction was provided.
+can perform many more tasks than the ones used in evaluation
+                                                                        After data collection, we finetune the value function on
+in Section VI. During pre-training, we first train the value
+                                                                     all of the data collected for the task so far, and then use it
+function on the same dataset, predicting (the negative of) the
+                                                                     to finetune the policy with updated indicators It , using the
+number of steps to successful completion of each task. Then
+                                                                     same procedure as in pre-training. Both the value function and
+we estimate the per-task improvement threshold, ϵℓ , used in
+                                                                     policy are finetuned from the pre-trained checkpoint, rather
+determining the advantage-based improvement indicator It .
+                                                                     than the policy and value function from the last iteration.
+We set ϵℓ to the 30% percentile of values predicted by the
+                                                                     We found this to be useful for avoiding drift over multiple
+value function for the task ℓ. We then run the value function
+                                                                     iterations, though it may be possible to also obtain good results
+on-the-fly during VLA training to estimate Aπref (ot , at , ℓ) for
+                                                                     by consistently finetuning from the last model.
+each example, and then use it to compute It based on ϵℓ . It
+is included as an input to π0.6∗
+                                  as described in Section V-A.          We can repeat this process for several iterations as needed,
+As we use a relatively small VLM backbone (670M) for                 though in practice we found that even one iteration often leads
+the value function, on-the-fly inference of the value function       to significantly improved results.
+incurs minimal additional cost during VLA training.
+                                                                                     VI. E XPERIMENTAL E VALUATION
+   After pre-training we start a policy improvement loop for
+                                    ∗
+the target task. We first finetune π0.6 with demonstration data         In our experimental evaluation, we use R ECAP to train the
+Dℓ for the target task ℓ. We fix the indicator It to True in this    π0.6 model on a set of realistic tasks: making espresso drinks,
+stage, which we found to lead to slightly better results, such       folding diverse laundry, and assembling boxes. Each task re-
+that this stage corresponds to supervised finetuning (SFT).          quires multiple steps, ranging from 5 to 15 minutes in duration,
+This results in the initial policy πℓ0 , which is then used          complex manipulation behaviors (constrained forceful manipu-
+to collect additional data that is added to Dℓ . While some          lation, pouring liquids, manipulating cloth and cardboard, etc.),
+of the episodes are collected fully autonomously, some are           and fast execution to provide for high throughput. We illustrate
+monitored by an expert teleoperator who can intervene to             the robotic platform used in our experiments in Figure 5. We
+Fig. 6: Illustrations of the tasks used in our experiments. Tasks include three different laundry variants, assembling boxes, and making coffee drinks with
+an espresso machine.
+
+
+
+give details on the tasks and baselines below, followed by                     commercial espresso machine. While our cafe policy can make
+quantitative experiments.                                                      many drinks (lattes, iced Americanos, espresso, etc), and even
+                                                                               clean the espresso machine with a towel, for the purposes of
+A. Evaluation Tasks                                                            our quantitative experiments we focus on the double espresso
+   Our quantitative evaluations and comparisons use three                      shot task. This entails picking up the portafilter, placing it
+broad task categories each with individual task variants: laun-                on the grinder and grinding beans into it, tamping the ground
+dry folding, coffee making, and box assembly. We summarize                     coffee beans, locking the portafilter into the espresso machine,
+the tasks below, with illustrations in Figure 6:                               bringing over the cup, extracting the full shot of espresso, then
+Laundry (t-shirts and shorts). This is the standard laundry                    serving. Success is measured as completing all steps within
+folding task in the π0 paper [81]. This task entails retrieving                200 seconds without critical mistakes (such as dropping the
+either a T-shirt or shorts from a basket with variable initial                 portafilter or spilling the coffee).
+conditions, flattening, folding. Success requires one clothing                 Box assembly. We evaluate our policy on the problem of
+item to be folded and stacked in the top right corner of the                   assembling packaging boxes in a real-world factory deploy-
+table within 200 seconds.                                                      ment scenario. Box assembly involves folding a cardboard box
+Laundry (diverse items). The diverse laundry task requires                     starting from a flattened cardboard sheet, attaching a label onto
+folding a much larger variety of items, considering 11 item                    it and placing the box in the appropriate spot in a crate. For
+types, including towels, button-up shirts, sweaters, jeans, T-                 the purposes of the quantitative experiments, we focus on all
+shirts, shorts, polos, skirts, long sleeve shirts, socks, and                  portions of the task and count overall success as going from
+underwear. To obtain a low-variance metric in our experiments,                 a flattened to an assembled and stacked box in under 600
+we measure performance on one of the most challenging                          seconds.
+items – the button-up shirt. However, the policy is trained
+on all items, and the accompanying videos show results for                     B. Comparisons and Ablations
+a variety of clothing. Success is defined as having the target
+item correctly folded and placed on a stack on the table within                   We compare R ECAP to several baselines:
+500 seconds.                                                                   Pre-trained π0.5 [5]. This baseline does not use RL and does
+Laundry (targeted failure removal). The final version of                       not leverage R ECAP.
+the laundry folding task considers a much more structured                      Pre-trained π0.6 [6]. It does not include the advantage indi-
+setup for use in our ablation experiments, in which the task                   cator It , and is pre-trained with supervised learning.
+                                                                                                     ∗
+involves folding a single orange T-shirt from a fixed flattened                RL pre-trained π0.6      . It is pre-trained with RL alongside
+initial condition. We place the highest emphasis on success,                   its value function, and includes an advantage indicator It as
+with a strict success criteria that requires the shirt to be folded            described in Section V-D.
+                                                                                 ∗
+correctly with the collar always facing up within 200 seconds.                 π0.6 offline RL + SFT. This model is trained by finetuning the
+                                                                                      ∗
+We found this task to be useful for assessing whether R ECAP                   base π0.6   pre-trained checkpoint with demonstration data for
+can remove specific undesirable behaviors via RL (in this case,                the target task. We refer to this finetuning as “SFT” because
+placing the collar facing down rather than up).                                the advantage values are fixed to True for all demonstrations.
+Cafe (double shot espresso). We evaluate our policies on                       We find that this combination of the offline RL pre-trained
+                                                                                 ∗
+the challenging long-horizon task of making coffee with a                      π0.6 model with high-quality SFT outperforms standard SFT
+Fig. 7: Throughput. We show the number of successfully completed tasks per hour for laundry (simple and diverse), espresso making, and box assembly.
+Error bars show standard error. This metric measures both success and speed. In all cases, R ECAP applied to π0.6
+                                                                                                              ∗ (Ours) leads to substantial improvements
+in throughput. R ECAP has the highest impact on throughput for diverse laundry and espresso tasks, more than doubling successful completions per hour.
+
+
+
+
+Fig. 8: Success rates. We show the absolute success rates with standard error. Each stage of R ECAP improves performance across the tasks, with the challenging
+diverse laundry and espresso tasks seeing the largest gains success rate, corresponding to more than 2× reduction in failure rates. For the box assembly task
+we show the success rate for the different subtasks. R ECAP leads to the most consistent (and highest) success across all subtasks.
+
+
+
+(without offline RL pre-training), and provides a good starting                  to judge the episode with respect to multiple quality metrics,
+point for RL with on-robot data.                                                 and we aggregate these quality indicators into a success label.
+  ∗                                                                                 1) How much does R ECAP improve the policy?: To answer
+π0.6  (ours). This is the final model trained with R ECAP on
+the target task, including both autonomous rollouts and expert                   this question, we present the main quantitative results in
+                                                                                                                                   ∗
+corrections. By default we evaluate with β = 1. In some                          Figures 7 and 8. Across all tasks, the final π0.6    significantly
+experiments we also consider inference with CFG, which                           improves over the base (supervised) π0.6 model, the RL pre-
+                                                                                           ∗                                            ∗
+corresponds to β > 1.                                                            trained π0.6  model, and the offline RL + SFT π0.6         model.
+We also consider two alternative policy extraction methods                       Throughput more than doubles on the diverse laundry folding
+in the literature as comparisons for our advantage-conditioned                   and espresso tasks from including on-robot data (the improve-
+                                                                                                                               ∗
+approach, both of which use the same on-robot data as R ECAP                     ment from offline RL + SFT to the final π0.6      model), and the
+but a different policy learning method:                                          rate of failure reduces by about a factor of two. On the easier
+AWR. Starting from the same pre-trained model π0.6 (with-                        laundry task (t-shirts and shorts), the success rate is already
+out advantage conditioning) we fine-tune using advantage                         close to the maximum after the SFT phase, but throughput still
+weighted regression [68], based on advantages extracted from                     increases by a significant margin with the final model.
+our value-function.                                                                 On all of the tasks except diverse laundry, the success rate
+                                                                                                ∗
+PPO. We implement a variant of DPPO/FPO [23, 82] in which                        of the final π0.6  model is in the 90%+ range. This makes it
+we calculate likelihoods based on the single step diffusion ob-                  feasible to use in practical settings, such as making espresso
+jective and use an alternative definition of the PPO constraint                  drinks at the office or assembling boxes in a factory, as
+following SPO [83] (see Appendix D for details).                                 shown in the accompanying videos. For the box assembly
+                                                                                 task, Figure 8 (right) contains a breakdown of the task success
+C. Quantitative results                                                          over its four stages: picking up a box sheet, building the box,
+   We use two metrics in our evaluation: throughput and                          labeling the box, and placing it at an available spot in a crate.
+                                                                                   ∗
+success rate. Throughput measures the number of successful                       π0.6 attains higher success rates for all of the stages compared
+task executions per hour, thus capturing both speed and                          to the other models. The majority of failures on these stages
+success rate into one practically relevant quantity. Success                     happen because the policy runs out of time. The accompanying
+rate measures the proportion of episodes that succeed, and                       videos present time lapses where each of the tasks is run for
+is derived from human-provided annotations. Raters are asked                     multiple hours.
+                                                                             Fig. 11: Comparison of different policy extraction methods. R ECAP applied
+                                                                             to π0.6
+                                                                                  ∗ achieves by far the highest throughput for the laundry task compared
+                                                                             to AWR and PPO.
+Fig. 9: Improvement in throughput over multiple iterations. Both tasks
+improve significantly in throughput as we take more iterations of R ECAP,
+with box assembling first dropping and then improving significantly.
+
+
+
+
+Fig. 10: Improvement in success rate over multiple iterations. The laundry
+task quickly reaches the maximum success rate (but continues to improve in   Fig. 12: Failure mode removal. Here we apply R ECAP on a variant of
+throughput as shown in Figure 9, while box assembly continues to improve.    the laundry task with one item but a very strict success criteria. R ECAP is
+                                                                             particularly effective at removing failure modes that would be considered non
+                                                                             successful under the strict criteria. Therefore, our method can also be used to
+                                          ∗                                  alter a policy’s behavior with relatively little data effectively.
+   2) How much does R ECAP improve π0.6       over multiple itera-
+tions?: We next elucidate how training with R ECAP improves
+policies through multiple iterations of data collection and train-
+ing. We study the T-shirt and shorts folding task and the box                improves throughput. For the box assembly task, we see clear
+assembly task. For the T-shirt folding task, only data collected             improvements in the success rate over both iterations. While
+with autonomous evaluation (without human corrections) is                    there are still some failures (especially when placing the box
+used to perform policy improvement over two iterations, in                   on the stack at the end), the final policy achieves a success
+order to evaluate how well our method can improve the policy                 rate of about 90% both for folding the box and labeling it in
+via RL alone. We collect 300 trajectories on four robots in each             the allocated time limit of 600 seconds.
+iteration. Box assembly uses both autonomous trials and trials                  3) How does the advantage-conditioned policy extraction
+with expert teleoperator interventions, with 600 autonomous                  method in R ECAP compare to other methods?: We compare
+trials and 360 trials with interventions in each iteration.                  our advantage conditioned policy extraction method from
+   We plot the throughput over iterations in Figure 9, com-                  Section IV-B to other methods in the literature: AWR and
+paring two iterations of R ECAP, denoted by i = 1, i = 2                     PPO. We use the T-shirts and Shorts task for this comparison.
+respectively. The final iteration, labeled (Ours), corresponds               To ensure a controlled comparison, we use the same data for
+to the overall best result for these tasks presented in the                  these comparisons that was used to train our final model. This
+previous section. We also compare the initial data collection                provides a slight advantage to the baselines, since they have
+                                                  ∗
+policy, which uses the offline RL pre-trained π0.6    model with             access to better data that was collected while running R ECAP.
+                                     ∗
+SFT finetuning. For both tasks, π0.6 improves over the two                   The results are shown in Figure 11. While both AWR and
+iterations. In the laundry task we can see steady improvement                PPO can attain reasonable results, they both fall far short of
+yielding an overall 50% improvement in throughput. For the                   our method, and struggle to improve over the offline RL +
+                                                                                    ∗
+long-horizon box assembly task, more data is needed to yield                 SFT π0.6   model. For PPO, we had to use a small trust-region
+a significant improvement, but after the second iteration we                 constraint (η = 0.01) to stabilize training in this off-policy
+see a 2× improvement in throughput.                                          setting, and while this makes training stable, the method does
+   We also show the success rate over the iterations in Fig-                 not achieve good performance. AWR can achieve a reasonable
+ure 10. For the laundry task, the first iteration already raises             success rate, but leads to much slower polies with lower
+the success rate to over 90%, while the second iteration mainly              throughput.
+   4) Can R ECAP significantly alter policy behavior with            where the policy and value function are updated in real time
+relatively little data and remove a failure mode?: While the         as data is collected. We make this decision out of convenience,
+preceding experiments have focused on holistic end-to-end            but extending our approach into a fully concurrent online RL
+evaluations of policy performance, we can also zoom in on            framework is a promising direction for future work.
+a specific failure mode to examine whether RL training with             More broadly, training VLAs with RL is perhaps the most
+R ECAP can remove a specific mistake from the policy. To             direct path to get to performance levels that are adequate for
+answer this question, we use a version of the laundry task with      real-world use cases. RL with VLAs presents a number of
+a strict success criterion, which requires the policy to fold a      challenges, from the difficulty of large-scale RL training of
+t-shirt with the collar centered and facing up. Each episode is      high capacity models to sample complexity, autonomy, and
+initialized with a specific adversarial condition in which the       delayed feedback. While existing RL frameworks designed for
+shirt is placed flat on the table in such a way that the baseline    smaller-scale systems or “virtual” domains such as LLMs can
+offline RL + SFT policy often fails to fold it correctly. As         provide a good starting point, more research will be needed
+shown in Figure 12, applying R ECAP in this setting for two          to make RL a practical tool for VLA training. We hope that
+iterations (collecting 600 trajectories in each iteration) results   our work represents a meaningful step in this direction.
+in a policy that succeeds 97% of the time, and with high speed.
+Thus we conclude that R ECAP can be effective at removing                               ACKNOWLEDGEMENTS
+specific failure modes, even when learning entirely via RL
+                                                                        We thank our robot operators for data collection, evalua-
+without any intervention data or additional demonstrations.
+                                                                     tions, logistics, and video recording, and our technicians for
+           VII. D ISCUSSION AND F UTURE W ORK                        robot maintenance and repair. See Appendix A for a full
+                                                                     contributions statement.
+   Training policies that can achieve the same robustness,
+speed, and fluency on real-world tasks as people presents a
+                                                                                             R EFERENCES
+major challenge in robotic learning. In this paper, we discussed
+how learning from experience, through a combination of                [1] Richard S Sutton and Andrew G Barto. Reinforcement
+DAgger-style coaching and RL, can begin to address this chal-             learning: An introduction. MIT press, 2018. 1
+lenge. We describe R ECAP, a method for training VLAs with            [2] Sascha Lange, Thomas Gabel, and Martin A. Ried-
+autonomous trials, reward feedback, and human interventions,              miller. Batch reinforcement learning. In Marco A.
+                                                               ∗
+and present results for a model trained with R ECAP, π0.6        ,        Wiering and Martijn van Otterlo, editors, Reinforce-
+on a set of realistic tasks: making espresso drinks, folding              ment Learning, volume 12 of Adaptation, Learning,
+diverse laundry, and assembling boxes. At the core of R ECAP              and Optimization, pages 45–73. Springer, 2012. doi:
+is an RL method that is well-suited for scalable training                 10.1007/978-3-642-27645-3\ 2. 2, 4
+of VLA policies, using advantage conditioning for policy              [3] Sergey Levine, Aviral Kumar, George Tucker, and Justin
+extraction with value functions. The data for this RL method              Fu. Offline reinforcement learning: Tutorial, review,
+is collected with a combination of autonomous rollouts and                and perspectives on open problems. arXiv preprint
+human interventions, correcting mistakes with interventions               arXiv:2005.01643, 2020. 2, 4
+while finetuning the details of the behavior on autonomous            [4] Kevin Frans, Seohong Park, Pieter Abbeel, and Sergey
+data. Our experiments show that R ECAP can improve both the               Levine. Diffusion guidance is a controllable policy
+success rate and throughput of the VLA, more than doubling                improvement operator. arXiv preprint, arXiv:2505.23458,
+the throughput on some of the harder tasks, and decreasing                2025. 2, 3, 4, 5, 17
+the number of failures by roughly 2×.                                 [5] Kevin Black, Noah Brown, James Darpinian, Karan
+   There are several directions for improvement with R ECAP.              Dhabalia, Danny Driess, Adnan Esmail, Michael Robert
+First, our system is not fully autonomous: it relies on human             Equi, Chelsea Finn, Niccolo Fusai, Manuel Y Galliker,
+labeling and effort for reward feedback, interventions, and               et al. π0.5 : a vision-language-action model with open-
+episode resets. A number of prior works have explored ways                world generalization. In 9th Annual Conference on Robot
+to automate these components [84, 85], and VLAs offer                     Learning, 2025. 2, 3, 5, 7, 8
+new ways to provide for more automated data collection, for           [6] Physical Intelligence Team. π0.6 model card. 2025. 2,
+example by using high-level policies [86] to reason through               5, 6, 8
+resetting the scene. Second, our system is relatively naı̈ve in       [7] Stéphane Ross, Geoffrey Gordon, and Drew Bagnell. A
+how it approaches exploration: exploration is largely greedy,             reduction of imitation learning and structured prediction
+relying on stochasticity in the policy and human interventions            to no-regret online learning. In AISTATS, pages 627–635,
+to explore new solutions. This is reasonable when the initial             2011. 2, 7
+imitation learning policy already takes reasonable actions, but       [8] Michael Laskey, Jonathan Lee, Roy Fox, Anca Dragan,
+there is plenty of room for improvement with more sophis-                 and Ken Goldberg. Shiv: Reducing supervisor burden
+ticated exploration methods. Lastly, R ECAP performs iterated             in dagger using support vectors for efficient learning
+“offline” updates (i.e., it collects a batch of data, retrains the        from demonstrations in high dimensional state spaces. In
+model, and repeats), rather than running a fully online RL loop           Proceedings of the 2016 IEEE International Conference
+     on Robotics and Automation (ICRA), pages 462–469,                suite for sample-efficient robotic reinforcement learning,
+     2016. doi: 10.1109/ICRA.2016.7487175. 2                          2024.
+ [9] Michael Laskey, Jonathan Lee, Roy Fox, Anca D. Dra-         [20] Lars Ankile, Zhenyu Jiang, Rocky Duan, Guanya Shi,
+     gan, and Ken Goldberg. Dart: Noise injection for robust          Pieter Abbeel, and Anusha Nagabandi. Residual off-
+     imitation learning. In Proceedings of the 34th Interna-          policy rl for finetuning behavior cloning policies. arXiv
+     tional Conference on Machine Learning (ICML), vol-               preprint arXiv:2509.19301, 2025.
+     ume 70 of Proceedings of Machine Learning Research,         [21] Thomas Lampe, Abbas Abdolmaleki, Sarah Bechtle,
+     pages 1989–1998. PMLR, 2017.                                     Sandy H. Huang, Jost Tobias Springenberg, Michael
+[10] Eric Jang, Alex Irpan, Mohi Khansari, Daniel Kappler,            Bloesch, Oliver Groth, Roland Hafner, Tim Hertweck,
+     Frederik Ebert, Corey Lynch, Sergey Levine, and Chelsea          Michael Neunert, Markus Wulfmeier, Jingwei Zhang,
+     Finn. Bc-z: Zero-shot task generalization with robotic           Francesco Nori, Nicolas Heess, and Martin Riedmiller.
+     imitation learning. In Conference on Robot Learning,             Mastering stacking of diverse shapes with large-scale
+     pages 991–1002. PMLR, 2022. 2                                    iterative reinforcement learning on real robots. In 2024
+[11] Zheyuan Hu, Robyn Wu, Naveen Enock, Jasmine Li,                  IEEE International Conference on Robotics and Automa-
+     Riya Kadakia, Zackory Erickson, and Aviral Kumar. Rac:           tion (ICRA), pages 7772–7779, 2024. doi: 10.1109/
+     Robot learning for long-horizon tasks by scaling recovery        ICRA57147.2024.10610297. 2
+     and correction. arXiv preprint, arXiv:2509.07953, 2025.     [22] Perry Dong, Suvir Mirchandani, Dorsa Sadigh, and
+     2                                                                Chelsea Finn.       What matters for batch online re-
+[12] Michael Kelly, Chelsea Sidrane, Katherine Driggs-                inforcement learning in robotics?          arXiv preprint,
+     Campbell, and Mykel J Kochenderfer. Hg-dagger: Inter-            arXiv:2505.08078, 2025. 2
+     active imitation learning with human experts. In ICRA,      [23] Allen Z. Ren, Justin Lidard, Lars Lien Ankile, Anthony
+     2019. 2                                                          Simeonov, Pulkit Agrawal, Anirudha Majumdar, Ben-
+[13] Sergey Levine, Chelsea Finn, Trevor Darrell, and Pieter          jamin Burchfiel, Hongkai Dai, and Max Simchowitz.
+     Abbeel. End-to-end training of deep visuomotor policies.         Diffusion Policy Policy Optimization. In Proceedings
+     The Journal of Machine Learning Research, 17(1):1334–            of the 2025 International Conference on Learning Rep-
+     1373, 2016. 2                                                    resentations (ICLR), 2025. 9, 17
+[14] Dmitry Kalashnikov, Alex Irpan, Peter Pastor, Julian        [24] Kun Lei, Huanyu Li, Dongjie Yu, Zhenyu Wei, Lingxiao
+     Ibarz, Alexander Herzog, Eric Jang, Deirdre Quillen,             Guo, Zhennan Jiang, Ziyu Wang, Shiyu Liang, and
+     Ethan Holly, Mrinal Kalakrishnan, Vincent Vanhoucke,             Huazhe Xu. Rl-100: Performant robotic manipulation
+     et al. QT-Opt: Scalable deep reinforcement learning              with real-world reinforcement learning. arXiv preprint,
+     for vision-based robotic manipulation. arXiv preprint            arXiv:2510.14830, 2025. 2
+     arXiv:1806.10293, 2018.                                     [25] Dmitry Kalashnkov, Jake Varley, Yevgen Chebotar, Ben
+[15] Ajay Mandlekar, Fabio Ramos, Byron Boots, Li Fei-                Swanson, Rico Jonschkowski, Chelsea Finn, Sergey
+     Fei, Animesh Garg, and Dieter Fox. Iris: Implicit                Levine, and Karol Hausman. Mt-opt: Continuous multi-
+     reinforcement without interaction at scale for learning          task robotic reinforcement learning at scale. arXiv, 2021.
+     control from offline robot manipulation data. ICRA,              2
+     2020.                                                       [26] Abhishek Gupta, Justin Yu, Tony Z. Zhao, Vikash Kumar,
+[16] Archit Sharma, M. Ahmed Ahmed Rehaan Ahmad,                      Aaron Rovinsky, Kelvin Xu, Thomas Devlin, and Sergey
+     and Chelsea Finn. Self-improving robots: End-to-end              Levine. Reset-free reinforcement learning via multi-
+     autonomous visuomotor reinforcement learning.          In        task learning: Learning dexterous manipulation behaviors
+     Proceedings of the 7th Conference on Robot Learning              without human intervention. In Proceedings of the
+     (CoRL), volume 229, pages 3292–3308. PMLR, 2023.                 2021 IEEE International Conference on Robotics and
+[17] Russell Mendonca, Shikhar Bahl, and Deepak Pathak.               Automation (ICRA), pages 6664–6671, 2021. 2
+     Alan: Autonomously exploring robotic agents in the          [27] Konstantinos Bousmalis, Giulia Vezzani, Dushyant Rao,
+     real world. In Proceedings of the 2023 IEEE Interna-             Coline Devin, Alex X Lee, Maria Bauza, Todor Davchev,
+     tional Conference on Robotics and Automation (ICRA),             Yuxiang Zhou, Agrim Gupta, Akhil Raju, et al. Robocat:
+     pages 3044–3050, 2023. doi: 10.1109/ICRA48891.2023.              A self-improving foundation agent for robotic manipula-
+     10013321.                                                        tion. arXiv preprint arXiv:2306.11706, 2023. 2
+[18] Russell Mendonca, Emmanuel Panov, Bernadette Bucher,        [28] Aviral Kumar, Anikait Singh, Frederik Ebert, Mitsuhiko
+     Jiuguang Wang, and Deepak Pathak. Continuously                   Nakamoto, Yanlai Yang, Chelsea Finn, and Sergey
+     improving mobile manipulation with autonomous real-              Levine. Pre-training for robots: Offline reinforcement
+     world rl. In Proceedings of the 8th Conference on Robot          learning enables learning new tasks from a handful of
+     Learning (CoRL), pages 5204–5219, 2024.                          trials. In Proceedings of Robotics: Science and Systems
+[19] Jianlan Luo, Zheyuan Hu, Charles Xu, You Liang Tan,              (RSS), 2023. doi: 10.15607/RSS.2023.XIX.019.
+     Jacob Berg, Archit Sharma, Stefan Schaal, Chelsea Finn,     [29] Jingyun Yang, Max Sobol Mark, Brandon Vu, Archit
+     Abhishek Gupta, and Sergey Levine. Serl: A software              Sharma, Jeannette Bohg, and Chelsea Finn. Robot
+     fine-tuning made easy: Pre-training rewards and policies          Yunfei Ge, Zhenglong Sun, Xiu Li, Chi Zhang, Chenjia
+     for autonomous real-world reinforcement learning. In              Bai, and Xuelong Li. Align-then-steer: Adapting the
+     Proceedings of the 2024 IEEE International Confer-                vision-language action models through unified latent
+     ence on Robotics and Automation (ICRA), 2024. doi:                guidance. arXiv preprint arXiv:2509.02055, 2025. 2
+     10.1109/ICRA57147.2024.10610421. 2                           [41] Andrew Wagenmaker, Mitsuhiko Nakamoto, Yunchu
+[30] Shuhan Tan, Kairan Dou, Yue Zhao, and                             Zhang, Seohong Park, Waleed Yagoub, Anusha Naga-
+     Philipp Krähenbühl.       Interactive post-training for         bandi, Abhishek Gupta, and Sergey Levine. Steering your
+     vision-language-action models.           arXiv preprint,          diffusion policy with latent space reinforcement learning.
+     arXiv:2505.17016, 2025. 2                                         In Proceedings of the 9th Conference on Robot Learning
+[31] Guanxing Lu, Wenkai Guo, Chubin Zhang, Yuheng                     (CoRL), 2025. 2
+     Zhou, Haonan Jiang, Zifeng Gao, Yansong Tang, and Zi-        [42] Charles Xu, Qiyang Li, Jianlan Luo, and Sergey Levine.
+     wei Wang. Vla-rl: Towards masterful and general robotic           Rldg: Robotic generalist policy distillation via reinforce-
+     manipulation with scalable reinforcement learning. arXiv          ment learning. arXiv preprint arXiv:2412.09858, 2024.
+     preprint, arXiv:2505.18719, 2025.                                 2
+[32] Jijia Liu, Feng Gao, Bingwen Wei, Xinlei Chen, Qingmin       [43] Dongchi Huang, Zhirui Fang, Tianle Zhang, Yihang
+     Liao, Yi Wu, Chao Yu, and Yu Wang. What can rl bring              Li, Lin Zhao, and Chunhe Xia. Co-rft: Efficient fine-
+     to vla generalization? an empirical study. arXiv preprint,        tuning of vision-language-action models through chun-
+     arXiv:2505.19789, 2025.                                           ked offline reinforcement learning. arXiv preprint,
+[33] Kang Chen, Zhihao Liu, Tonghe Zhang, Zhen Guo,                    arXiv:2508.02219, 2025. 3
+     Si Xu, Hao Lin, Hongzhi Zang, Quanlu Zhang,                  [44] Zijian Zhang, Kaiyuan Zheng, Zhaorun Chen, Joel
+     Zhaofei Yu, Guoliang Fan, Tiejun Huang, Yu Wang,                  Jang, Yi Li, Siwei Han, Chaoqi Wang, Mingyu Ding,
+     and Chao Yu. πrl : Online rl fine-tuning for flow-                Dieter Fox, and Huaxiu Yao. Grape: Generalizing
+     based vision-language-action models. arXiv preprint,              robot policy via preference alignment. arXiv preprint,
+     arXiv:2510.25889, 2025.                                           arXiv:2411.19309, 2024. 3
+[34] Haozhan Li, Yuxin Zuo, Jiale Yu, Yuhao Zhang, Zhao-          [45] Shaopeng Zhai, Qi Zhang, Tianyi Zhang, Fuxian Huang,
+     hui Yang, Kaiyan Zhang, Xuekai Zhu, Yuchen Zhang,                 Haoran Zhang, Ming Zhou, Shengzhe Zhang, Litao Liu,
+     Tianxing Chen, Ganqu Cui, Dehui Wang, Dingxiang Luo,              Sixu Lin, and Jiangmiao Pang. A vision-language-
+     Yuchen Fan, Youbang Sun, Jia Zeng, Jiangmiao Pang,                action-critic model for robotic real-world reinforcement
+     Shanghang Zhang, Yu Wang, Yao Mu, Bowen Zhou, and                 learning. arXiv preprint, arXiv:2509.15937, 2025. 3
+     Ning Ding. Simplevla-rl: Scaling vla training via rein-      [46] Seyed Kamyar Ghasemipour, Ayzaan Wahid, Jonathan
+     forcement learning. arXiv preprint, arXiv:2509.09674,             Tompson, Pannag Sanketi, and Igor Mordatch. Self-
+     2025. 2                                                           improving embodied foundation models. arXiv preprint,
+[35] Yanjiang Guo, Jianke Zhang, Xiaoyu Chen, Xiang Ji,                arXiv:2509.15155, 2025. 3
+     Yen-Jen Wang, Yucheng Hu, and Jianyu Chen. Improving         [47] Jürgen Schmidhuber. Reinforcement learning upside
+     vision-language-action model with online reinforcement            down: Don’t predict rewards — just map them to actions.
+     learning. arXiv preprint, arXiv:2501.16664, 2025. 2               arXiv preprint, arXiv:1912.02875, 2019. 3, 4
+[36] Wenli Xiao, Haotian Lin, Andy Peng, Haoru Xue, Tairan        [48] Aviral Kumar, Xue Bin Peng, and Sergey Levine.
+     He, Yuqi Xie, Fengyuan Hu, Jimmy Wu, Zhengyi Luo,                 Reward-conditioned policies. CoRR, abs/1912.13465,
+     Linxi ”Jim” Fan, Guanya Shi, and Yuke Zhu. Self-                  2019. 4
+     improving vision-language-action models with data gen-       [49] Lili Chen, Kevin Lu, Aravind Rajeswaran, Kimin Lee,
+     eration via residual rl, 2025. 2                                  Aditya Grover, Michael Laskin, Pieter Abbeel, Aravind
+[37] Yuhui Chen, Shuai Tian, Shugao Liu, Yingting Zhou,                Srinivas, and Igor Mordatch. Decision transformer: Rein-
+     Haoran Li, and Dongbin Zhao. Conrft: A reinforced                 forcement learning via sequence modeling. In Advances
+     fine-tuning method for vla models via consistency policy.         in Neural Information Processing Systems (NeurIPS) 34,
+     arXiv preprint arXiv:2502.05450, 2025. 2                          2021.
+[38] Max Sobol Mark, Tian Gao, Georgia Gabriela Sampaio,          [50] David Brandfonbrener, Alberto Bietti, Jacob Buckman,
+     Mohan Kumar Srirama, Archit Sharma, Chelsea Finn,                 Romain Laroche, and Joan Bruna. When does return-
+     and Aviral Kumar. Policy-agnostic rl: Offline rl and              conditioned supervised learning work for offline rein-
+     online rl fine-tuning of any class and backbone. arXiv            forcement learning? In Advances in Neural Information
+     preprint, arXiv:2412.06685, 2024. 2                               Processing Systems (NeurIPS) 35, 2022. 4
+[39] Mitsuhiko Nakamoto, Oier Mees, Aviral Kumar, and             [51] Scott Emmons, Benjamin Eysenbach, Ilya Kostrikov, and
+     Sergey Levine. Steering your generalists: Improving               Sergey Levine. Rvs: What is essential for offline rl
+     robotic foundation models via value guidance. In Con-             via supervised learning? In Proceedings of the 10th
+     ference on Robot Learning, pages 4996–5013. PMLR,                 International Conference on Learning Representations
+     2025.                                                             (ICLR), 2022.
+[40] Yang Zhang, Chenwei Wang, Ouyang Lu, Yuan Zhao,              [52] Hiroki Furuta, Yusuke Matsuo, and Shixiang Shane Gu.
+     Generalized decision transformer for offline hindsight            Sontakke, Joseph J. Lim, Jesse Thomason, Erdem Bıyık,
+     information matching. In Proceedings of the 10th                  and Jesse Zhang. Rewind: Language-guided rewards
+     International Conference on Learning Representations              teach robot policies without new demonstrations. In
+     (ICLR), 2022.                                                     Proceedings of the 9th Conference on Robot Learning
+[53] Taku Yamagata, Ahmed Khalil, and Raúl Santos-                    (CoRL), 2025.
+     Rodrı́guez. Q-learning decision transformer: Leveraging      [63] Minttu Alakuijala, Reginald McLean, Isaac Woungang,
+     dynamic programming for conditional sequence mod-                 Nariman Farsad, Samuel Kaski, Pekka Marttinen, and
+     elling in offline rl. In Proceedings of the 40th Interna-         Kai Yuan. Video-language critic: Transferable reward
+     tional Conference on Machine Learning (ICML), volume              functions for language-conditioned robotics. Transac-
+     202 of Proceedings of Machine Learning Research, pages            tions on Machine Learning Research, 2025:1–22, 2025.
+     38989–39007. PMLR, 2023.                                          3
+[54] Qinqing Zheng, Amy Zhang, and Aditya Grover. Online          [64] Yecheng Jason Ma, William Liang, Vaidehi Som, Vikash
+     decision transformer. In Proceedings of the 39th Interna-         Kumar, Amy Zhang, Osbert Bastani, and Dinesh Jayara-
+     tional Conference on Machine Learning (ICML), volume              man. Liv: Language-image representations and rewards
+     162 of Proceedings of Machine Learning Research, pages            for robotic control. In Proceedings of the 40th Interna-
+     27042–27059. PMLR, 2022.                                          tional Conference on Machine Learning (ICML), 2023.
+[55] Jakub Grudzien Kuba, Pieter Abbeel, and Sergey Levine.            3
+     Advantage-conditioned diffusion: Offline rl via general-     [65] Yecheng Jason Ma, Joey Hejna, Chuyuan Fu, Dhruv
+     ization. 2023.                                                    Shah, Jacky Liang, Zhuo Xu, Sean Kirmani, Peng Xu,
+[56] Yueh-Hua Wu, Xiaolong Wang, and Masashi Hamaya.                   Danny Driess, Ted Xiao, Osbert Bastani, Dinesh Ja-
+     Elastic decision transformer. In Proceedings of the 37th          yaraman, Wenhao Yu, Tingnan Zhang, Dorsa Sadigh,
+     Conference on Neural Information Processing Systems               and Fei Xia. Vision language models are in-context
+     (NeurIPS), 2023. doi: 10.5555/3666122.3666936. 3                  value learners. In Proceedings of the 13th International
+[57] Lin Shao, Toki Migimatsu, Qiang Zhang, Kaiyuan Yang,              Conference on Learning Representations (ICLR), 2025.
+     and Jeannette Bohg. Concept2robot: Learning manipu-               3
+     lation concepts from instructions and human demonstra-       [66] John Schulman, Filip Wolski, Prafulla Dhariwal, Alec
+     tions. In Proceedings of Robotics: Science & Systems              Radford, and Oleg Klimov. Proximal policy optimization
+     (RSS), 2020. doi: 10.15607/RSS.2020.XVI.082. 3                    algorithms. arXiv preprint arXiv:1707.06347, 2017. 3,
+[58] Annie S. Chen, Suraj Nair, and Chelsea Finn. Learn-               4, 17
+     ing generalizable robotic reward functions from “in-the-     [67] Abbas Abdolmaleki, Jost Tobias Springenberg, Yuval
+     wild” human videos. In Proceedings of Robotics: Science           Tassa, Remi Munos, Nicolas Heess, and Martin Ried-
+     & Systems (RSS) 2021, 2021.                                       miller. Maximum a posteriori policy optimisation. In
+[59] Suraj Nair, Eric Mitchell, Kevin Chen, Brian Ichter,              International Conference on Learning Representations,
+     Silvio Savarese, and Chelsea Finn. Learning language-             2018. 3
+     conditioned robot behavior from offline data and crowd-      [68] Xue Bin Peng, Aviral Kumar, Grace Zhang, and Sergey
+     sourced annotation. In Proceedings of the 5th Conference          Levine. Advantage-weighted regression: Simple and
+     on Robot Learning (CoRL), volume 164 of Proceed-                  scalable off-policy reinforcement learning. arXiv preprint
+     ings of Machine Learning Research, pages 1303–1315.               arXiv:1910.00177, 2019. 4, 9
+     PMLR, 2022.                                                  [69] Peter Dayan and Geoffrey E. Hinton. Using expectation-
+[60] Sumedh A. Sontakke, Jesse Zhang, Sébastien M.R.                  maximization for reinforcement learning. Neural Com-
+     Arnold, Karl Pertsch, Erdem Bıyık, Dorsa Sadigh,                  putation, 9(2):271–278, 1997. doi: 10.1162/neco.1997.9.
+     Chelsea Finn, and Laurent Itti. Roboclip: One demon-              2.271.
+     stration is enough to learn robot policies. In Proceedings   [70] Jan Peters, Katharina Mülling, and Yasemin Altün. Rel-
+     of the 37th Conference on Neural Information Processing           ative entropy policy search. In Proceedings of the
+     Systems (NeurIPS), 2023.                                          Twenty-Fourth AAAI Conference on Artificial Intelli-
+[61] Wenhao Yu, Nimrod Gileadi, Chuyuan Fu, Sean Kir-                  gence, AAAI’10, page 1607–1612. AAAI Press, 2010.
+     mani, Kuang-Huei Lee, Montse Gonzalez Arenas, Hao-                3
+     Tien Lewis Chiang, Tom Erez, Leonard Hasenclever,            [71] Qing Wang, Jiechao Xiong, Lei Han, peng sun, Han
+     Jan Humplik, Brian Ichter, Ted Xiao, Peng Xu, Andy                Liu, and Tong Zhang. Exponentially weighted imitation
+     Zeng, Tingnan Zhang, Nicolas Heess, Dorsa Sadigh, Jie             learning for batched historical data. In S. Bengio, H. Wal-
+     Tan, Yuval Tassa, and Fei Xia. Language to rewards                lach, H. Larochelle, K. Grauman, N. Cesa-Bianchi, and
+     for robotic skill synthesis. In Proceedings of the 7th            R. Garnett, editors, Advances in Neural Information
+     Conference on Robot Learning (CoRL), volume 229 of                Processing Systems, volume 31, 2018. 3
+     Proceedings of Machine Learning Research, pages 374–         [72] Marc G Bellemare, Will Dabney, and Rémi Munos.
+     404. PMLR, 2023.                                                  A distributional perspective on reinforcement learning.
+[62] Jiahui Zhang, Yusen Luo, Abrar Anwar, Sumedh Anand                In International conference on machine learning, pages
+     449–458. PMLR, 2017. 4                                            erick Liu, Gagik Amirkhanyan, Glenn Cameron, Hadi
+[73] Danny Driess, Jost Tobias Springenberg, Brian Ichter,             Hashemi, Hanna Klimczak-Plucińska, Harman Singh,
+     Lili Yu, Adrian Li-Bell, Karl Pertsch, Allen Z Ren,               Harsh Mehta, Harshal Tushar Lehri, Hussein Hazimeh,
+     Homer Walke, Quan Vuong, Lucy Xiaoyang Shi, et al.                Ian Ballantyne, Idan Szpektor, Ivan Nardini, Jean Pouget-
+     Knowledge insulating vision-language-action models:               Abadie, Jetha Chan, Joe Stanton, John Wieting, Jonathan
+     Train fast, run fast, generalize better. In Proceedings of        Lai, Jordi Orbay, Joseph Fernandez, Josh Newlan,
+     the 37th Conference on Neural Information Processing              Ju yeong Ji, Jyotinder Singh, Kat Black, Kathy Yu, Kevin
+     Systems (NeurIPS), 2025. 4, 6                                     Hui, Kiran Vodrahalli, Klaus Greff, Linhai Qiu, Marcella
+[74] Tuomas Haarnoja, Aurick Zhou, Pieter Abbeel, and                  Valentine, Marina Coelho, Marvin Ritter, Matt Hoffman,
+     Sergey Levine. Soft actor-critic: Off-policy maximum              Matthew Watson, Mayank Chaturvedi, Michael Moyni-
+     entropy deep reinforcement learning with a stochastic             han, Min Ma, Nabila Babar, Natasha Noy, Nathan Byrd,
+     actor. ICML, 2018. 4                                              Nick Roy, Nikola Momchev, Nilay Chauhan, Noveen
+[75] Ziyu Wang, Alexander Novikov, Konrad Zolna, Josh S                Sachdeva, Oskar Bunyan, Pankil Botarda, Paul Caron,
+     Merel, Jost Tobias Springenberg, Scott E Reed, Bobak              Paul Kishan Rubenstein, Phil Culliton, Philipp Schmid,
+     Shahriari, Noah Siegel, Caglar Gulcehre, Nicolas Heess,           Pier Giuseppe Sessa, Pingmei Xu, Piotr Stanczyk, Pouya
+     and Nando de Freitas. Critic regularized regression. In           Tafti, Rakesh Shivanna, Renjie Wu, Renke Pan, Reza
+     H. Larochelle, M. Ranzato, R. Hadsell, M.F. Balcan,               Rokni, Rob Willoughby, Rohith Vallu, Ryan Mullins,
+     and H. Lin, editors, Advances in Neural Information               Sammy Jerome, Sara Smoot, Sertan Girgin, Shariq Iqbal,
+     Processing Systems, volume 33, pages 7768–7778, 2020.             Shashir Reddy, Shruti Sheth, Siim Põder, Sijal Bhat-
+     4                                                                 nagar, Sindhu Raghuram Panyam, Sivan Eiger, Susan
+[76] Ilya Kostrikov, Ashvin Nair, and Sergey Levine. Offline           Zhang, Tianqi Liu, Trevor Yacovone, Tyler Liechty, Uday
+     reinforcement learning with implicit q-learning. In Inter-        Kalra, Utku Evci, Vedant Misra, Vincent Roseberry,
+     national Conference on Learning Representations, 2022.            Vlad Feinberg, Vlad Kolesnikov, Woohyun Han, Woosuk
+     4                                                                 Kwon, Xi Chen, Yinlam Chow, Yuvein Zhu, Zichuan
+[77] Karl Pertsch, Kyle Stachowicz, Brian Ichter, Danny                Wei, Zoltan Egyed, Victor Cotruta, Minh Giang, Phoebe
+     Driess, Suraj Nair, Quan Vuong, Oier Mees, Chelsea                Kirk, Anand Rao, Kat Black, Nabila Babar, Jessica Lo,
+     Finn, and Sergey Levine. FAST: Efficient action tok-              Erica Moreira, Luiz Gustavo Martins, Omar Sanseviero,
+     enization for vision-language-action models. Robotics:            Lucas Gonzalez, Zach Gleicher, Tris Warkentin, Vahab
+     Science and Systems, 2025. 6                                      Mirrokni, Evan Senter, Eli Collins, Joelle Barral, Zoubin
+[78] Gemma Team, Aishwarya Kamath, Johan Ferret, Shreya                Ghahramani, Raia Hadsell, Yossi Matias, D. Sculley, Slav
+     Pathak, Nino Vieillard, Ramona Merhej, Sarah Per-                 Petrov, Noah Fiedel, Noam Shazeer, Oriol Vinyals, Jeff
+     rin, Tatiana Matejovicova, Alexandre Ramé, Morgane               Dean, Demis Hassabis, Koray Kavukcuoglu, Clement
+     Rivière, Louis Rouillard, Thomas Mesnard, Geoffrey               Farabet, Elena Buchatskaya, Jean-Baptiste Alayrac, Ro-
+     Cideron, Jean bastien Grill, Sabela Ramos, Edouard                han Anil, Dmitry, Lepikhin, Sebastian Borgeaud, Olivier
+     Yvinec, Michelle Casbon, Etienne Pot, Ivo Penchev,                Bachem, Armand Joulin, Alek Andreev, Cassidy Hardin,
+     Gaël Liu, Francesco Visin, Kathleen Kenealy, Lucas               Robert Dadashi, and Léonard Hussenot. Gemma 3
+     Beyer, Xiaohai Zhai, Anton Tsitsulin, Robert Busa-                technical report, 2025. 6
+     Fekete, Alex Feng, Noveen Sachdeva, Benjamin Cole-           [79] Yaron Lipman, Ricky TQ Chen, Heli Ben-Hamu, Maxim-
+     man, Yi Gao, Basil Mustafa, Iain Barr, Emilio Parisotto,          ilian Nickel, and Matt Le. Flow matching for generative
+     David Tian, Matan Eyal, Colin Cherry, Jan-Thorsten                modeling. arXiv preprint arXiv:2210.02747, 2022. 6, 16
+     Peter, Danila Sinopalnikov, Surya Bhupatiraju, Rishabh       [80] Diederik Kingma and Ruiqi Gao. Understanding diffu-
+     Agarwal, Mehran Kazemi, Dan Malkin, Ravin Ku-                     sion objectives as the elbo with simple data augmenta-
+     mar, David Vilar, Idan Brusilovsky, Jiaming Luo, An-              tion. In A. Oh, T. Naumann, A. Globerson, K. Saenko,
+     dreas Steiner, Abe Friesen, Abhanshu Sharma, Abheesht             M. Hardt, and S. Levine, editors, Advances in Neural In-
+     Sharma, Adi Mayrav Gilady, Adrian Goedeckemeyer,                  formation Processing Systems, volume 36, pages 65484–
+     Alaa Saade, Alex Feng, Alexander Kolesnikov, Alexei               65516, 2023. 6, 16
+     Bendebury, Alvin Abdagic, Amit Vadi, András György,        [81] Kevin Black, Noah Brown, Danny Driess, Adnan Es-
+     André Susano Pinto, Anil Das, Ankur Bapna, An-                   mail, Michael Equi, Chelsea Finn, Niccolo Fusai,
+     toine Miech, Antoine Yang, Antonia Paterson, Ashish               Lachy Groom, Karol Hausman, Brian Ichter, Szymon
+     Shenoy, Ayan Chakrabarti, Bilal Piot, Bo Wu, Bobak                Jakubczak, Tim Jones, Liyiming Ke, Sergey Levine,
+     Shahriari, Bryce Petrini, Charlie Chen, Charline Le               Adrian Li-Bell, Mohith Mothukuri, Suraj Nair, Karl
+     Lan, Christopher A. Choquette-Choo, CJ Carey, Cormac              Pertsch, Lucy Xiaoyang Shi, James Tanner, Quan Vuong,
+     Brick, Daniel Deutsch, Danielle Eisenbud, Dee Cattle,             Anna Walling, Haohuan Wang, and Ury Zhilinsky. π0 :
+     Derek Cheng, Dimitris Paparas, Divyashree Shivakumar              A vision-language-action flow model for general robot
+     Sreepathihalli, Doug Reid, Dustin Tran, Dustin Zelle,             control. arXiv preprint arXiv:2410.24164, 2024. 8
+     Eric Noland, Erwin Huizenga, Eugene Kharitonov, Fred-        [82] David McAllister, Songwei Ge, Brent Yi, Chung Min
+     Kim, Ethan Weber, Hongsuk Choi, Haiwen Feng, and           Brian Ichter, Liyiming Ke, Sergey Levine, Suraj Nair, Allen
+     Angjoo Kanazawa. Flow matching policy gradients,           Z. Ren, Laura Smith, Jost Tobias Springenberg, Zhiyuan Zhou
+     2025. 9, 16, 17                                            B. Additional Value Function Visualization
+[83] Zhengpeng Xie, Qiang Zhang, Fan Yang, Marco Hutter,
+     and Renjing Xu. Simple policy optimization. In Forty-         Figure 13 shows additional visualizations of our trained
+     second International Conference on Machine Learning        value function on five different tasks, including tasks on which
+     (ICML), 2025. 9, 17                                        we evaluate our policies (espresso making, box assembly) and
+[84] Henry Zhu, Justin Yu, Abhishek Gupta, Dhruv Shah,          also broader tasks (hang towel, attach hook). The parts with
+     Kristian Hartikainen, Avi Singh, Vikash Kumar, and         the most prominent changes are highlighted: red corresponds
+     Sergey Levine. The ingredients of real-world robotic re-   to where value function drops, green corresponds to where
+     inforcement learning. arXiv preprint arXiv:2004.12570,     value function increases, and yellow corresponds to oscillating
+     2020. 11                                                   values. Images show the corresponding frames and description
+[85] Archit Sharma, Kelvin Xu, Nikhil Sardana, Abhishek         of the episode.
+     Gupta, Karol Hausman, Sergey Levine, and Chelsea           C. Computing the log-likelihood for policy improvement
+     Finn. Autonomous reinforcement learning: Formalism           To derive the log-likelihood from Equation (4) we can first
+     and benchmarking. arXiv preprint arXiv:2112.09605,         observe that we can decompose the full model likelihood into
+     2021. 11                                                   autoregressive and diffusion terms
+[86] Lucy Xiaoyang Shi, Brian Ichter, Michael Equi, Liy-
+     iming Ke, Karl Pertsch, Quan Vuong, James Tanner,             πθ (at:t+H , aℓt:t+H , ℓ̂|It , ot , ℓ) =
+     Anna Walling, Haohuan Wang, Niccolo Fusai, et al.              πθ (at:t+H |It , ot , ℓ, ℓ̂)πθ (aℓt:t+H |It , ot , ℓ, ℓ̂)πθ (ℓ̂|It , ot , ℓ),
+     Hi robot: Open-ended instruction following with hier-                                                                                      (6)
+     archical vision-language-action models. arXiv preprint     where the first term is modeled with flow matching, the second
+     arXiv:2502.19417, 2025. 11                                 term is the autoregressive likelihood of the discretized actions
+                                                                aℓt:t+H , and the third term corresponds to the autoregressive
+                         A PPENDIX                              text likelihood. The autoregressive likelihoods can be esti-
+                                                                mated in the usual way, using the cross-entropy loss evaluated
+A. Contributions                                                on ground truth tokens. For the continuous likelihood over
+Data collection and operations. Michael Equi, Chelsea Finn,     at:t+H , a closed form likelihood is not available [79]. We
+Lachy Groom, Hunter Hancock, Karol Hausman, Rowan Jen,          can, however follow prior work [82], and consider the one-step
+Liyiming Ke, Marinda Lamb, Vishnu Mano, Suraj Nair, Charvi      diffusion process as a Gaussian distribution with likelihood
+Sharma, Laura Smith, Will Stoeckle, Anna Walling, Blake
+                                                                              logπθ (at:t+H |aη,ω
+                                                                                              1:H , It , ot , ℓ, ℓ̂) =
+Williams.                                                                                                                                    (7)
+Annotation and supplemental data. Chelsea Finn, Catherine                        log N ω − fθ (aη,ω 1:H  , I t , ot , ℓ, ℓ̂), I  ,
+Glossop, Hunter Hancock, Brian Ichter, Rowan Jen, Liyiming
+                                                                with aη,ω
+                                                                       t:t+H = ηat:t+H + (1 − η)ω and ω = N (0, I). From
+Ke, Chandra Kuchi, Karl Pertsch, Laura Smith, Will Stoeckle,
+                                                                this we can form an evidence lower bound to the likelihood
+Quan Vuong, Anna Walling.
+                                                                following [80, 82] (effectively marginalizing over η and ω)
+Policy training and research. Ashwin Balakrishna, Kevin
+                                                                which yields
+Black, Danny Driess, Michael Equi, Yunhao Fang, Chelsea
+Finn, Catherine Glossop, Karol Hausman, Gashon Hussein,         logπθ (at:t+H |It , ot , ℓ, ℓ̂) ≥
+Brian Ichter, Liyiming Ke, Sergey Levine, Yao Lu, Suraj             1      h                                                   2i
+Nair, Karl Pertsch, Allen Z. Ren, Lucy Shi, Laura Smith,              Eη,ω − w(η) ω − a1:H − fθ (aη,ω  1:H , I t , ot , ℓ, ℓ̂)    + c,
+                                                                    2
+Jost Tobias Springenberg, Kyle Stachowicz, Alex Swerdlow,                                                                          (8)
+Marcel Torne, Quan Vuong, Lili Yu, Zhiyuan Zhou.                where w(η) = e−η/2 is a noise dependent weighting term,
+Policy infrastructure. Kevin Black, Karan Dhabalia, Danny       and c is a constant independent of fθ . For the derivation,
+Driess, Michael Equi, Liyiming Ke, Adrian Li, Suraj Nair,       see [80], which also derives the relationship between flow
+Allen Z. Ren, Laura Smith, Jost Tobias Springenberg, Kyle       matching and diffusion in Appendix D.3 for this choice of
+Stachowicz, Alex Swerdlow, Haohuan Wang, Ury Zhilinsky,         weighting term. Finally putting the lower bound together with
+Zhiyuan Zhou.                                                   the autoregressive likelihood for the discretized action part of
+Robot hardware. Ali Amin, Raichelle Aniceto, Grace Con-         the text output ℓ̂, and subsuming the weighting terms in α,
+nors, Adnan Esmail, Thomas Godden, Ivan Goryachev, Tim          gives
+Jones, Ben Katz, Devin LeBlanc, Mohith Mothukuri, Sukwon             log πθ (at:t+H , aℓt:t+H |It , ot , ℓ, ℓ̂) ≥
+Yoo.                                                                       h
+                                                                      Eη,ω log pθ (aℓt:t+H |It , ot , ℓ, ℓ̂)                                   (9)
+Robot infrastructure. Ken Conley, James Darpinian, Jared
+DiCarlo, Karol Hausman, Szymon Jakubczak, James Tanner.                                                                              2i
+                                                                               − αη ω − a1:H − fθ (aη,ω
+                                                                                                    1:H , It , ot , ℓ, ℓ̂)                ,
+Writing and illustration. Kevin Black, Danny Driess,
+Michael Equi, Chelsea Finn, Hunter Hancock, Karol Hausman,      which is the bound given in the main part of the paper.
+                                                                                               can be written as
+                                                                                                    log πθ (at:t+H , aℓt:t+H |ot , ℓ, ℓ̂) ≥
+                                                                                                          h
+                                                                                                     Eη,ω log pθ (aℓt:t+H |ot , ℓ, ℓ̂)
+                   Drops portafilter multiple times                     Succeeds & continues
+
+                                                                                                                                                                    (10)
+                                                                                                                                                          2i
+                                                                                                             − αη     ω − a1:H − fθ (aη,ω
+                                                                                                                                      1:H , ot , ℓ, ℓ̂)        ,
+
+                                                                                               which is analogous to the diffusion likelihood bound used in
+                                                                                               FPO [82]. And we combine it with a PPO style loss separated
+                                                                                               into diffusion and autoregressive terms. In preliminary exper-
+                                                                                               iments we found that for our setting it was difficult to enforce
+                         Successfully building a cardboard box
+                                                                                               a trust region constraint on the action expert (which models
+                                                                                               actions with an unbounded diffusion head) when using the
+                                                                                               standard PPO clipping objective. Presumably, this is partially
+                                                                                               due to the “offline” nature of our algorithm setting, where
+                                                                                               we cannot afford to collect new data from real robots every
+                                                                                               few gradient steps. To stabilize training we found using an
+                                                                                               alternative definition of the PPO constraint following SPO [83]
+                                                                                               to be effective. The resulting loss is given as:
+                                                                                                      LSP O+CoV LA (θ) =
+                                                                                                      (
+          Right arm drops towel                       Tidy       Successfully hangs towel               πθ (aℓ̂ ∈ ℓ̂|ot , ℓ) πref
+                                                                                                                               A (ot , at , ℓ)
+                                                                                                        πref (aℓ̂ ∈ ℓ̂|ot , ℓ)
+                                                                                                                              "                           #)
+                                                                                                         |Aπref (ot , at , ℓ)| πθ (aℓ̂ ∈ ℓ̂|ot , ℓ)
+                                                                                                      −                                                −1
+                                                                                                                 2ϵar           πref (aℓ̂ ∈ ℓ̂|ot , ℓ)              (11)
+                                                                                                      (
+                                                                                                        πθ (at:t+H |ot , ℓ) πref
+                                                                                                   +α                          A (ot , at , ℓ)
+                                                                                                        πref (at:t+H |ot , ℓ)
+                                                                                                                              "                           #)
+                                                                                                         |Aπref (ot , at , ℓ)| πθ (at:t+H |ot , ℓ)
+                                                                                                      −                                                −1 ,
+           Tries to attach the hook but the hook flies off due to unstable hold                                 2ϵflow          πref (at:t+H |ot , ℓ)
+
+                                                                                               where α is a trade-off parameter and ϵar , ϵflow are trust-region
+                                                                                               parameters for autoregressive and flow-matching model parts
+                                                                                               respectively. We use this variant to perform training on eval
+                                                                                               data starting from the π0.6 checkpoint.
+
+                                                                                               E. Using CFG for test-time policy improvement with β > 1
+Fig. 13: Additional visualization of value function on five different tasks.                      After training we can choose to further sharpen the policy
+Red parts highlight places where value drops, green parts highlight places                     used for evaluation by setting β > 1 in Eq. (2). As shown in
+where value increases, and yellow parts highlight oscillating value regions.
+Images show the corresponding frames and descriptions of the episode.
+                                                                                               prior work [4] we can recover this sharpened policy without
+                                                                                               additional training since it is implicitly defined by the learned
+                                                                                               policies πθ (at:t+H |It , ot , ℓ) and πθ (at:t+H |ot , ℓ). Specifically,
+                                                                                               after training we can form the approximation
+D. PPO implementation                                                                                                                     
+                                                                                                                                            πref (at:t+H |It , ot , ℓ)
+                                                                                                                                                                       β
+                                                                                               π̂(at:t+H |ot , ℓ) ∝ πref (at:t+H |ot , ℓ)                                 .
+                                                                                                                                             πref (at:t+H |ot , ℓ)
+   We implement a variant of PPO [66] related to DPPO and                                                                                                            (12)
+FPO [23, 82] and use it as an additional baseline. To allow for                                One can now realize that the diffusion model effectively
+training both the autoregressive part of the model as well as the                              learns the gradient of the likelihoods, i.e. it represents
+diffusion based action expert in a compute effective manner                                    ∇a log πθ (at:t+H |It , ot , ℓ) and ∇a log πθ (at:t+H |ot , ℓ) re-
+we calculate likelihoods based on the single step diffusion                                    spectively. From this, following Frans et al. [4], we can see
+objective alone.                                                                               that if we run flow-matching inference following the gradient
+   In particular, we use a likelihood bound analogous to Eq.                                    ∇a log πθ (at:t+H |ot , ℓ)+
+(9) (previous section) but without the improvement indicator.                                    β(∇a log πθ (at:t+H |It , ot , ℓ) − ∇a log πθ (at:t+H |ot , ℓ)),
+Decomposing into autoregressive and flow-matching terms this                                                                                                  (13)
+we are effectively sampling from the desired attenuated dis-        without expert corrections. As we push model performance to
+tribution. We note that, as mentioned in the main paper, the        closely resemble the expert data collector in terms of speed,
+parameter β is loosely connected to the advantage threshold         it becomes hard to provide corrections. For this task, We
+ϵℓ that we introduce during training (in the sense that both        collect 300 episodes across 4 robot stations for reporting eval
+sharpen the distribution, one at inference and one at training      performance. For the diverse laundry folding task we collect
+time). We find that sharpening the distribution after training      450 evaluation episodes and 287 correction episodes. For the
+with high settings for β can lead to pushing the action distribu-   failure mode removal ablation we collect both autonomous and
+tion towards the boundaries of its learned support (which can       policy correction data. In total we collect ∼ 1000 autonomous
+lead to overly aggressive motions) and thus primarily rely on ϵℓ    and 280 + 378 correction episodes spread over 3 robots. For
+for obtaining a good conditioned policy directly after training     box assembly we collect data in the deployment scenario
+and combine it with moderate settings (e.g. β ∈ [1.5, 2.5])         directly, collecting 600 demonstrations and 360 correction
+where useful.                                                       episodes in each iteration, using 3 robots in total. For cafe we
+                                                                    perform a single iteration and collect 429 correction episodes
+F. Additional algorithm details                                     as well as 414 autonomous episodes.
+   We describe details for setting the task specific parameters
+used in Algorithm 1.
+   Advantage Estimation: During post-training,    Pwe    estimate
+                                                    t+N −1 ′
+the advantage function using Aπ (ot , at ) =        t′ =t    rt +
+V π (ot+N ) − V π (ot ), where ot+N is an observation sampled
+from N steps ahead from the same trajectory. We use N = 50
+lookahead to calculate this advantage. During pre-training,
+                                                     PT        we
+calculate the advantage estimate as Aπ (ot , at ) = t′ =0 rt′ −
+V π (ot ), setting N = T for each episode, which is a higher
+variance estimate of the advantage. We use this advantage
+calculation since it allows us to calculate the advantage values
+on-the-fly during pre-training using a single inference call to
+the value function. We find empirically that this advantage
+estimate works well when the policy is trained on large
+amounts of data from diverse tasks during pre-training.
+   Advantage conditioning dropout: During training, we
+randomly drop out the conditioning on the advantage indi-
+cator 30% of the time. We employ this dropout so that we
+can directly sample directly from either the conditional or
+unconditional policy during inference time and use CFG for
+test-time policy improvement (see Section E for details); and
+it effectively replaces the loss multiplier α.
+   Advantage threshold: The per task advantage threshold ϵℓ
+is set as follows. During pre-training we select the threshold
+for each task such that approximately 30% of the demonstra-
+tion data has positive advantage (as calculatedd on a random
+sample of 10k datapoints). During fine-tuning we generally set
+the threshold such that approximately 40% of the evaluation
+rollouts in each iteration have positive advantage. For the T-
+shirt and shorts laundry folding task (in which training on
+high-quality demonstration data yields slow policies but with
+high success rate) we increase the threshold such that only
+approximately 10% of the data has positive advantage.
+   Dataset composition: We use the dataset aggregation strat-
+egy described in Algorithm 1 for all tasks. However each
+of our task has distinct nature: the episode lengths vary, the
+performances of Iteration 0 model on each task are differ-
+ent, and one task (Assemble Box) is performed offsite in a
+deployment scenario. Therefore, we have different amount of
+demonstration data to begin with and collect different amounts
+of experience data for iterative improvement. For laundry (T-
+shirt and shorts), we use autonomous evaluation data only
+

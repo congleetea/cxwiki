@@ -1,0 +1,650 @@
+              Emergence of Human to Robot Transfer in
+                  Vision-Language-Action Models
+                            Simar Kareer1 2 ∗           Karl Pertsch1 James Darpinian1 Judy Hoffman2
+                                 Danfei Xu2             Sergey Levine1 Chelsea Finn1 Suraj Nair1
+                                      1 Physical Intelligence            2 Georgia Institute of Technology
+
+
+
+
+Fig. 1: Emergence of human to robot transfer: We observe that the transfer from human data to robot policies scales with the size and diversity of VLA
+pre-training data. The x-axis represents the diversity of the pre-training robot dataset, and the yellow and blue lines show the finetuning performance with and
+without human embodiment data. While both increase, the gain from leveraging human data only appears beyond a certain pre-training scale. We evaluate on
+a suite of four generalization scenarios shown only in the human data.
+
+
+   Abstract—Vision-language-action (VLA) models can enable                       by watching a video of someone perform a task, remains an
+broad open world generalization, but require large and diverse                   active area of research [9, 2, 31, 5, 22, 27]. Techniques for
+datasets. It is appealing to consider whether some of this data                  leveraging this type of data hold the promise to unlock massive
+can come from human videos, which cover diverse real-world
+situations and are easy to obtain. However, it is difficult to train             scale human data for generalist robot policies.
+VLAs with human videos alone, and establishing a mapping                            Drawing inspiration from language models, recent work has
+between humans and robots requires manual engineering and                        found that the ability to leverage certain sources of data is
+presents a major research challenge. Drawing inspiration from
+advances in large language models, where the ability to learn                    intrinsically tied to model scale [47, 49, 48]. For instance,
+from diverse supervision emerges with scale, we ask whether                      while smaller models fail to leverage diverse instruction tuning
+a similar phenomenon holds for VLAs that incorporate human                       datasets, larger models become generalists that soak up diverse
+video data. We introduce a simple co-training recipe, and find                   data and generalize to new tasks. This leads us to ask: does
+that human-to-robot transfer emerges once the VLA is pre-                        learning skills from human video data, with no explicit
+trained on sufficient scenes, tasks, and embodiments. Our analysis
+suggests that this emergent capability arises because diverse                    alignment, emerge with scale? To test this hypothesis, we
+pretraining produces embodiment-agnostic representations for                     introduce a simple co-training recipe, that treats human videos
+human and robot data. We validate these findings through a                       as an additional embodiment with the same objectives used
+series of experiments probing human to robot skill transfer and                  for robot data. Specifically, we predict low level end effector
+find that with sufficiently diverse robot pre-training our method                trajectories using 3D hand tracks and high-level sub-tasks
+can nearly double the performance on generalization settings
+seen only in human data.                                                         using dense language annotations, mirroring the objectives
+                                                                                 used during robot pretraining. We then co-finetune on a mix
+                          I. I NTRODUCTION                                       of this human data with the relevant robot data, and evaluate
+                                                                                 in a setting present only in the human data. For example
+   Human knowledge provides the foundation to instill physi-
+                                                                                 one such setting involves sorting eggs, where the robot data
+cal intelligence in robots. This manifests in many forms, from
+                                                                                 covers placing eggs in cartons, while human data specifies
+bootstrapping robot policies with human generated text and
+                                                                                 how differently colored eggs should be sorted across multiple
+images via vision-language models, to mimicking human gen-
+                                                                                 cartons.
+erated actions via robot teleoperation. While such techniques
+indirectly imbue the model with human experience, the right                         With this recipe, we uncover our key finding: human to
+recipe to directly learn from human experience, for instance                     robot transfer is an emergent property of diverse VLA pre-
+                                                                                 training (Figure 1). As we expand the diversity of robot data
+  ∗ Work conducted during internship at Physical Intelligence.                   – across tasks, scenes, and embodiments – the pretrained VLA
+Fig. 2: Per-task improvement from human data: We plot the difference in performance between policies fine-tuned with robot + human data versus
+robot-only data, isolating the lift from human supervision. Gains are largest when pre-training spans diverse tasks, scenes, and embodiments, suggesting that
+broad pre-training improves transfer from human videos.
+
+
+becomes increasingly capable of leveraging human videos                         by diverse pretraining.
+during post-training. We quantify this effect on four gener-
+alization benchmarks that probe different axes of transfer,                                             II. R ELATED W ORKS
+including unseen apartments, novel object categories, and new
+task semantics. Our full recipe leverages human video data to                   Learning from Humans. Learning manipulation from human
+enable capabilities never shown in robot data, for instance it                  video has received significant attention due to its potential
+busses unseen objects, tidies an unseen home and performs a                     scalability. Over the years, advances have been made to
+task with novel semantic structure.                                             leverage this data more directly for policy learning. Early
+                                                                                works in this field leveraged human video data to train stronger
+   These findings might lead one to ask: why does diverse                       vision encoders, which can improve downstream policy learn-
+pretraining matter so much for transfer? We find that as pre-                   ing [31, 30, 29]. Such approaches leverage the visual diversity
+training diversity increases, the latent representations between                of large human datasets like Ego4D [19] to train rich visual
+human and robot data naturally align. This suggests that with                   features, but are unable to directly improve action prediction.
+sufficient data coverage, models begin to form embodiment                       To address this, a number of works developed proxies for
+agnostic representations, despite vast visual and kinematic                     actions via intermediate prediction tasks such as keypoint
+domain shifts. In the same way large language models become                     tracking [5, 45], latent actions [55], reward modeling [9], and
+generalists that can learn from diverse supervision, diverse                    affordance prediction [3, 2]. Alternatively, other approaches
+VLAs become generalists that can learn from diverse embod-                      use overlayed robots and AR/VR to explicitly align the human
+iments.                                                                         and robot actions [15, 34]. While these works get closer
+   Concretely we show that robotic foundation models are                        to capturing real human actions, they introduce a manually
+able to directly leverage human data when pre-trained on                        engineered structure to enable transfer, limiting the generality
+sufficiently diverse data, which we demonstrate quantitatively                  of tasks that can be captured.
+by performance on generalization tasks, as well as qualitatively                   In parallel to this work, advances in AR/VR enable us to
+by analyzing the structure of the latent embeddings across                      extract explicit actions from humans in the form of 3D hand
+embodiments. To test the efficacy of our recipe, we ablate the                  and head tracking [17]. Recent works leverage this advance-
+importance of each training objective, the importance of wrist                  ment to train unified policies on human and robot data with a
+cameras, and compare the relative value between human and                       single objective: future action prediction, whether that be from
+robot data. We believe this research provides a new perspective                 a human hand or robot end-effector [22, 36, 59, 27, 28, 54, 37].
+on the potential role of embodied human data in training state-                 These works offer a promising path to directly leverage large
+of-the-art VLAs. Rather than developing bespoke algorithms                      scale human data, but such methods are generally brittle at
+to leverage human data, we can think of it in the context of                    a small scale. As such, they often rely on some form of
+cross-embodiment transfer, where its usefulness is amplified                    alignment to work well, whether that be kinematic, visual, or
+Fig. 3: Training mixture and benchmark. Our fine-tuning mix is evenly split between human data for generalization tasks and robot data for the nearest
+neighbor task. For each task we evaluate generalization to a new concept introduced only in human data 1) Scene generalization: We have robot data for
+tidying dressers and spice racks across many airbnbs and human data for an unseen apartment. 2) Object generalization: robot data covers bussing a table
+filled with trash and dinnerware and human data for a new set of objects. 3) Task generalization: robot data covers placing eggs into cartons, but human data
+introduces the new concept of sorting eggs by color.
+
+
+latent. In our work, we extend this style of work and perform                   embodied human videos with explicit hand motion and lan-
+no explicit alignment steps.                                                    guage annotations in the VLA mixture. We find that with
+Heterogeneous Vision-Language-Action Models. Modern                             sufficient pretraining scale, the resulting VLAs naturally form
+VLAs are trained as generalist policies with heteroge-                          embodiment-agnostic representations that align human and
+neous supervision, combining robot teleoperation, web-scale                     robot trajectories.
+vision–language data, and language annotations into a single                    Scaling Alternative Data Collection Strategies. While most
+model [13, 60, 24, 8, 50, 57, 4, 40, 35, 42, 51, 7, 20].                        VLAs are largely driven by robot teleoperation data, there’s
+These models bootstrap strong vision–language backbones                         recent work exploring alternative data collection mechanisms
+to get broad semantic understanding from human-generated                        which are more scalable. A number of works use portable
+images and text, and then ground that understanding in                          hardware that a user operates with their hands to simulate
+robot experience via behavior cloning on large teleoperation                    teleoperation [39, 56], for instance UMI [10] is a hand-held
+datasets [11, 16, 44, 33, 23, 6, 18, 38, 1, 25, 21]. While                      parallel jaw gripper that tracks its own movement to use as
+supervision from web images, videos, and language further                       demonstration data. A number of works expanded on this
+improves open-world generalization, this data lacks explicit                    design to capture data for dexterous hands as well, both via
+actions and is visually out-of-distribution for a robot’s ego-                  exoskeletons and portable motion capture [52, 41, 46]. While
+centric observations.                                                           these devices are exciting options to increase data scalability,
+   A common theme in recent VLAs is cross-embodiment                            they ultimately encumber the operator, and it is difficult to
+training [33, 32, 12, 53, 58], where a single policy is                         perform work naturally with these devices
+used to control many different robot embodiments with a                            Capturing embodied human data offers a promising way
+unified architecture and action representation. These multi-                    to address these limitations, using cameras and computer
+robot VLAs show that skills can transfer across embodiments,                    vision to record 3D hand motion with minimal disruption.
+often without bespoke alignment beyond shared observation                       This approach enables us to observe human behavior without
+and action spaces. This suggests that heterogeneous, multi-                     encumbrance. In this study, we therefore focus on methods for
+robot pretraining can produce internal representations that are                 leveraging embodied human data.
+naturally conducive to transfer across embodiments.
+                                                                                                         III. P RELIMINARIES
+   We build on this cross-embodiment hypothesis by treating
+humans as yet another embodiment within the same hetero-                           We consider the setting of training generalist policies with
+geneous VLA training recipe. In contrast to non-embodied                        vision language action models. VLAs inherit the architecture
+human videos one might find on YouTube, we leverage                             and pretrained weights of a vision-language model, but are
+                                                                                A. Human Data Collection Pipeline
+                                                                                Data collection device. We design our data collection setup
+                                                                                to enable capture of a wide range of human interactions,
+                                                                                while being minimally intrusive, and thus scalable. We equip
+                                                                                human data collectors with a head-worn, high resolution
+                                                                                camera. Since recent robotics research has demonstrated the
+                                                                                benefit of wrist-mounted cameras for policy learning, which
+                                                                                provide a more detailed view of the end-effector’s interactions
+                                                                                with manipulated objects, we also experiment with equipping
+                                                                                data collectors with wrist-mounted cameras that provide two
+                                                                                additional, time-synchronized camera streams. We ablate the
+Fig. 4: Model Architecture. We use the π0.5 model. We finetune with a           effect of these additional cameras in Section V.
+combination of high level sub-task prediction and low level action prediction   Data collection protocol. Our intent is to collect human
+on both human and robot data. The low level action prediction leverages
+relative end-effector actions aligned across human and robot.                   data in the style of episodic robot teleoperation data, which
+                                                                                allows us to isolate the transfer problem to only the visual
+trained to produce continuous robot control. VLAs are typ-                      and kinematic differences between human and robot. As such,
+ically trained via behavior cloning on a dataset of demon-                      operators are instructed to collect repeated demonstrations for
+strations D = (ot , lt , at:t+H ) to produce a policy that maps                 each of our tasks while wearing the data collection device.
+observation and language command to a trajectory of future                      Further, operators are asked to keep their hands in the field of
+actions πθ (at:t+H | ot , lt ). Actions can either be represented               view of the camera to improve tracking quality. We collected
+as discrete action tokens [60, 26, 35], trainable via standard                  3 hours of data for bussing, 3 hours for spice, 3 hours for
+next-token prediction, or as continuous values, often trained                   dresser and 5 hours for sort eggs.
+via flow-matching objectives [8]. In this work, we follow                       Data processing & annotation. Given a raw video capture
+Driess et al. [14] and train VLA models using both action                       of human interactions, we use visual SLAM to reconstruct the
+representations: we train our model to predict discretized                      6D movement et ∈ R6 of the head-mounted camera relative to
+FAST [35] action tokens, and introduce a small action expert                    a constant world-frame. We also reconstruct the position of 17
+network that decodes continuous actions via a flow matching                     3D keypoints het t ∈ R3×17 for both hands in the head camera
+objective. For more details on model architecture and training                  frame. Finally, analogously to the robot teleoperation data in
+objective, see [20].                                                            our training mixture, we annotate the human video data with
+   Recent VLAs like π0.5 showed improved generalization                         text-based subtasks, describing the actions of each arm.
+from co-training VLAs with additional objectives like subtask                   Action space. We aim to roughly align the action repre-
+prediction, object detection, and VQA. For subtask prediction,                  sentations for human and robot data in our training mixture
+the policy predicts a subtask string given visual observations                  to facilitate transfer. For robot teleoperation data, there are
+and a high level language command p(ltsubtask | ot , lt ). This                 multiple choices of action representations. Two common op-
+language is fed back into the model to condition action gen-                    tions are to represent actions as trajectories of robot joint
+eration πθ (at:t+H | ot , lsubtask ), similar to chain of thought.              positions or end-effector poses. We will consider end-effector
+Subtask labels are obtained by densely annotating demonstra-                    based actions, since approximating joint positions for humans
+tion data with language descriptions of short, atomic action                    is difficult. Specifically, these end-effector actions are rep-
+sequences. In this work, we train on human data with two                        resented as a length H action chunk [a0 , a1 , ..., aH ], where
+objectives: flow based prediction for continuous actions and                    each ai represents the 6-DoF pose relative to the current
+language based subtask prediction.                                              observed state 6-DoF pose s0 . The total action space for
+                                                                                robot data is the concatenation of the 6 DoF left arm end-
+    IV. F INE -T UNING WITH E MERGENT H UMAN -ROBOT                             effector trajectory + gripper, 6 DoF right arm end-effector
+                        A LIGNMENT                                              trajectory + gripper, and 2 dimensional base actions, yielding
+   Our fine-tuning recipe aims to leverage embodied human                       a total action chunk of a ∈ RH×16 . To compute corresponding
+data identically to other robots in our mixture with no explicit                actions in the human video, we define an “end-effector” pose
+alignment. This approach is maximally general, and leans on                     spanning the 3D keypoints of each hand’s palm, middle, and
+the capabilities of large models to ingest relevant information                 ring finger (Figure 6),relative to the head frame et . We then
+from diverse sources, rather than human designed heuristics                     compute end-effector actions as relative transformations from
+for aligning domains. We first collect, process, and annotate                   the current 6-DoF state similar to how we do for the robot end
+the human video data, and then use it in combination with                       effector. Similarly, we approximate relative robot base actions
+robot data to fine-tune the pre-trained model, which we base                    by projecting the human video base camera poses into the
+on the π0.5 model shown in Figure 4. The fine-tuning objective                  frame of the chunk’s first timestep base camera pose. We do
+treats human and robot data in exactly the same way, without                    not explicitly approximate “gripper actions” for the human
+any explicit transfer learning method or loss.                                  video, since it is challenging to estimate the openness of a
+Fig. 5: VLA representation of human and robot data. We plot the latent embeddings of our VLA by performing a TSNE analysis on mean-pooled tokens
+from the final layer of the VLM backbone. With no pre-training, it is clear that the model has disjoint representations between human and robot data. But as
+pretraining becomes more diverse, latent overlap increases, which correlates with performance on our generalization tasks.
+
+
+                                                                               alization” scenarios that have limited coverage in robot data,
+                                                                               but present in human data. These scenarios span generalizing
+                                                                               to new scenes, objects and tasks. We begin our study by
+                                                                               understanding whether our recipe can enable transfer to these
+                                                                               new settings. Then, we validate our core hypothesis, which
+                                                                               is that this transfer is an emergent property of diverse VLA
+                                                                               pretraining. Finally, we compare human embodiment data to
+                                                                               other robot embodiments, study whether transfer occurs from
+                                                                               high level subtask or low level action prediction, and ablate
+                                                                               the impact of our human-worn wrist cameras.
+Fig. 6: Data Collection Apparatus. We collect human data with three views:
+head mounted camera, left wrist camera, and right wrist camera.
+                                                                               A. Human to robot transfer benchmark
+human hand during object interactions, and instead rely on                        Our benchmark aims to test human to robot transfer across
+learning gripper actions from robot data only. As a result, our                various axis of generalization: scene, object and task (fig. 3).
+human actions have 2 × 6 + 6 = 18 dimensions.                                  For each axis, we consider a setup where our robot teleopera-
+Training objectives. Our best recipes to perform difficult                     tion data lacks coverage, and we collect targeted human data
+long horizon tasks leverage both high level subtask prediction                 to expand this coverage. In each setting we co-train using
+and low level action prediction. We construct both of these                    π0.5 + ego and evaluate on the new concept introduced in
+prediction tasks on our human data. For low level action                       human data.
+prediction, we supervise action chunk prediction both via next                 Scene transfer: We identified two tasks where we have robot
+token prediction on discrete FAST tokens as well as flow                       data coverage in a fixed number of homes, but π0.5 trained only
+matching loss on the continuous actions πθ (a|ot , ltsubtask ). For            on robot data fails to generalize to an unseen home: Spice
+high level subtask prediction we train on next token prediction                and Dresser in which the robot must tidy a spice rack and
+on subtask language tokens πθ (ltsubtask | ot , lt ).                          the top of a dresser respectively. We collect human data in the
+Training mixture. At fine-tuning time, it is important to                      unseen target kitchen, then benchmark π0.5 + ego on this new
+create a training mixture that both retains the model’s original               scene. For both of these shorter horizon tasks the score is a
+capabilities, while introducing new concepts from human data                   binary success rate.
+to improve generalization. Our mixture reflects this with a                    Object transfer: Our robot data has coverage of bussing
+simple recipe: we co-train human data for generalization tasks                 a messy table covered with trash and dinnerware. We then
+at 50-50 proportion to the nearest neighbor robot task. We                     collect human data which introduces new objects like kitchen
+use this mixture to finetune π0.5 , a strong VLA exhibiting                    tools, then benchmark π0.5 +ego on these new objects. For this
+zero shot generalization, and further improve its capabilities.                longer-horizon task the score measures the number of correctly
+As shorthand, we refer to the combined model that integrates                   placed objects.
+egocentric data into π0.5 as π0.5 + ego.                                       Task transfer: Our robot data has coverage for picking eggs
+                                                                               and packing them into a carton. We collect human data that
+                  V. E XPERIMENTAL F INDINGS                                   sorts eggs into two cartons based on color and benchmark
+   To test whether π0.5 + ego can generalize to new concepts                   π0.5 + ego on this new task. For this longer-horizon task the
+from egocentric human data, we construct a suite of “gener-                    score measures the number of correctly placed eggs.
+                                                                                      •  0%: base VLM initialization only
+                                                                                      •  25%, 50%, 75%, 100%: VLA pre-trained on in-
+                                                                                         creasingly diverse robot data, corresponding to fractions
+                                                                                         of the full diversity of [scene-task] combinations in our
+                                                                                         data, constrained to the target robot embodiments: ARX
+                                                                                         and mobile ARX
+                                                                                      • 100% + X-emb: the π0.5 full VLA pretraining mix-
+                                                                                         ture Intelligence et al. [20], which additionally contains
+                                                                                         data across numerous non-target robot embodiments.
+                                                                                      With each of these pretrained initializations we train two
+                                                                                   models: one with only robot teleoperation data from the
+Fig. 7: Human to robot transfer finetuning π0.5 . We evaluate performance          most similar tasks in our dataset, and one which additionally
+across a suite of static and mobile tasks, each testing either scene, object, or   includes human embodiment data for these tasks. This allows
+task level generalization present only in the human data. We see clear human
+to robot transfer resulting in nearly double the score on the target tasks.        us to measure the impact of diverse pretraining on human to
+                                                                                   robot transfer.
+  For more details about task setup and scoring, see Ap-                              We report results in Figure 2. Concretely, we report the
+pendix A.                                                                          difference in score between the model using human data and
+                                                                                   not using human data at different levels of pre-trained model
+B. The π0.5 + ego recipe enables generalization to unseen                          scale. This difference represents the magnitude of the human
+scenes, objects, and tasks                                                         to robot transfer as a function of pre-training diversity. We find
+   We report transfer results on our suite of benchmark tasks                      that this transfer significantly increases as a function of pre-
+in Figure 7. Across all three generalization axes we find                          training diversity. While with no or little pre-training, VLAs
+that targeted human data collection and co-training can                            cannot benefit from human data co-training (0%, 25%), VLAs
+significantly improve policy generalization. Concretely, for                       pre-trained on diverse data see significant gains from human
+both scene and object generalization, we see substantially                         data co-training (75%, 100%). Transfer is further improved
+higher task score after co-training: Spice: 32% → 71%;                             by pre-training on a diverse cross-embodiment data mix, that
+dresser: 25% → 50%; bussing: 53→63%. Notably, we                                   includes data from diverse, non-target robot embodiments.
+also see strong task transfer from human video in the egg
+sorting task: while a policy trained on robot data only has
+the basic manipulation skills to pick and place eggs, it has
+no concept of sorting and simply places eggs into cartons
+randomly (57% sorting accuracy). In contrast, once co-trained
+with human egg sorting videos, the robot policy is able to sort
+eggs with 78% accuracy, and on average placed 4 more eggs
+correctly than π0.5 .
+C. Human to robot transfer emerges as a function of diverse
+VLA pretraining across scenes, tasks and embodiments
+   We’ve established that π0.5 + ego can leverage embodied
+human data to expand its capabilities, which leads us to the
+central question of this work: what enables this transfer? We
+hypothesize that policy pretraining with a diverse data mix
+of many scenes, tasks and embodiments is the key enabler                           Fig. 8: Task generalization performance scaling: Performance of Robot
+                                                                                   Finetuning on Sort Eggs plateaus, even as the pretraining diversity im-
+for effective human to robot transfer. Intuitively, VLAs with                      proves. In contrast, Human+Robot Finetuning performance scales sharply with
+strong pretraining may learn abstractions that span embod-                         pretraining, suggesting that broader pretraining enables more effective transfer
+iments—organizing their representations to capture shared                          from human data.
+structure across domains, and thus facilitating transfer. We test                     We can analyze the scaling trends for each task individually.
+this hypothesis in two parts. First, we establish that human to                    For instance in Sort Eggs we see that increased pretraining
+robot transfer on our generalization benchmark increases as a                      diversity alone does not enable a robot-only policy to perform
+function of pretraining diversity. Then, we analyze our model’s                    Sort Eggs, a task never seen in our robot teleoperation
+learned representations as pretraining diversity increases.                        data (Figure 8). However, increased pretraining diversity en-
+Strong human to robot transfer emerges with diverse                                ables us to transfer significantly more knowledge from human
+pretraining. To evaluate the impact of VLA pretraining on                          data, which does cover this new task. Similarly, for Dresser,
+human to robot transfer, we repeat our transfer benchmark                          up until our 50% pretrained checkpoint there are no gains
+experiments but with the following, increasingly diverse, pre-                     from human video co-training, and potentially even negative
+trained initializations:                                                           transfer (Figure 13). But between 75%→100% + X-emb we
+Fig. 9: Human data compared to target robot data: For Eggs and
+Dresser we find that fientuning with comparable amounts of human data
+(yellow) and robot data (grey) resulted in similarly performant models. For
+Bussing we observe a larger performance gap to target robot data.
+
+                                                                              Fig. 10: Human data compared to cross embodiment robot data: We
+see consistent stacked gains on top of the robot-only baseline,               compare the transfer from human data on the bussing task to that from a
+even as the pretrained checkpoint gets stronger. More broadly,                robot (albeit a different UR5 robot). We find that both enable lift over the
+                                                                              baseline, but neither match data of the target robot, suggesting that human
+these results suggest that human to robot transfer will continue              data transfer parallels cross-embodiment robot transfer.
+to improve as the diversity of our pretrained model grows. This
+follows our intuition, since we expect that diversity of scenes,
+tasks and embodiments ought to improve the model’s ability
+to form embodiment agnostic abstractions.
+Embodiment agnostic representations emerge with pre-
+training scale. We hypothesize that diverse pre-training helps
+produce embodiment agnostic representations which in turn
+improve human to robot transfer. To probe this, we perform
+a TSNE [43] analysis on the output embeddings of the VLA
+from both human and robot data after co-training (Figure 5).
+With poor pre-training, the model has disjoint representations
+across embodiments, suggesting that the model separately fits
+                                                                              Fig. 11: High level vs low level transfer For our mobile tasks we find
+these distributions. Then, as pretraining diversity increases,                that embodied human data enables transfer both through high level sub-task
+the representations converge, suggesting the model builds a                   prediction and low level action prediction.
+unified representation for both embodiments. See Appendix C
+for more details.                                                                Next we study whether embodied human data has roughly
+   Prior works that operate on less data observe that co-training             the same value as non-target robot data for a new task. Specif-
+improves performance, but the representations of human and                    ically, for the Bussing task we collected 400 demonstrations
+robot are disjoint, and propose methods to explicitly improve                 (7.45 hours) on a UR5 robot and evaluated transfer to an arx
+representational alignment [36]. Our analysis suggests that                   robot. We see a similar trend in the nature of human to ARX
+with sufficiently diverse pretraining, co-training alone can                  and UR5 to ARX transfer – both exceed the baseline, but
+produce aligned representations that facilitate transfer.                     both also don’t match data from the target robot embodiment,
+                                                                              suggesting that human data transfer and cross-embodiment
+D. How does embodied human data compare to data from                          robot transfer share similar properties.
+other robots?
+   π0.5 +ego frames human to robot transfer as an instantiation               E. At what level does transfer occur?
+of cross embodiment transfer, so it’s natural to benchmark                       A natural question is whether human data can only be
+human to robot transfer with robot to robot transfer. This helps              used to transfer “high level” semantic concepts, or whether
+us understand whether we can leverage human data as just                      it’s also transferring the ”low level” action prediction. For
+another robot embodiment in our mix. We first compare human                   the Bussing and Eggs task, we do not use a high-level
+data to an ”upper bound” scenario where we collect target                     policy during evaluation, so the transfer has to come from
+robot data for our benchmark tasks (Figure 9).                                low level action prediction. For our mobile tasks Spice and
+   For two of three tasks (Sort Eggs and Dresser), we                         Dresser, we evaluate a joint high level + low level and ablate
+find that finetuning with human data were nearly as effective                 the impact of each (Figure 11), by testing robot-only HL+LL,
+as finetuning with in domain data from the target robot itself.               robot-only HL + cotrained LL, cotrained HL + robot-only LL
+However, we note that on the Bussing task, target robot data                  and cotrained HL+LL. We find that leveraging human data
+was more effective than human data alone (25% vs 65%).                        for only the HL or LL policy alone is not as effective as co-
+                                                                                   robot teleoperation data in pretraining, we ultimately only use
+                                                                                   10s of hours of human data, and this data is collected in an
+                                                                                   episodic manner. We’re moving towards a future with vast
+                                                                                   datasets of embodied human data, which cover the episodic
+                                                                                   collection like in this work, but also passive data of people
+                                                                                   performing everyday tasks. There is additional work to be
+                                                                                   done to effectively leverage this data during pre-training, but
+                                                                                   we believe our work lays the groundwork to train VLAs with
+                                                                                   human data at scale.
+                                                                                      Our findings on the emergence of human-to-robot transfer
+                                                                                   point to a promising future for scaling vision-language-action
+Fig. 12: Human worn wrist cameras: We see that wrist cameras provide               models. Much like large language models, larger VLAs may
+benefit for the Dresser and Bussing tasks and had similar performance              not only improve performance but also unlock entirely new
+elsewhere. This matches our intuition that some (but not all) tasks will benefit   capabilities. These capabilities could make it easier to tap
+from the added observability of wrist cameras.
+                                                                                   into previously hard-to-use data sources and enable more
+                                                                                   effective transfer across domains—ultimately allowing robotic
+training both with human data, suggesting that transfer occurs                     foundation models to scale even further. Using human video
+across both levels.                                                                may be just one such capability, and it’s exciting to imagine
+   When we only leverage human data for the HL policy,                             what others might emerge as we continue to scale up robotic
+the low level policies don’t follow commands correctly. For                        foundation models.
+instance in the spice task we observe a failure mode where
+“pick up the spice bottle” is misinterpreted by the low level                                         ACKNOWLEDGEMENTS
+policy to pick up bottles that are already on the tray. Or in the
+dresser task, when the HL says to ”put the necklace in the                            We thank our robot operators for data collection, eval-
+jewelry box”, it sometimes puts it in the dresser organizer.                       uations, logistics, and video recording, and our technicians
+   Likewise, when we only leverage human data for LL policy,                       for robot maintenance and repair. We’d like to thank Hunter
+we get poor HL policy commands. For instance in spice the                          Hancock for extensive support on the blog post. We also
+high level policy continues to predict “pick up spice bottle”                      thank Brian Ichter, Karol Hausman, and the entire Physical
+long after the bottle has been picked, blocking task progress.                     Intelligence team for feedback throughout the project.
+And in dresser the HL policy often predicts incorrect
+actions, like “put the hair clip on the top of the dresser” instead                                        R EFERENCES
+of correctly predicting to put it in the organizer.                                 [1] AgiBot-World-Contributors, Qingwen Bu, Jisong Cai,
+                                                                                        Li Chen, Xiuqi Cui, Yan Ding, Siyuan Feng, Shenyuan
+F. How important are the human worn wrist cameras?
+                                                                                        Gao, Xindong He, Xuan Hu, Xu Huang, Shu Jiang,
+   To help mitigate the sensor gap between human and robot,                             Yuxin Jiang, Cheng Jing, Hongyang Li, Jialu Li, Chiming
+we opted towards collecting human data with small wrist-worn                            Liu, Yi Liu, Yuxiang Lu, Jianlan Luo, Ping Luo, Yao
+cameras, to mimic the wrist cameras on our robot arms. We                               Mu, Yuehan Niu, Yixuan Pan, Jiangmiao Pang, Yu Qiao,
+seek to understand their importance, since it has implications                          Guanghui Ren, Cheng Ruan, Jiaqi Shan, Yongjian Shen,
+on how to sensorize humans for large scale data collection.                             Chengshi Shi, Mingkang Shi, Modi Shi, Chonghao Sima,
+We report transfer results with and without wrist camera                                Jianheng Song, Huijie Wang, Wenhao Wang, Dafeng
+observations for the human video data in Figure 12. For some                            Wei, Chengen Xie, Guo Xu, Junchi Yan, Cunbiao Yang,
+tasks like Bussing and Dresser we see improved transfer                                 Lei Yang, Shukai Yang, Maoqing Yao, Jia Zeng, Chi
+from leveraging the human worn wrist cameras, while in other                            Zhang, Qinglin Zhang, Bin Zhao, Chengyue Zhao, Jiaqi
+tasks like Spice and Eggs, transfer does not benefit from                               Zhao, and Jianchao Zhu. Agibot world colosseo: A large-
+the additional camera streams. This matches our expectations,                           scale manipulation platform for scalable and intelligent
+since some tasks rely on wrist cameras for observability more                           embodied systems. arXiv preprint arXiv:2503.06669,
+than others. As a result of these experiments, we expect that                           2025.
+collecting embodied human data with wrist worn cameras                              [2] Shikhar Bahl, Abhinav Gupta, and Deepak Pathak.
+maximally covers the space of potential tasks.                                          Human-to-robot imitation in the wild. arXiv preprint
+                                                                                        arXiv:2207.09450, 2022.
+              VI. D ISCUSSION AND F UTURE W ORK                                     [3] Shikhar Bahl, Russell Mendonca, Lili Chen, Unnat Jain,
+   We study the emergence of human to robot transfer in our                             and Deepak Pathak. Affordances from human videos as
+proposed recipe π0.5 + ego. We find that with limited pretrain-                         a versatile representation for robotics. In Proceedings
+ing diversity, VLAs fail to transfer knowledge from human                               of the IEEE/CVF Conference on Computer Vision and
+data, but as pretraining diversity grows past a critical threshold,                     Pattern Recognition (CVPR), pages 13778–13790, June
+transfer emerges. While our recipes leverage vast datasets of                           2023.
+ [4] Suneel Belkhale and Dorsa Sadigh. Minivla: A better vla         and Ranjay Krishna. Ar2-d2:training a robot without a
+     with a smaller footprint, 2024. URL https://github.com/         robot, 2023. URL https://arxiv.org/abs/2306.13818.
+     Stanford-ILIAD/openvla-mini.                               [16] Frederik Ebert, Yanlai Yang, Karl Schmeckpeper,
+ [5] Homanga Bharadhwaj, Roozbeh Mottaghi, Abhinav                   Bernadette Bucher, Georgios Georgakis, Kostas Dani-
+     Gupta, and Shubham Tulsiani. Track2act: Predicting              ilidis, Chelsea Finn, and Sergey Levine. Bridge data:
+     point tracks from internet videos enables generalizable         Boosting generalization of robotic skills with cross-
+     robot manipulation, 2024. URL https://arxiv.org/abs/            domain datasets. arXiv preprint arXiv:2109.13396, 2021.
+     2405.01527.                                                [17] Jakob Engel, Kiran Somasundaram, Michael Goesele,
+ [6] Homanga Bharadhwaj, Jay Vakil, Mohit Sharma, Ab-                Albert Sun, Alexander Gamino, Andrew Turner, Ar-
+     hinav Gupta, Shubham Tulsiani, and Vikash Kumar.                jang Talattof, Arnie Yuan, Bilal Souti, Brighid Mered-
+     Roboagent: Generalization and efficiency in robot manip-        ith, Cheng Peng, Chris Sweeney, Cole Wilson, Dan
+     ulation via semantic augmentations and action chunking.         Barnes, Daniel DeTone, David Caruso, Derek Valleroy,
+     In 2024 IEEE International Conference on Robotics and           Dinesh Ginjupalli, Duncan Frost, Edward Miller, Elias
+     Automation (ICRA), pages 4788–4795. IEEE, 2024.                 Mueggler, Evgeniy Oleinik, Fan Zhang, Guruprasad So-
+ [7] Johan Bjorck, Fernando Castañeda, Nikita Cherniadev,           masundaram, Gustavo Solaira, Harry Lanaras, Henry
+     Xingye Da, Runyu Ding, Linxi Fan, Yu Fang, Dieter Fox,          Howard-Jenkins, Huixuan Tang, Hyo Jin Kim, Jaime
+     Fengyuan Hu, Spencer Huang, et al. Gr00t n1: An open            Rivera, Ji Luo, Jing Dong, Julian Straub, Kevin Bai-
+     foundation model for generalist humanoid robots. arXiv          ley, Kevin Eckenhoff, Lingni Ma, Luis Pesqueira, Mark
+     preprint arXiv:2503.14734, 2025.                                Schwesinger, Maurizio Monge, Nan Yang, Nick Charron,
+ [8] Kevin Black, Noah Brown, Danny Driess, Adnan Es-                Nikhil Raina, Omkar Parkhi, Peter Borschowa, Pierre
+     mail, Michael Equi, Chelsea Finn, Niccolo Fusai,                Moulon, Prince Gupta, Raul Mur-Artal, Robbie Penning-
+     Lachy Groom, Karol Hausman, Brian Ichter, Szymon                ton, Sachin Kulkarni, Sagar Miglani, Santosh Gondi,
+     Jakubczak, Tim Jones, Liyiming Ke, Sergey Levine,               Saransh Solanki, Sean Diener, Shangyi Cheng, Simon
+     Adrian Li-Bell, Mohith Mothukuri, Suraj Nair, Karl              Green, Steve Saarinen, Suvam Patra, Tassos Mourikis,
+     Pertsch, Lucy Xiaoyang Shi, James Tanner, Quan Vuong,           Thomas Whelan, Tripti Singh, Vasileios Balntas, Vijay
+     Anna Walling, Haohuan Wang, and Ury Zhilinsky. π0 :             Baiyya, Wilson Dreewes, Xiaqing Pan, Yang Lou, Yipu
+     A vision-language-action flow model for general robot           Zhao, Yusuf Mansour, Yuyang Zou, Zhaoyang Lv, Zi-
+     control. arXiv preprint arXiv:2410.24164, 2024.                 jian Wang, Mingfei Yan, Carl Ren, Renzo De Nardi,
+ [9] Annie S Chen, Suraj Nair, and Chelsea Finn. Learn-              and Richard Newcombe. Project aria: A new tool
+     ing generalizable robotic reward functions from” in-the-        for egocentric multi-modal ai research, 2023. URL
+     wild” human videos. RSS, 2021.                                  https://arxiv.org/abs/2308.13561.
+[10] Cheng Chi, Zhenjia Xu, Chuer Pan, Eric Cousineau,          [18] Hao-Shu Fang, Hongjie Fang, Zhenyu Tang, Jirong Liu,
+     Benjamin Burchfiel, Siyuan Feng, Russ Tedrake, and              Chenxi Wang, Junbo Wang, Haoyi Zhu, and Cewu Lu.
+     Shuran Song. Universal manipulation interface: In-              Rh20t: A comprehensive robotic dataset for learning
+     the-wild robot teaching without in-the-wild robots. In          diverse skills in one-shot. In 2024 IEEE International
+     Proceedings of Robotics: Science and Systems (RSS),             Conference on Robotics and Automation (ICRA), pages
+     2024.                                                           653–660. IEEE, 2024.
+[11] Sudeep Dasari, Frederik Ebert, Stephen Tian, Suraj Nair,   [19] Kristen Grauman, Andrew Westbury, Eugene Byrne,
+     Bernadette Bucher, Karl Schmeckpeper, Siddharth Singh,          Zachary Chavis, Antonino Furnari, Rohit Girdhar, Jack-
+     Sergey Levine, and Chelsea Finn. Robonet: Large-scale           son Hamburger, Hao Jiang, Miao Liu, Xingyu Liu, et al.
+     multi-robot learning. CoRL, 2019.                               Ego4d: Around the world in 3,000 hours of egocentric
+[12] Ria Doshi, Homer Walke, Oier Mees, Sudeep Dasari,               video. In Proceedings of the IEEE/CVF Conference on
+     and Sergey Levine. Scaling cross-embodied learning:             Computer Vision and Pattern Recognition, pages 18995–
+     One policy for manipulation, navigation, locomotion and         19012, 2022.
+     aviation. In Conference on Robot Learning, 2024.           [20] Physical Intelligence, Kevin Black, Noah Brown, James
+[13] Danny Driess, Fei Xia, Mehdi SM Sajjadi, Corey Lynch,           Darpinian, Karan Dhabalia, Danny Driess, Adnan Es-
+     Aakanksha Chowdhery, Brian Ichter, Ayzaan Wahid,                mail, Michael Equi, Chelsea Finn, Niccolo Fusai,
+     Jonathan Tompson, Quan Vuong, Tianhe Yu, et al. Palm-           Manuel Y. Galliker, Dibya Ghosh, Lachy Groom, Karol
+     e: An embodied multimodal language model. arXiv                 Hausman, Brian Ichter, Szymon Jakubczak, Tim Jones,
+     preprint arXiv:2303.03378, 2023.                                Liyiming Ke, Devin LeBlanc, Sergey Levine, Adrian
+[14] Danny Driess, Jost Tobias Springenberg, Brian Ichter,           Li-Bell, Mohith Mothukuri, Suraj Nair, Karl Pertsch,
+     Lili Yu, Adrian Li-Bell, Karl Pertsch, Allen Z Ren,             Allen Z. Ren, Lucy Xiaoyang Shi, Laura Smith, Jost To-
+     Homer Walke, Quan Vuong, Lucy Xiaoyang Shi, et al.              bias Springenberg, Kyle Stachowicz, James Tanner, Quan
+     Knowledge insulating vision-language-action models:             Vuong, Homer Walke, Anna Walling, Haohuan Wang,
+     Train fast, run fast, generalize better. NeurIPS, 2025.         Lili Yu, and Ury Zhilinsky. π0.5 : a vision-language-
+[15] Jiafei Duan, Yi Ru Wang, Mohit Shridhar, Dieter Fox,            action model with open-world generalization, 2025. URL
+     https://arxiv.org/abs/2504.16054.                                arXiv:2403.03181, 2024.
+[21] Tao Jiang, Tianyuan Yuan, Yicheng Liu, Chenhao Lu,          [27] Marion Lepert, Jiaying Fang, and Jeannette Bohg. Phan-
+     Jianning Cui, Xiao Liu, Shuiqi Cheng, Jiyang Gao,                tom: Training robots without robots using only human
+     Huazhe Xu, and Hang Zhao. Galaxea open-world                     videos, 2025. URL https://arxiv.org/abs/2503.00779.
+     dataset and g0 dual-system vla model. arXiv preprint        [28] Vincent Liu, Ademi Adeniji, Haotian Zhan, Siddhant
+     arXiv:2509.00576, 2025.                                          Haldar, Raunaq Bhirangi, Pieter Abbeel, and Lerrel
+[22] Simar Kareer, Dhruv Patel, Ryan Punamiya, Pranay                 Pinto. Egozero: Robot learning from smart glasses, 2025.
+     Mathur, Shuo Cheng, Chen Wang, Judy Hoffman, and                 URL https://arxiv.org/abs/2505.20290.
+     Danfei Xu. Egomimic: Scaling imitation learning via         [29] Yecheng Jason Ma, Shagun Sodhani, Dinesh Jayaraman,
+     egocentric video, 2024. URL https://arxiv.org/abs/2410.          Osbert Bastani, Vikash Kumar, and Amy Zhang. Vip:
+     24221.                                                           Towards universal visual reward and representation via
+[23] Alexander Khazatsky, Karl Pertsch, Suraj Nair, Ash-              value-implicit pre-training. In The Eleventh International
+     win Balakrishna, Sudeep Dasari, Siddharth Karam-                 Conference on Learning Representations, 2022.
+     cheti, Soroush Nasiriany, Mohan Kumar Srirama,              [30] Arjun Majumdar, Karmesh Yadav, Sergio Arnaud,
+     Lawrence Yunliang Chen, Kirsty Ellis, Peter David                Yecheng Jason Ma, Claire Chen, Sneha Silwal, Aryan
+     Fagan, Joey Hejna, Masha Itkina, Marion Lepert,                  Jain, Vincent-Pierre Berges, Pieter Abbeel, Jitendra Ma-
+     Yecheng Jason Ma, Patrick Tree Miller, Jimmy Wu,                 lik, Dhruv Batra, Yixin Lin, Oleksandr Maksymets, Ar-
+     Suneel Belkhale, Shivin Dass, Huy Ha, Arhan Jain, Abra-          avind Rajeswaran, and Franziska Meier. Where are we
+     ham Lee, Youngwoon Lee, Marius Memmel, Sungjae                   in the search for an artificial visual cortex for embodied
+     Park, Ilija Radosavovic, Kaiyuan Wang, Albert Zhan,              intelligence? 2023.
+     Kevin Black, Cheng Chi, Kyle Beltran Hatch, Shan            [31] Suraj Nair, Aravind Rajeswaran, Vikash Kumar, Chelsea
+     Lin, Jingpei Lu, Jean Mercat, Abdul Rehman, Pan-                 Finn, and Abhinav Gupta. R3m: A universal visual
+     nag R Sanketi, Archit Sharma, Cody Simpson, Quan                 representation for robot manipulation. In CoRL, 2022.
+     Vuong, Homer Rich Walke, Blake Wulfe, Ted Xiao,             [32] Octo Model Team, Dibya Ghosh, Homer Walke, Karl
+     Jonathan Heewon Yang, Arefeh Yavary, Tony Z. Zhao,               Pertsch, Kevin Black, Oier Mees, Sudeep Dasari, Joey
+     Christopher Agia, Rohan Baijal, Mateo Guaman Cas-                Hejna, Charles Xu, Jianlan Luo, Tobias Kreiman, You
+     tro, Daphne Chen, Qiuyu Chen, Trinity Chung, Jaimyn              Liang Tan, Pannag Sanketi, Quan Vuong, Ted Xiao,
+     Drake, Ethan Paul Foster, Jensen Gao, David Antonio              Dorsa Sadigh, Chelsea Finn, and Sergey Levine. Octo:
+     Herrera, Minho Heo, Kyle Hsu, Jiaheng Hu, Donovon                An open-source generalist robot policy. In Proceedings of
+     Jackson, Charlotte Le, Yunshuang Li, Kevin Lin, Roy              Robotics: Science and Systems, Delft, Netherlands, 2024.
+     Lin, Zehan Ma, Abhiram Maddukuri, Suvir Mirchandani,        [33] Open X-Embodiment Collaboration, Abhishek Padalkar,
+     Daniel Morton, Tony Nguyen, Abigail O’Neill, Rosario             Acorn Pooley, Ajinkya Jain, Alex Bewley, Alex Her-
+     Scalise, Derick Seale, Victor Son, Stephen Tian, Emi             zog, Alex Irpan, Alexander Khazatsky, Anant Rai,
+     Tran, Andrew E. Wang, Yilin Wu, Annie Xie, Jingyun               Anikait Singh, Anthony Brohan, Antonin Raffin, Ayzaan
+     Yang, Patrick Yin, Yunchu Zhang, Osbert Bastani, Glen            Wahid, Ben Burgess-Limerick, Beomjoon Kim, Bern-
+     Berseth, Jeannette Bohg, Ken Goldberg, Abhinav Gupta,            hard Schölkopf, Brian Ichter, Cewu Lu, Charles Xu,
+     Abhishek Gupta, Dinesh Jayaraman, Joseph J Lim, Ji-              Chelsea Finn, Chenfeng Xu, Cheng Chi, Chenguang
+     tendra Malik, Roberto Martı́n-Martı́n, Subramanian Ra-           Huang, Christine Chan, Chuer Pan, Chuyuan Fu, Coline
+     mamoorthy, Dorsa Sadigh, Shuran Song, Jiajun Wu,                 Devin, Danny Driess, Deepak Pathak, Dhruv Shah, Di-
+     Michael C. Yip, Yuke Zhu, Thomas Kollar, Sergey                  eter Büchler, Dmitry Kalashnikov, Dorsa Sadigh, Edward
+     Levine, and Chelsea Finn. Droid: A large-scale in-               Johns, Federico Ceola, Fei Xia, Freek Stulp, Gaoyue
+     the-wild robot manipulation dataset. In Proceedings of           Zhou, Gaurav S. Sukhatme, Gautam Salhotra, Ge Yan,
+     Robotics: Science and Systems, 2024.                             Giulio Schiavi, Hao Su, Hao-Shu Fang, Haochen Shi,
+[24] Moo Jin Kim, Karl Pertsch, Siddharth Karamcheti, Ted             Heni Ben Amor, Henrik I Christensen, Hiroki Furuta,
+     Xiao, Ashwin Balakrishna, Suraj Nair, Rafael Rafailov,           Homer Walke, Hongjie Fang, Igor Mordatch, Ilija Ra-
+     Ethan Foster, Grace Lam, Pannag Sanketi, et al. Openvla:         dosavovic, Isabel Leal, Jacky Liang, Jaehyung Kim,
+     An open-source vision-language-action model. arXiv               Jan Schneider, Jasmine Hsu, Jeannette Bohg, Jeffrey
+     preprint arXiv:2406.09246, 2024.                                 Bingham, Jiajun Wu, Jialin Wu, Jianlan Luo, Jiayuan
+[25] Jason Lee, Jiafei Duan, Haoquan Fang, Yuquan Deng,               Gu, Jie Tan, Jihoon Oh, Jitendra Malik, Jonathan Tomp-
+     Shuo Liu, Boyang Li, Bohan Fang, Jieyu Zhang, Yi Ru              son, Jonathan Yang, Joseph J. Lim, João Silvério, Jun-
+     Wang, Sangho Lee, et al. Molmoact: Action reasoning              hyek Han, Kanishka Rao, Karl Pertsch, Karol Hausman,
+     models that can reason in space, 2025. URL https://arxiv.        Keegan Go, Keerthana Gopalakrishnan, Ken Goldberg,
+     org/abs/2508.07917, 2025.                                        Kendra Byrne, Kenneth Oslund, Kento Kawaharazuka,
+[26] Seungjae Lee, Yibin Wang, Haritheja Etukuru, H. Jin              Kevin Zhang, Keyvan Majd, Krishan Rana, Krishnan
+     Kim, Nur Muhammad Mahi Shafiullah, and Lerrel Pinto.             Srinivasan, Lawrence Yunliang Chen, Lerrel Pinto, Liam
+     Behavior generation with latent actions. arXiv preprint          Tan, Lionel Ott, Lisa Lee, Masayoshi Tomizuka, Max-
+     imilian Du, Michael Ahn, Mingtong Zhang, Mingyu                generalist embodied agents: Methods and lessons. arXiv
+     Ding, Mohan Kumar Srirama, Mohit Sharma, Moo Jin               preprint arXiv:2412.08442, 2024.
+     Kim, Naoaki Kanazawa, Nicklas Hansen, Nicolas Heess,      [41] Tony Tao, Mohan Kumar Srirama, Jason Jingzhou Liu,
+     Nikhil J Joshi, Niko Suenderhauf, Norman Di Palo,              Kenneth Shaw, and Deepak Pathak. Dexwild: Dexterous
+     Nur Muhammad Mahi Shafiullah, Oier Mees, Oliver                human interactions for in-the-wild robot policies, 2025.
+     Kroemer, Pannag R Sanketi, Paul Wohlhart, Peng Xu,             URL https://arxiv.org/abs/2505.07813.
+     Pierre Sermanet, Priya Sundaresan, Quan Vuong, Rafael     [42] Gemini Robotics Team, Saminda Abeyruwan, Joshua
+     Rafailov, Ran Tian, Ria Doshi, Roberto Martı́n-Martı́n,        Ainslie, Jean-Baptiste Alayrac, Montserrat Gonzalez
+     Russell Mendonca, Rutav Shah, Ryan Hoque, Ryan Ju-             Arenas, Travis Armstrong, Ashwin Balakrishna, Robert
+     lian, Samuel Bustamante, Sean Kirmani, Sergey Levine,          Baruch, Maria Bauza, Michiel Blokzijl, et al. Gemini
+     Sherry Moore, Shikhar Bahl, Shivin Dass, Shuran Song,          robotics: Bringing ai into the physical world. arXiv
+     Sichun Xu, Siddhant Haldar, Simeon Adebola, Simon              preprint arXiv:2503.20020, 2025.
+     Guist, Soroush Nasiriany, Stefan Schaal, Stefan Welker,   [43] Laurens van der Maaten and Geoffrey Hinton. Visu-
+     Stephen Tian, Sudeep Dasari, Suneel Belkhale, Takayuki         alizing data using t-sne. Journal of Machine Learning
+     Osa, Tatsuya Harada, Tatsuya Matsushima, Ted Xiao,             Research, 9(86):2579–2605, 2008. URL http://jmlr.org/
+     Tianhe Yu, Tianli Ding, Todor Davchev, Tony Z. Zhao,           papers/v9/vandermaaten08a.html.
+     Travis Armstrong, Trevor Darrell, Vidhi Jain, Vincent     [44] Homer Rich Walke, Kevin Black, Tony Z Zhao, Quan
+     Vanhoucke, Wei Zhan, Wenxuan Zhou, Wolfram Bur-                Vuong, Chongyi Zheng, Philippe Hansen-Estruch, An-
+     gard, Xi Chen, Xiaolong Wang, Xinghao Zhu, Xuanlin             dre Wang He, Vivek Myers, Moo Jin Kim, Max Du,
+     Li, Yao Lu, Yevgen Chebotar, Yifan Zhou, Yifeng Zhu,           et al. BridgeData v2: A dataset for robot learning at
+     Ying Xu, Yixuan Wang, Yonatan Bisk, Yoonyoung Cho,             scale. In Conference on Robot Learning, pages 1723–
+     Youngwoon Lee, Yuchen Cui, Yueh hua Wu, Yujin Tang,            1736. PMLR, 2023.
+     Yuke Zhu, Yunzhu Li, Yusuke Iwasawa, Yutaka Matsuo,       [45] Chen Wang, Linxi Fan, Jiankai Sun, Ruohan Zhang,
+     Zhuo Xu, and Zichen Jeff Cui. Open X-Embodiment:               Li Fei-Fei, Danfei Xu, Yuke Zhu, and Anima Anand-
+     Robotic learning datasets and RT-X models. https:              kumar. Mimicplay: Long-horizon imitation learning by
+     //arxiv.org/abs/2310.08864, 2023.                              watching human play, 2023. URL https://arxiv.org/abs/
+[34] Younghyo Park, Jagdeep Singh Bhatia, Lars Ankile, and          2302.12422.
+     Pulkit Agrawal. Dexhub and dart: Towards internet scale   [46] Chen Wang, Haochen Shi, Weizhuo Wang, Ruohan
+     robot data collection, 2024. URL https://arxiv.org/abs/        Zhang, Li Fei-Fei, and C. Karen Liu. Dexcap: Scalable
+     2411.02214.                                                    and portable mocap data collection system for dexter-
+[35] Karl Pertsch, Kyle Stachowicz, Brian Ichter, Danny             ous manipulation, 2024. URL https://arxiv.org/abs/2403.
+     Driess, Suraj Nair, Quan Vuong, Oier Mees, Chelsea             07788.
+     Finn, and Sergey Levine. FAST: Efficient action tok-      [47] Jason Wei, Maarten Bosma, Vincent Y Zhao, Kelvin
+     enization for vision-language-action models. Robotics:         Guu, Adams Wei Yu, Brian Lester, Nan Du, Andrew M
+     Science and Systems, 2025.                                     Dai, and Quoc V Le. Finetuned language models are
+[36] Ryan Punamiya, Dhruv Patel, Patcharapong Aphiwetsa,            zero-shot learners. arXiv preprint arXiv:2109.01652,
+     Pranav Kuppili, Lawrence Y. Zhu, Simar Kareer, Judy            2021.
+     Hoffman, and Danfei Xu. Egobridge: Domain adaptation      [48] Jason Wei, Yi Tay, Rishi Bommasani, Colin Raffel, Bar-
+     for generalizable imitation from egocentric human data,        ret Zoph, Sebastian Borgeaud, Dani Yogatama, Maarten
+     2025. URL https://arxiv.org/abs/2509.19626.                    Bosma, Denny Zhou, Donald Metzler, et al. Emer-
+[37] Ri-Zhao Qiu, Shiqi Yang, Xuxin Cheng, Chaitanya                gent abilities of large language models. arXiv preprint
+     Chawla, Jialong Li, Tairan He, Ge Yan, David J. Yoon,          arXiv:2206.07682, 2022.
+     Ryan Hoque, Lars Paulsen, Ge Yang, Jian Zhang, Sha Yi,    [49] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
+     Guanya Shi, and Xiaolong Wang. Humanoid policy hu-             Bosma, Fei Xia, Ed Chi, Quoc V Le, Denny Zhou,
+     man policy, 2025. URL https://arxiv.org/abs/2503.13441.        et al. Chain-of-thought prompting elicits reasoning in
+[38] Nur Muhammad Mahi Shafiullah, Anant Rai, Haritheja             large language models. Advances in neural information
+     Etukuru, Yiqian Liu, Ishan Misra, Soumith Chintala, and        processing systems, 35:24824–24837, 2022.
+     Lerrel Pinto. On bringing robots home. arXiv preprint     [50] Junjie Wen, Yichen Zhu, Jinming Li, Minjie Zhu, Kun
+     arXiv:2311.16098, 2023.                                        Wu, Zhiyuan Xu, Ning Liu, Ran Cheng, Chaomin
+[39] Shuran Song, Andy Zeng, Johnny Lee, and Thomas                 Shen, Yaxin Peng, Feifei Feng, and Jian Tang.
+     Funkhouser. Grasping in the wild: Learning 6dof closed-        Tinyvla: Towards fast, data-efficient vision-language-
+     loop grasping from low-cost demonstrations. IEEE               action models for robotic manipulation. arXiv preprint
+     Robotics and Automation Letters, 2020.                         arXiv:2409.12514, 2024.
+[40] Andrew Szot, Bogdan Mazoure, Omar Attia, Aleksei          [51] Junjie Wen, Yichen Zhu, Jinming Li, Zhibin Tang,
+     Timofeev, Harsh Agrawal, Devon Hjelm, Zhe Gan, Zsolt           Chaomin Shen, and Feifei Feng.         Dexvla: Vision-
+     Kira, and Alexander Toshev. From multimodal llms to            language model with plug-in diffusion expert for general
+     robot control. arXiv preprint arXiv:2502.05855, 2025.
+[52] Mengda Xu, Han Zhang, Yifan Hou, Zhenjia Xu, Linxi
+     Fan, Manuela Veloso, and Shuran Song. Dexumi: Using
+     human hand as the universal manipulation interface for
+     dexterous manipulation, 2025. URL https://arxiv.org/abs/
+     2505.21864.
+[53] Jonathan Yang, Catherine Glossop, Arjun Bhorkar,
+     Dhruv Shah, Quan Vuong, Chelsea Finn, Dorsa Sadigh,
+     and Sergey Levine.        Pushing the limits of cross-
+     embodiment learning for manipulation and navigation.
+     arXiv preprint arXiv:2402.19432, 2024.
+[54] Ruihan Yang, Qinxi Yu, Yecheng Wu, Rui Yan, Borui
+     Li, An-Chieh Cheng, Xueyan Zou, Yunhao Fang, Xuxin
+     Cheng, Ri-Zhao Qiu, Hongxu Yin, Sifei Liu, Song Han,
+     Yao Lu, and Xiaolong Wang. Egovla: Learning vision-
+     language-action models from egocentric human videos,
+     2025. URL https://arxiv.org/abs/2507.12440.
+[55] Seonghyeon Ye, Joel Jang, Byeongguk Jeon, Sejune Joo,
+     Jianwei Yang, Baolin Peng, Ajay Mandlekar, Reuben
+     Tan, Yu-Wei Chao, Bill Yuchen Lin, et al.            La-
+     tent action pretraining from videos. arXiv preprint
+     arXiv:2410.11758, 2024.
+[56] Sarah Young, Dhiraj Gandhi, Shubham Tulsiani, Abhinav
+     Gupta, Pieter Abbeel, and Lerrel Pinto. Visual imitation
+     made easy. In Conference on Robot learning, pages
+     1992–2005. PMLR, 2021.
+[57] Haoyu Zhen, Xiaowen Qiu, Peihao Chen, Jincheng Yang,
+     Xin Yan, Yilun Du, Yining Hong, and Chuang Gan. 3d-
+     vla: 3d vision-language-action generative world model.
+     arXiv preprint arXiv:2403.09631, 2024.
+[58] Jinliang Zheng, Jianxiong Li, Zhihao Wang, Dongxiu
+     Liu, Xirui Kang, Yuchun Feng, Yinan Zheng, Jiayin Zou,
+     Yilun Chen, Jia Zeng, et al. X-vla: Soft-prompted trans-
+     former as scalable cross-embodiment vision-language-
+     action model. arXiv preprint arXiv:2510.10274, 2025.
+[59] Lawrence Y. Zhu, Pranav Kuppili, Ryan Punamiya,
+     Patcharapong Aphiwetsa, Dhruv Patel, Simar Kareer,
+     Sehoon Ha, and Danfei Xu. Emma: Scaling mobile
+     manipulation via egocentric human data, 2025. URL
+     https://arxiv.org/abs/2509.04443.
+[60] Brianna Zitkovich, Tianhe Yu, Sichun Xu, Peng Xu,
+     Ted Xiao, Fei Xia, Jialin Wu, Paul Wohlhart, Stefan
+     Welker, Ayzaan Wahid, et al. Rt-2: Vision-language-
+     action models transfer web knowledge to robotic control.
+     In Conference on Robot Learning, pages 2165–2183.
+     PMLR, 2023.
+Fig. 13: per task scaling graphs: Across all tasks we see a clear upward trend in the efficacy of finetuning with human data as pretrained diversity increases.
+In Eggs we observe that despite pretraining diversity increasing, the model fails to generalize to this OOD task (blue line), but improves significantly with
+in-distribution human embodiment data (yellow line).
+
+
+                               A PPENDIX                                         Eggs, performance quickly plateaus even with improved
+A. Transfer Benchmark Details                                                    pretraining. This tells us that increasing pretrained diversity
+                                                                                 generally improves zero shot generalization across tasks, but
+   Our human to robot transfer benchmark consists of 4 tasks,                    it can be nonlinear.
+each testing a concept shown only in human data.                                    Interestingly, across these tasks there are points in which
+   Bussing: The robot begins with nine kitchen items on a                        the zero shot generalization and transferability from human
+table, and must place each item in either the trash can or the                   data (yellow Human + Robot curve) are not necessarily
+bussing bin. The robot earns one point for each item correctly                   correlated. For instance, with Spice 50%→75% we see
+bussed, and we normalize score between [0, 1].                                   a modest increase in zero shot generalization, but a large
+   Spice: A kitchen island is set with three randomly placed                     increase in transferability. Similarly for Dresser 75%→100%
+spice bottles and a spice rack. The robot earns a point if it                    or Eggs 50%→100%+X-emb we see no improvement in zero
+successfully places all spice bottles on the rack. This kitchen                  shot generalization, but a large increase in transfer from
+is unseen in robot data, but covered in human data.                              human data. In other words, there are cases where increased
+   Dresser: A bedroom dresser is set with a necklace and                         pretraining diversity doesn’t improve zero shot generalization,
+hair clip. The robot earns a point by correctly putting the                      but it does improve human to robot transfer.
+necklace in the jewelry box and the hair clip in the accessories
+organizer. This bedroom is unseen in robot data, but covered                     C. TSNE Visualization
+in human data.                                                                      To visualize how the model represents the human and robot
+   Sort Eggs: The table is set with two egg cartons (half                        data internally, we visualize the output embeddings of the VLA
+dozen each) and a bowl containing six white and six brown                        from human and robot data with a TSNE in Figure 5. Specifi-
+eggs. The robot scores one point for each white egg it places in                 cally, we pass observations from human and robot data through
+the left carton and brown egg in the right carton. An additional                 the co-finetuned VLA as input. We then mean-pool the first
+point is awarded for closing each egg carton shut at the end.                    200 output embeddings of the VLA (corresponding roughly to
+Scores are normalized [0, 1]. While the robot data covers                        “task”) and visualize them with the TSNE, capturing how well
+picking eggs, the concept of sorting eggs is only covered in                     the VLA aligns different observations from humans and robots
+human data.                                                                      to the same task. We observe this alignment visibly improves
+   For each experiment, we perform between 20 and 40                             with more diverse pre-training, even after all models have been
+evaluations. All error bars visualize 1 standard error.                          finetuned on the same data.
+
+B. Results Analysis
+   In the context of our experiments, performance improves
+as a function of two parameters, pretrained model diversity
+and human data finetuning. To help disentangle these factors,
+we can compare the robot-only and human+robot performance
+scaling curves.
+   First we can consider the zero shot generalization of our
+robot only model (blue robot-only curve). For tasks like
+Bussing and Spice, the zero shot generalization to these
+new tasks increases steadily with increased pretrained diver-
+sity. However, for Dresser zero shot generalization only
+emerges in the in our strongest pretrained model. And for
+

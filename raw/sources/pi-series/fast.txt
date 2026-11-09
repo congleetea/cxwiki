@@ -1,0 +1,237 @@
+Source: https://www.pi.website/research/fast
+Retrieved: 2026-11-06
+
+FAST: Efficient Robot Action Tokenization
+Physical Intelligence (π)
+Home
+Research
+Join Us
+FAST: Efficient Robot Action Tokenization
+Published
+January 16, 2025
+Email
+research@physicalintelligence.company
+Karl Pertsch, Kyle Stachowicz, Brian Ichter, Danny Driess, Suraj Nair, Quan Vuong, Oier Mees, Chelsea Finn, Sergey Levine
+Paper
+Hugging Face
+Most foundation models use the Transformer architecture, a sequence model that operates on discrete "tokens," which typically correspond to groups of letters or short words, image patches, or sound snippets.
+Transformers map input tokens (e.g., a question) to output tokens (e.g,. an answer), and any data that we can tokenize into discrete units can be processed by such a sequence model.
+However, the choice of tokenization can have a big impact on the
+effectiveness of downstream learning
+,
+and using a good tokenizer is essential for effective large-scale training.
+So what should we do if we want to train Transformers to control robots? In this case, the output is an "action chunk," a short sequence of robot actions (e.g., arm joint angles),
+which might range from 3-5 actions for crude systems all the way to 20-50 actions for high-frequency dexterous robots. Just like with language, representing these actions in the
+right way is essential for effective learning. Existing vision-language-action (VLA) models typically use simple discrete binning, where each dimension of each action step is
+represented with a discrete bin. This is passable for simple behaviors, but rapidly breaks down for more complex and dexterous skills that require precision and high-frequency control.
+As we will discuss in this post, this kind of binning technique simply fails to solve the kinds of complex, dexterous tasks that we are interested in at Physical Intelligence.
+Diffusion or flow matching tends to perform much better, as in the case of our
+π
+0
+model
+. But diffusion takes much longer to train. So how can we represent actions to be able to
+train Transformers for robotic control quickly while preserving dexterity and precision?
+Dexterous Robot Data
+UR5e
+Bimanual UR5e
+Franka
+Bimanual Trossen
+Bimanual Arx
+Mobile Trossen
+Mobile Fibocom
+π0-FAST Vision-Language-Action model
+Robot Action Sequences
+FAST Action Tokenizer
+Action Tokens
+T_1
+T_2
+T_3
+Fold shirt
+Autoregressive Transformer VLA
+Dexterous Robot Control
+Bus table
+Fold Laundry
+Bag groceries
+Remove toast
+Generalization to New Environments
+Berkeley Kitchen
+Berkeley Counter
+Stanford
+UW
+Our new action tokenizer, FAST, enables us to train generalist policies on highly dexterous tasks via simple next token prediction.
+To address this, we developed a new tokenizer designed specifically for actions, called FAST. FAST is inspired by continuous compression methods like the one used for JPEG images,
+handles high-frequency dexterous tasks that are impossible with standard binning-based discretization, and achieves similar levels of dexterity as flow matching or diffusion,
+while training 5 times faster. By representing actions via discrete tokens, just like language, FAST improves transfer from Internet-scale pretraining and improves language instruction following.
+For the first time it allowed us to train policies on the DROID dataset that can perform a range of manipulation tasks zero-shot in entirely new environments, simply by prompting them with natural language commands.
+To facilitate research on more capable robotic foundation models, we are releasing a general-purpose variant of the FAST tokenizer trained on 1M real robot action sequences.
+The FAST Robot Action Tokenizer
+1
+Normalized action chunk
+(first 2 dimensions displayed)
+Discrete Cosine Transform (DCT)
+2
+Frequency components
+(first 2 dimensions displayed)
+Quantize
+3
+124
+12
+-3
+0
+0
+0
+12
+-86
+0
+0
+0
+0
+0
+0
+344
+3
+1
+0
+0
+1
+5
+-45
+0
+0
+0
+0
+0
+0
+178
+15
+-1
+0
+0
+0
+-2
+Sparse frequency matrix
+(each dim = 1 row)
+Flatten
+Flatten
+4
+124
+-86
+344
+-45
+178
+12
+0
+3
+0
+15
+•••
+Low-frequency components first
+Byte Pair Encoding (BPE)
+5
+124
+-86
+978
+344
+-45
+233
+178
+12
+0
+19
+3
+0
+1022
+15
+•••
+1
+Compressed action tokens
+Our FAST tokenizer compresses action sequences using the discrete cosine transform (DCT). It results in a dense sequence of compressed action tokens.
+Our new action tokenization approach, FAST, improves over simple binning approaches by compressing the raw action chunks before training on them.
+It can drastically increase the efficiency of policy training and inference on dexterous robot data. Concretely, our tokenization approach relies on the discrete cosine transform (DCT),
+a technique commonly used for signal compression, for instance in JPEG or MP3 codecs. We combine DCT with byte pair encoding (BPE), a compression algorithm often used for training
+large language models. Together, they allow us to condense raw action chunks into a small number of dense action tokens, typically 30 to 60 per chunk,
+a 10x compression over prior action tokenization approaches.
+We tested our action tokenizer by combining FAST with the
+π
+0
+model
+. In contrast to prior discretized VLA models that were confined to simple manipulation tasks,
+FAST enables us to train autoregressive transformer policies on highly dexterous tasks, like folding laundry, bussing tables, and packing grocery bags.
+At the same time, FAST training is up to 5x faster than previous models. Below we show a number of tasks we can solve with our FAST policies.
+One of the things we were able to do with FAST is to train the first generalist
+policy on the recently released
+DROID
+dataset
+that could actually generalize to a
+variety of instructions in new environments. DROID is an open-source dataset of
+diverse robot manipulation tasks that was collected over the span of two years
+by a large consortium of robotics researchers from around the world. It
+contains a wide diversity of scenes and tasks, from university buildings to
+real households, but so far no method has managed to train a generalist policy
+on the full dataset that can follow language commands in zero shot in new
+environments. With FAST, we did just that -- below, you can see our policy in
+action! We sent it to collaborators at three US universities (UC Berkeley,
+Stanford, and the University of Washington), and the policy was able to perform
+simple manipulation tasks in all tested environments out of the box.
+Even when the policy failed on a task, it often made intuitive attempts at
+solving it (see below). While far from perfect, this gives a glimpse into a
+future where we can download and directly use generalist robot policies, just
+like we use language models today.
+Scaling Up
+π
+0
++ FAST (ours)
+π
+0
+Training with FAST is very efficient. Our generalist policy, π0-FAST, trains 5x faster than the original π0 model, and achieves similar performance.
+We also used the FAST tokenizer to train
+π
+0
+-FAST, our first autoregressive generalist policy. It builds on our previous
+π
+0
+model, and uses the same model backbone
+and training dataset.
+π
+0
+-FAST can solve the same complex and dexterous tasks as the standard diffusion-based
+π
+0
+model, but because it uses simple autoregressive
+discretization, it trains 5x faster. In our comparisons, standard discretization methods could not solve any of the dexterous tasks in our experimental repertoire.
+We are very excited about the prospects of autoregressive VLA training. One notable shortcoming of the current model is its inference speed:
+the autoregressive decoding of
+π
+0
+-FAST is significantly slower than the decoding via flow matching
+used by
+π
+0
+. While accelerating the inference of autoregressive VLAs is an open problem, there is a rich body of work on fast inference of autoregressive transformer models
+in other domains like language modeling, which can inspire solutions for VLAs.
+Using the FAST Tokenizer
+We are releasing a version of the FAST tokenizer that we trained on 1M real robot action sequences. This allows you to train your own policies using FAST. You can tokenize actions
+with only three lines of code:
+from
+transformers
+import
+AutoProcessor
+
+tokenizer = AutoProcessor.from_pretrained(
+"physical-intelligence/fast"
+, trust_remote_code=
+True
+)
+tokens = tokenizer(action_chunk)
+For more information about the tokenizer, and how to train a FAST tokenizer on your own data, please see the
+HuggingFace repo
+.
+Looking Forward
+With FAST, we developed an efficient approach for robot action tokenization that allows us to seamlessly connect robotics to modern autoregressive transformer training pipelines.
+Our experiments show that autoregressive policies like the ones we trained in this work allow us to use a simple recipe to solve some of the hardest robot tasks to date,
+while training significantly faster than existing models. At the same time, FAST demonstrated how small changes to the training pipeline of modern generalist policies can
+have major effects on training efficiency and performance, suggesting that there are likely many more changes that can improve policy training.
+At Physical Intelligence, we work towards a future with ubiquitous general physical intelligence. On the way, we are constructing the largest robot dataset in the world,
+and are developing new approaches to train better, more powerful, and more efficient generalist policies. If this is a mission that excites you,
+reach out
+!

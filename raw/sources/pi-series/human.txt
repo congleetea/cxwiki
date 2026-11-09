@@ -1,0 +1,176 @@
+Source: https://www.pi.website/research/human_to_robot
+Retrieved: 2026-11-06
+
+Emergence of Human to Robot Transfer in Vision-Language-Action Models
+Physical Intelligence (π)
+Home
+Research
+Join Us
+Emergence of Human to Robot Transfer in VLAs
+Published
+December 16, 2025
+Email
+research@physicalintelligence.company
+Simar Kareer, Karl Pertsch, James Darpinian, Judy Hoffman, Danfei Xu, Sergey Levine, Chelsea Finn, Suraj Nair
+Paper
+human_to_robot.pdf
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+HUMAN DATA
+DIVERSE AND LARGE SCALE ROBOT DATA
+NEW ROBOT CAPABILITIES
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+Loading…
+HUMAN DATA
+DIVERSE AND LARGE SCALE ROBOT DATA
+NEW ROBOT CAPABILITIES
+One of the most exciting (and perhaps controversial) phenomena in large language models is
+emergence
+. As models and datasets become bigger, some capabilities, such as in-context learning and effective chain-of-thought reasoning, begin to appear only above a particular scale. One of the things that can emerge at scale with LLMs is the ability to more effectively leverage data, both through compositionality and generalization, and by utilizing other data sources, such as synthetic data produced via RL. As we scale up foundation models, they become generalists that can soak up diverse data sources in ways that smaller models cannot. In this post, we’ll discuss some of our recent results showing that transfer from human videos to robotic tasks emerges in robotic foundation models as we scale up the amount of robot training data. Based on this finding, we developed a method for using ego-centric data from humans to improve our models, providing a roughly 2x improvement on tasks where robot data is limited.
+What do emergent capabilities look like in robotics?
+Modern vision-language-action (VLA) models like
+π
+0.5
+can achieve broad open world generalization by training on large and diverse datasets, which include many different robots and data from the web. Do these models acquire emergent capabilities to leverage new data sources as they are scaled up?
+We focus specifically on egocentric human videos as one such data source, which can be recorded by wearable cameras. This kind of data is easy to record, but using it to train robots presents a challenge, which is called a
+domain gap
+: humans and robots look different and move in different ways, and robots can't imitate humans directly. In recent research works, using such data typically required some sort of manual alignment, such as
+masking out parts of the image
+or even converting human hands into robot hands
+using generative models
+. Some methods even try to change the robot hardware to better align with human motions, such as by using humanoid robots. While these methods can be effective, what they gain in transferability, they tend to lose in generality.  We wanted to see if simply scaling up robotic foundation models could allow for emergent human to robot transfer without any explicit transfer learning mechanism.
+In our first experiment, we fine-tuned the full
+π
+0.5
+with human data. We use a simple human-robot co-finetuning recipe, where we treat human video data like our existing robot embodiments, with actions given by 3D hand positions, without any special transfer learning method. We combine the human data with the most relevant robot data and fine-tune on this mixture, then evaluate the policies on the specific settings illustrated only in the human demonstrations. For example, in the sorting eggs task, robot data covers placing eggs in cartons, while human data shows how differently colored eggs should be sorted across multiple cartons — the scenario used for evaluation. Similarly, for the dresser-tidying task, robot data spans diverse bedroom scenes, whereas human data shows how to arrange the target dresser in its specific scene, with items placed into appropriate containers (e.g., jewelry in the jewelry box, hair ties in the organizer).
+Human to Robot Transfer on Generalization Tasks
+Performance
+Performance
+1.0
+0.8
+0.6
+0.4
+0.2
+0.0
+Bussing
+Spice
+Dresser
+Eggs
+Average
+π
+0.5
+π
+0.5
++ Ego
+To our surprise, we found that this simple recipe actually works quite well: simply by including the human video data in fine-tuning, the performance of our policy went up by about 2x across a suite of 4 generalization scenarios present only in the human data.  This is surprising because we did not include any special mechanism to facilitate transfer. Simply using the pre-trained π0.5 model and co-training on the data we enabled
+emergent
+human to robot transfer. We found this same recipe could be extended to even more tasks, from organizing a toolbox to sorting fruit:
+Loading…
+But what made this work? Was it really the case that the pre-trained π0.5 was key to enabling this emergent transfer? We wanted to dig into this result more closely and understand how exactly the transfer of knowledge from human data relates to the diversity and scale of robot data used during pre-training of the robotic foundation model. That is, does the ability to effectively learn from human data emerge by scaling up robotic foundation model pre-training?
+To answer this question, we measured the robot’s performance on the scenarios demonstrated in the human data, comparing it to a policy without the human data. We see that the improvement in performance from adding human data
+increases as we scale up the pre-trained model
+.
+Absolute Performance Improvement from Human Data vs Pre-training Diversity
+Absolute Performance Improvement
+0.4
+0.3
+0.2
+0.1
+0.0
+0%
+25%
+50%
+75%
+100%
+100%
++ Xemb
+Pre-training Diversity
+bussing
+spice
+dresser
+eggs
+aggregate
+Sort Eggs by Color
+Performance
+0.6
+0.4
+0.2
+0.0
+0%
+25%
+50%
+75%
+100%
++Xemb
+Robot Finetuning
+Human + Robot Finetuning
+One particular instance where this is clearly evident is in the sorting eggs task, where we observe that scaling up pre-training stops improving the model fine-tuned without human videos after about 60% of the dataset, but still continues to improve performance when fine-tuning with human videos. That means that adding more
+robot
+data in pre-training actually improves the model’s ability to absorb
+human
+data in fine-tuning!
+To better understand why this happens, we can examine the representations that the models use for the images in the human and robot examples. Visualizations of the model features projected onto a 2D plot are shown below. For models with small-scale pre-training, or no pre-training at all (left, middle), we see that robot data and human data is represented with very different features, suggesting that the model has not successfully aligned human and robot examples. But when we scale up the pre-training dataset, we see that the features line up much better, indicating emergent human-robot alignment. Note that pre-training uses
+robot data
+, the human data is seen only in fine-tuning and does not change between the different models. The emergent human-robot alignment stems only from the increase in the quantity and diversity of robot data from other tasks.
+Pretraining diversity.
+We plot the latent embeddings of our VLA by performing a TSNE analysis on mean-pooled tokens from the final layer of the VLM backbone. With no pre-training, it is clear that the model has disjoint representations between human and robot data. But as pretraining becomes more diverse, latent overlap increases, which correlates with performance on our generalization tasks.
+Static Robot Data
+Static Human Data
+-40
+-30
+-20
+-10
+0
+10
+20
+30
+-40
+-20
+0
+20
+40
+60
+0% Pre-training
+50% Pre-training
+100% + Xemb Pre-training
+What will the next generation of VLAs unlock?
+Our finding on the emergence of human to robot transfer paints a promising picture for scaling up vision-language-action models. These results suggest that, as with large language models, scaling up VLAs might lead not only to better performance, but also to new capabilities. These capabilities could enable leveraging new, previously hard-to-use data sources and provide for more effective transfer across domains, which in turn would allow scaling up robotic foundation models
+even more
+. Effectively using human video might represent just one of many such capabilities, and it’s exciting to imagine what new capabilities might be unlocked as we continue to scale up our robotic foundation models.
+If you are interested in collaborating, please
+reach out
+. We are particularly excited to work with companies scaling up data collection with robots deployed for real-world applications, who are looking to collaborate on autonomy.
+We are also hiring! If you'd be interested in
+joining us
+please get in touch.
+For researchers interested in our work, collaborations, or other queries, please write to
+research@physicalintelligence.company
+.

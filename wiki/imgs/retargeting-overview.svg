@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1160" viewBox="0 0 1600 1160" role="img" aria-label="机器人动作重定向：保留什么？怎样求解？如何执行？">
+<defs><linearGradient id="header"><stop stop-color="#063c76"/><stop offset="1" stop-color="#087eae"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#397bad" stroke-width="1.6"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif} .label{font-weight:700}</style>
+<rect x="0" y="0" width="1600" height="1160" rx="0" fill="#f3f7fc" stroke="none" stroke-width="2"/>
+<rect x="16" y="16" width="1568" height="110" rx="15" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="42" y="64" font-size="34" fill="#fff" font-weight="700" text-anchor="start">机器人动作重定向：保留什么？怎样求解？如何执行？</text>
+<text x="44" y="103" font-size="21" fill="#d8efff" font-weight="400" text-anchor="start">从人体运动到机器人动作：先定义关系，再构造目标，用约束求解，最后检验物理执行。</text>
+<rect x="16" y="144" width="505" height="302" rx="12" fill="#fff" stroke="#e06450" stroke-width="2"/>
+<rect x="17" y="145" width="503" height="52" rx="10" fill="#e06450" stroke="none" stroke-width="2"/>
+<circle cx="44" cy="171" r="18" fill="white"/>
+<text x="44" y="179" font-size="23" fill="#e06450" font-weight="700" text-anchor="middle">1</text>
+<text x="73" y="179" font-size="25" fill="white" font-weight="700" text-anchor="start">为什么不能直接复制？</text>
+<rect x="32" y="211" width="473" height="105" rx="12" fill="#fff3ef" stroke="#e06450" stroke-width="2"/>
+<text x="50" y="245" font-size="25" fill="#e06450" font-weight="700" text-anchor="start">形态不同 → 目标可能互相冲突</text>
+<text x="50" y="283" font-size="22" fill="#103858" font-weight="400" text-anchor="start">骨长、关节轴、限位、身体比例不同</text>
+<text x="38" y="356" font-size="23" fill="#103858" font-weight="400" text-anchor="start">手碰膝盖：位置像 ≠ 真的触碰</text>
+<text x="38" y="396" font-size="23" fill="#103858" font-weight="400" text-anchor="start">脚底不穿地 ≠ 不滑脚 ≠ 站得稳</text>
+<rect x="537" y="144" width="1047" height="302" rx="12" fill="#fff" stroke="#087fca" stroke-width="2"/>
+<rect x="538" y="145" width="1045" height="52" rx="10" fill="#087fca" stroke="none" stroke-width="2"/>
+<circle cx="565" cy="171" r="18" fill="white"/>
+<text x="565" y="179" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">2</text>
+<text x="594" y="179" font-size="25" fill="white" font-weight="700" text-anchor="start">表示与目标：先说明每个数值的含义</text>
+<rect x="554" y="218" width="302" height="164" rx="12" fill="#eef7ff" stroke="#087fca" stroke-width="2"/>
+<text x="572" y="252" font-size="25" fill="#087fca" font-weight="700" text-anchor="start">源动作</text>
+<text x="572" y="290" font-size="22" fill="#103858" font-weight="400" text-anchor="start">BVH / SMPL / 视频估计</text>
+<text x="572" y="324" font-size="22" fill="#103858" font-weight="400" text-anchor="start">局部骨架 → 世界位姿</text>
+<text x="572" y="358" font-size="22" fill="#103858" font-weight="400" text-anchor="start">身体名 → 位置 + 朝向</text>
+<rect x="910" y="218" width="302" height="164" rx="12" fill="#eef7ff" stroke="#087fca" stroke-width="2"/>
+<text x="928" y="252" font-size="25" fill="#087fca" font-weight="700" text-anchor="start">形态适配</text>
+<text x="928" y="290" font-size="22" fill="#103858" font-weight="400" text-anchor="start">坐标与单位统一</text>
+<text x="928" y="324" font-size="22" fill="#103858" font-weight="400" text-anchor="start">框架偏置 + 分部位缩放</text>
+<text x="928" y="358" font-size="22" fill="#103858" font-weight="400" text-anchor="start">决定保留位置 / 姿态 / 关系</text>
+<rect x="1266" y="218" width="300" height="164" rx="12" fill="#eef7ff" stroke="#087fca" stroke-width="2"/>
+<text x="1284" y="252" font-size="25" fill="#087fca" font-weight="700" text-anchor="start">机器人目标</text>
+<text x="1284" y="290" font-size="22" fill="#103858" font-weight="400" text-anchor="start">手、脚、骨盆等目标</text>
+<text x="1284" y="324" font-size="22" fill="#103858" font-weight="400" text-anchor="start">权重、接触与任务关系</text>
+<text x="1284" y="358" font-size="22" fill="#103858" font-weight="400" text-anchor="start">机器人 FK 负责计算当前值</text>
+<path d="M863 300 L902 300" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<path d="M1219 300 L1258 300" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<text x="565" y="424" font-size="22" fill="#4f6980" font-weight="400" text-anchor="start">机器人配置 q：基座位置 + 四元数 + 关节角；广义速度 v 的维度与 q 不同。</text>
+<rect x="16" y="465" width="1035" height="345" rx="12" fill="#fff" stroke="#07569b" stroke-width="2"/>
+<rect x="17" y="466" width="1033" height="52" rx="10" fill="#07569b" stroke="none" stroke-width="2"/>
+<circle cx="44" cy="492" r="18" fill="white"/>
+<text x="44" y="500" font-size="23" fill="#07569b" font-weight="700" text-anchor="middle">3</text>
+<text x="73" y="500" font-size="25" fill="white" font-weight="700" text-anchor="start">算法主干：误差 → 线性化 → QP → 积分</text>
+<rect x="34" y="542" width="309" height="157" rx="12" fill="#eef7ff" stroke="#07569b" stroke-width="2"/>
+<text x="52" y="576" font-size="25" fill="#07569b" font-weight="700" text-anchor="start">比较当前与目标</text>
+<text x="52" y="614" font-size="22" fill="#103858" font-weight="400" text-anchor="start">FK(q) 得身体位姿</text>
+<text x="52" y="648" font-size="22" fill="#103858" font-weight="400" text-anchor="start">构造误差 e 与雅可比 J</text>
+<rect x="379" y="542" width="309" height="157" rx="12" fill="#eef7ff" stroke="#07569b" stroke-width="2"/>
+<text x="397" y="576" font-size="25" fill="#07569b" font-weight="700" text-anchor="start">求局部速度 v</text>
+<text x="397" y="614" font-size="22" fill="#103858" font-weight="400" text-anchor="start">最小化跟踪误差与速度</text>
+<text x="397" y="648" font-size="22" fill="#103858" font-weight="400" text-anchor="start">同时处理限位 / 地面 / 避碰</text>
+<rect x="724" y="542" width="309" height="157" rx="12" fill="#eef7ff" stroke="#07569b" stroke-width="2"/>
+<text x="742" y="576" font-size="25" fill="#07569b" font-weight="700" text-anchor="start">积分，再重新计算</text>
+<text x="742" y="614" font-size="22" fill="#103858" font-weight="400" text-anchor="start">q⁺ = Integrate(q, v, Δt)</text>
+<text x="742" y="648" font-size="22" fill="#103858" font-weight="400" text-anchor="start">下一帧热启动；逐帧推进</text>
+<path d="M350 616 L370 616" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<path d="M695 616 L715 616" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="34" y="723" width="999" height="64" rx="12" fill="#eaf2fb" stroke="none" stroke-width="2"/>
+<text x="54" y="764" font-size="24" fill="#07569b" font-weight="700" text-anchor="start">GMR：目标构造与两阶段 IK    PyRoki：组合优化    FRAX：编译与批处理</text>
+<rect x="1067" y="465" width="517" height="345" rx="12" fill="#fff" stroke="#7542c8" stroke-width="2"/>
+<rect x="1068" y="466" width="515" height="52" rx="10" fill="#7542c8" stroke="none" stroke-width="2"/>
+<circle cx="1095" cy="492" r="18" fill="white"/>
+<text x="1095" y="500" font-size="23" fill="#7542c8" font-weight="700" text-anchor="middle">4</text>
+<text x="1124" y="500" font-size="25" fill="white" font-weight="700" text-anchor="start">约束为什么需要权衡？</text>
+<rect x="1084" y="542" width="483" height="131" rx="12" fill="#f5efff" stroke="#7542c8" stroke-width="2"/>
+<text x="1102" y="576" font-size="25" fill="#7542c8" font-weight="700" text-anchor="start">ElastiQP：用 L₁ 松弛处理冲突</text>
+<text x="1102" y="614" font-size="22" fill="#103858" font-weight="400" text-anchor="start">有解可继续 ≠ 每条约束都满足</text>
+<text x="1102" y="648" font-size="22" fill="#103858" font-weight="400" text-anchor="start">罚系数与约束残差必须一起看</text>
+<text x="1090" y="718" font-size="23" fill="#103858" font-weight="400" text-anchor="start">局部步、球形近似、离散误差仍存在</text>
+<text x="1090" y="758" font-size="23" fill="#103858" font-weight="400" text-anchor="start">求解成功不能替代碰撞与限位检查</text>
+<rect x="16" y="830" width="766" height="214" rx="12" fill="#fff" stroke="#099773" stroke-width="2"/>
+<rect x="17" y="831" width="764" height="52" rx="10" fill="#099773" stroke="none" stroke-width="2"/>
+<circle cx="44" cy="857" r="18" fill="white"/>
+<text x="44" y="865" font-size="23" fill="#099773" font-weight="700" text-anchor="middle">5</text>
+<text x="73" y="865" font-size="25" fill="white" font-weight="700" text-anchor="start">从参考动作到真实执行</text>
+<text x="40" y="922" font-size="23" fill="#103858" font-weight="400" text-anchor="start">参考轨迹 + 状态反馈 → 控制器 → 力矩与接触</text>
+<text x="40" y="964" font-size="23" fill="#103858" font-weight="400" text-anchor="start">SONIC / ExtremControl：处理物理追踪与控制接口</text>
+<text x="40" y="1006" font-size="23" fill="#103858" font-weight="400" text-anchor="start">还需验证：平衡、摩擦、执行器能力与真实延迟</text>
+<rect x="798" y="830" width="786" height="214" rx="12" fill="#fff" stroke="#087fca" stroke-width="2"/>
+<rect x="799" y="831" width="784" height="52" rx="10" fill="#087fca" stroke="none" stroke-width="2"/>
+<circle cx="826" cy="857" r="18" fill="white"/>
+<text x="826" y="865" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">6</text>
+<text x="855" y="865" font-size="25" fill="white" font-weight="700" text-anchor="start">怎样判断结果好不好？</text>
+<text x="822" y="922" font-size="23" fill="#103858" font-weight="400" text-anchor="start">几何：位姿 / 相对关系    接触：脚滑 / 穿透</text>
+<text x="822" y="964" font-size="23" fill="#103858" font-weight="400" text-anchor="start">动态：速度 / 抖动 / 执行成功率    约束：违反量</text>
+<text x="822" y="1006" font-size="23" fill="#103858" font-weight="400" text-anchor="start">性能：单流延迟与多片段吞吐分别计时</text>
+<rect x="16" y="1066" width="1568" height="78" rx="12" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="40" y="1098" font-size="25" fill="#fff" font-weight="700" text-anchor="start">核心判断：重定向质量 = 目标是否正确 + 求解是否可靠 + 下游是否可用</text>
+<text x="40" y="1127" font-size="18" fill="#d8efff" font-weight="400" text-anchor="start">原创原理示意 · 具体约定与适用条件见正文 · cxwiki / 2026-11-05</text>
+</svg>

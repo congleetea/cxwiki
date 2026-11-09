@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="一个几何例子：人够得到，机器人为什么够不到？">
+<defs><linearGradient id="header"><stop stop-color="#063c76"/><stop offset="1" stop-color="#087eae"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#397bad" stroke-width="1.6"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif} .label{font-weight:700}</style>
+<rect x="0" y="0" width="1600" height="900" rx="0" fill="#f3f7fc" stroke="none" stroke-width="2"/>
+<rect x="16" y="16" width="1568" height="110" rx="15" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="42" y="64" font-size="34" fill="#fff" font-weight="700" text-anchor="start">一个几何例子：人够得到，机器人为什么够不到？</text>
+<text x="44" y="103" font-size="21" fill="#d8efff" font-weight="400" text-anchor="start">相同末端目标不代表相同可达性；可改变身体配置，也可重新选择要保留的任务关系。</text>
+<rect x="16" y="146" width="514" height="554" rx="12" fill="#fff" stroke="#087fca" stroke-width="2"/>
+<rect x="17" y="147" width="512" height="52" rx="10" fill="#087fca" stroke="none" stroke-width="2"/>
+<circle cx="44" cy="173" r="18" fill="white"/>
+<text x="44" y="181" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">1</text>
+<text x="73" y="181" font-size="25" fill="white" font-weight="700" text-anchor="start">源动作：长臂到达目标</text>
+<text x="40" y="244" font-size="21" fill="#4f6980" font-weight="400" text-anchor="start">两段各 0.35 m；目标距离 0.60 m</text>
+<rect x="82" y="468" width="68" height="23" rx="5" fill="#e6eef7" stroke="#087fca" stroke-width="2"/>
+<path d="M116 466 V400" stroke="#087fca" stroke-width="8"/>
+<path d="M116 400 L266.0 309.86121811340024 L416 400" fill="none" stroke="#087fca" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="116" cy="400" r="11" fill="white" stroke="#087fca" stroke-width="5"/>
+<circle cx="266.0" cy="309.86121811340024" r="11" fill="white" stroke="#087fca" stroke-width="5"/>
+<circle cx="416" cy="400" r="11" fill="white" stroke="#087fca" stroke-width="5"/>
+<circle cx="416" cy="400" r="22" fill="none" stroke="#7542c8" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M405 400 H427 M416 389 V411" stroke="#7542c8" stroke-width="2"/>
+<text x="416" y="449" font-size="21" fill="#7542c8" font-weight="400" text-anchor="middle">末端目标</text>
+<text x="40" y="606" font-size="22" fill="#103858" font-weight="400" text-anchor="start">可达：选一个弯肘解</text>
+<text x="40" y="649" font-size="22" fill="#103858" font-weight="400" text-anchor="start">同一目标也可能有多种关节姿态</text>
+<rect x="543" y="146" width="514" height="554" rx="12" fill="#fff" stroke="#e06450" stroke-width="2"/>
+<rect x="544" y="147" width="512" height="52" rx="10" fill="#e06450" stroke="none" stroke-width="2"/>
+<circle cx="571" cy="173" r="18" fill="white"/>
+<text x="571" y="181" font-size="23" fill="#e06450" font-weight="700" text-anchor="middle">2</text>
+<text x="600" y="181" font-size="25" fill="white" font-weight="700" text-anchor="start">短臂机器人：目标不可达</text>
+<text x="567" y="244" font-size="21" fill="#4f6980" font-weight="400" text-anchor="start">两段各 0.22 m；目标距离 0.60 m</text>
+<rect x="609" y="468" width="68" height="23" rx="5" fill="#e6eef7" stroke="#e06450" stroke-width="2"/>
+<path d="M643 466 V400" stroke="#e06450" stroke-width="8"/>
+<path d="M643 400 L753 400 L863 400" fill="none" stroke="#e06450" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="643" cy="400" r="11" fill="white" stroke="#e06450" stroke-width="5"/>
+<circle cx="753" cy="400" r="11" fill="white" stroke="#e06450" stroke-width="5"/>
+<circle cx="863" cy="400" r="11" fill="white" stroke="#e06450" stroke-width="5"/>
+<circle cx="943" cy="400" r="22" fill="none" stroke="#7542c8" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M932 400 H954 M943 389 V411" stroke="#7542c8" stroke-width="2"/>
+<text x="943" y="449" font-size="21" fill="#7542c8" font-weight="400" text-anchor="middle">末端目标</text>
+<path d="M875 400 H918" stroke="#e06450" stroke-width="2" stroke-dasharray="6 5"/>
+<text x="818" y="353" font-size="23" fill="#e06450" font-weight="700" text-anchor="start">差 0.16 m</text>
+<text x="567" y="606" font-size="22" fill="#103858" font-weight="400" text-anchor="start">再增加位置权重也无法够到</text>
+<text x="567" y="649" font-size="22" fill="#103858" font-weight="400" text-anchor="start">不可达首先是几何问题</text>
+<rect x="1070" y="146" width="514" height="554" rx="12" fill="#fff" stroke="#099773" stroke-width="2"/>
+<rect x="1071" y="147" width="512" height="52" rx="10" fill="#099773" stroke="none" stroke-width="2"/>
+<circle cx="1098" cy="173" r="18" fill="white"/>
+<text x="1098" y="181" font-size="23" fill="#099773" font-weight="700" text-anchor="middle">3</text>
+<text x="1127" y="181" font-size="25" fill="white" font-weight="700" text-anchor="start">移动基座：重新进入可达域</text>
+<text x="1094" y="244" font-size="21" fill="#4f6980" font-weight="400" text-anchor="start">基座前移 0.22 m；剩余 0.38 m</text>
+<rect x="1246" y="468" width="68" height="23" rx="5" fill="#e6eef7" stroke="#099773" stroke-width="2"/>
+<path d="M1280 466 V400" stroke="#099773" stroke-width="8"/>
+<path d="M1280 400 L1375.0 344.5473174679529 L1470 400" fill="none" stroke="#099773" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="1280" cy="400" r="11" fill="white" stroke="#099773" stroke-width="5"/>
+<circle cx="1375.0" cy="344.5473174679529" r="11" fill="white" stroke="#099773" stroke-width="5"/>
+<circle cx="1470" cy="400" r="11" fill="white" stroke="#099773" stroke-width="5"/>
+<circle cx="1470" cy="400" r="22" fill="none" stroke="#7542c8" stroke-width="2" stroke-dasharray="5 4"/>
+<path d="M1459 400 H1481 M1470 389 V411" stroke="#7542c8" stroke-width="2"/>
+<text x="1470" y="449" font-size="21" fill="#7542c8" font-weight="400" text-anchor="middle">末端目标</text>
+<path d="M1170 513 L1280 513" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<text x="1225" y="552" font-size="22" fill="#099773" font-weight="400" text-anchor="middle">基座平移</text>
+<text x="1094" y="606" font-size="22" fill="#103858" font-weight="400" text-anchor="start">几何上可达；代价是身体改变位置</text>
+<text x="1094" y="649" font-size="22" fill="#103858" font-weight="400" text-anchor="start">双足实机移动仍需要动力学控制</text>
+<rect x="16" y="721" width="1568" height="61" rx="12" fill="#eef3fc" stroke="#07569b" stroke-width="2"/>
+<text x="40" y="760" font-size="24" fill="#07569b" font-weight="700" text-anchor="start">两连杆最大触达 = l₁ + l₂。重定向要决定：保持身体位置、保持末端目标，还是改变两者的权衡？</text>
+<rect x="16" y="806" width="1568" height="78" rx="12" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="40" y="838" font-size="25" fill="#fff" font-weight="700" text-anchor="start">调整目标与允许的自由度，往往比更换求解器更先决定是否有解。</text>
+<text x="40" y="867" font-size="18" fill="#d8efff" font-weight="400" text-anchor="start">原创二维几何示意 · 长度与距离按相同比例绘制 · 不表示具体机器人或实机验证结果</text>
+</svg>

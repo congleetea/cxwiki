@@ -1,0 +1,3 @@
+-r requirements.txt
+# Optional: regenerate PNG figures or run browser checks.
+playwright>=1.40,<2

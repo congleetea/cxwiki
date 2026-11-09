@@ -1,0 +1,462 @@
+Source: https://www.pi.website/research/memory
+Retrieved: 2026-11-06
+
+VLAs with Long and Short-Term Memory
+Physical Intelligence (π)
+Home
+Research
+Join Us
+VLAs with Long and Short-Term Memory
+Published
+March 3, 2026
+Email
+research@physicalintelligence.company
+Marcel Torne, Karl Pertsch, Homer Walke, Kyle Vedder, Suraj Nair, Brian Ichter, Allen Ren, Haohuan Wang, Jiaming Tang, Kyle Stachowicz, Karan Dhabalia, Michael Equi, Quan Vuong, Jost Tobias Springenberg, Sergey Levine, Chelsea Finn, Danny Driess
+Paper
+MEM
+.pdf
+Loading…
+Current robotic foundation models can follow commands like
+"wash the frying pan"
+,
+"fold the laundry"
+, or
+"make a peanut butter sandwich"
+, performing intricate
+and complex motor skills. But we don’t just want robots that perform
+short individual skills, we want robots that can do a job, like cleaning an
+entire kitchen or cooking a meal. As the individual skills become more robust,
+the bottleneck is increasingly in how the robot deploys these skills to solve
+complex tasks, not the skills themselves. For complex, multi-stage behaviors
+like cleaning a kitchen or preparing a meal, it’s not enough to just master
+the individual motor skills. The robot must maintain a coherent narrative
+about where it is in the task, remember where the relevant objects are
+located even when they are not in view, and recall what did or didn’t work
+in the past to avoid repeating the same mistakes.
+This requires both long-term
+and short-term memory. Keeping a full history of the robot’s observations in
+context over minutes or hours is infeasible, but throwing it away leads to
+nonsensical behavior over long-duration tasks. Poorly designed memory systems
+can even harm performance, through a phenomenon dubbed
+"causal confusion"
+,
+where memory exacerbates spurious correlations that confound robotic imitation learning.
+The difficulty of designing effective memory architectures for robots is one
+reason why even otherwise capable learning systems are typically demonstrated
+on short, tightly controlled tasks lasting only a few minutes.
+We developed a method that we call Multi-scale Embodied Memory (
+MEM
+)
+to provide our models with memory and
+enable very long tasks, such as cleaning up an entire kitchen or cooking a
+grilled cheese sandwich from scratch.
+MEM
+allows our model to keep
+track of tasks up to fifteen minutes in length, keep both short-term and
+long-term memories, and even correct mistakes through in-context adaptation.
+MEM
+provides a
+multimodal
+memory mechanism, where short-term memories
+are maintained in terms of raw observations, and long-term memories are
+stored as abstract concepts in natural language. The model actively chooses
+what to remember and how via a reasoning mechanism that is also used to
+select high-level subtasks, effectively reasoning both about what to do and
+what to remember.
+We show some examples of
+π
+0.6
+with
+MEM
+in action, followed by a
+description of how
+MEM
+works.
+Multimodal memories
+Complex physical tasks demand sophisticated memory systems: a robot might need
+to remember recent events in great detail, but it might also need to maintain
+memories over long periods of time, for example to remember which part of the
+kitchen was already cleaned. Cramming all of these memories into the context of
+a model as raw images would be impractical, doubly so because of the need for
+real-time control.
+MEM
+equips VLAs with memory for solving long-horizon tasks at scale. It has two key components: an efficient video encoder for short-horizon frame-based history, and a language-based memory mechanism for long-horizon context. After training on a diverse corpus of robot and non-robot data, single frames and video,
+MEM
+VLAs can solve tasks that require up to 15 minutes of memory, handle partial observability, and perform in-context adaptation of manipulation strategies.
+Textual Memory
+I haven't completed any steps for the task
+I moved to the stove
+I moved to the stove and picked up the lid from the pot
+I placed the lid on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I picked up the pot and I am currently holding the pot
+I placed the lid on the countertop to the left of the stove. I am currently holding the pot and I moved to the sink
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I moved to the fridge and opened the lower fridge door
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I picked up the yellow bag of potatoes and I am currently holding the yellow bag of potatoes. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I am currently holding the yellow bag of potatoes and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I picked up the stick of butter and I am currently holding the stick of butter. The top fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I am currently holding the stick of butter and I closed the top fridge door
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I am currently holding the stick of butter and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I moved to the top drawer to the right of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I moved to the top drawer to the right of the stove and opened the top drawer
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I picked up the masher and the top drawer is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I am currently holding the masher and I closed the top drawer to the right of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I am currently holding the masher and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I placed the masher on the countertop to the left of the stove
+Prompt Instructions
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Visual Memory
+π
+Memory VLA
+Vision Language
+Model
+Subtasks
+Vision Language
+Actions
+Robot
+Actions
+Real World
+Subtasks
+MEM
+equips VLAs with memory for solving long-horizon tasks at scale. It has two key components: an efficient video encoder for short-horizon frame-based history, and a language-based memory mechanism for long-horizon context. After training on a diverse corpus of robot and non-robot data, single frames and video,
+MEM
+VLAs can solve tasks that require up to 15 minutes of memory, handle partial observability, and perform in-context adaptation of manipulation strategies.
+Textual Memory
+I haven't completed any steps for the task
+I moved to the stove
+I moved to the stove and picked up the lid from the pot
+I placed the lid on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I picked up the pot and I am currently holding the pot
+I placed the lid on the countertop to the left of the stove. I am currently holding the pot and I moved to the sink
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I moved to the fridge and opened the lower fridge door
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I picked up the yellow bag of potatoes and I am currently holding the yellow bag of potatoes. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I am currently holding the yellow bag of potatoes and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I picked up the stick of butter and I am currently holding the stick of butter. The top fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I am currently holding the stick of butter and I closed the top fridge door
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I am currently holding the stick of butter and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I moved to the top drawer to the right of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I moved to the top drawer to the right of the stove and opened the top drawer
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I picked up the masher and the top drawer is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I am currently holding the masher and I closed the top drawer to the right of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I am currently holding the masher and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I placed the masher on the countertop to the left of the stove
+Prompt Instructions
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Visual Memory
+π
+Memory VLA
+Vision Language
+Model
+Subtasks
+Vision Language
+Actions
+Robot
+Actions
+Real World
+Subtasks
+MEM
+equips VLAs with memory for solving long-horizon tasks at scale. It has two key components: an efficient video encoder for short-horizon frame-based history, and a language-based memory mechanism for long-horizon context. After training on a diverse corpus of robot and non-robot data, single frames and video,
+MEM
+VLAs can solve tasks that require up to 15 minutes of memory, handle partial observability, and perform in-context adaptation of manipulation strategies.
+Textual Memory
+I haven't completed any steps for the task
+I moved to the stove
+I moved to the stove and picked up the lid from the pot
+I placed the lid on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I picked up the pot and I am currently holding the pot
+I placed the lid on the countertop to the left of the stove. I am currently holding the pot and I moved to the sink
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I moved to the fridge and opened the lower fridge door
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I picked up the yellow bag of potatoes and I am currently holding the yellow bag of potatoes. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I am currently holding the yellow bag of potatoes and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk with narrow neck and the fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I picked up the white bottle of milk and I am currently holding the white bottle of milk. The lower fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk with narrow neck and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes on the countertop to the left of the stove. I am currently holding the white bottle of milk and moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I moved to the fridge
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I picked up the stick of butter and I am currently holding the stick of butter. The top fridge door is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I am currently holding the stick of butter and I closed the top fridge door
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes and white bottle of milk with narrow neck on the countertop to the left of the stove. I am currently holding the stick of butter and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I moved to the top drawer to the right of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I moved to the top drawer to the right of the stove and opened the top drawer
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I picked up the masher and the top drawer is still open
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I am currently holding the masher and I closed the top drawer to the right of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I am currently holding the masher and I moved to the countertop to the left of the stove
+I placed the lid on the countertop to the left of the stove. I placed the pot in the sink. I placed the yellow bag of potatoes, white bottle of milk with narrow neck and stick of butter on the countertop to the left of the stove. I placed the masher on the countertop to the left of the stove
+Prompt Instructions
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+Take out the supplies for the recipe. Remove the lid from the pot on the stove. Place the lid on the countertop to the left of the stove, and pick up the pot and place it in the sink to the right of the stove. Get the yellow bag of potatoes, white bottle of milk with narrow neck, and stick of butter from the top shelf of the fridge to the left of the stove and place them on the countertop to the left of the stove. Get the masher from the top drawer to the right of the stove and place it on the countertop to the left of the stove.
+π
+Vision Language
+Model
+Visual Memory
+Vision Language
+Actions
+Robot
+Actions
+Real World
+MEM
+stores two types of memories: short-term recent observations, and
+long-term “notes” about task progress. Both memory types are optimized to
+reduce the number of tokens to pass into the model, and hence to keep inference very fast.
+The short-term observations are encoded using a video encoder design,
+which interleaves layers of spatial and temporal attention to provide more
+efficient video processing (see diagram below).
+a
+a
+a
+i
+Intermediate Layer
+Every 4th layer, temporal attention across timesteps connects the same spatial positions across all timesteps, allowing the model to track motion and changes over time.
+Output Layer
+Intermediate Layer
+Input Layer
+2 Secs Ago
+1 Sec Ago
+Current
+Steps
+We develop an efficient video encoder architecture for compressing short-horizon, frame-based history. Our architecture expands standard ViTs for encoding video inputs by interleaving sparse spatial and causal-temporal attention operations. We drop history tokens in upper layers of the ViT to compress the inputs and reduce the number of tokens passed to the VLA backbone.
+The long-term memory consists of textual descriptions of past events.
+The
+π
+0.6
+model with
+MEM
+builds on the
+π
+0.5
+design, with a
+chain-of-thought-like inference process where high-level subtasks
+(“pick up the plate” or “wash the bowl”) are selected at a lower frequency,
+while actions are selected at a high frequency based on the latest subtask.
+MEM
+extends this high-level subtask inference process to also produce new
+textual memories, which are provided as input to future inference steps.
+The model can then be trained to remember events in various ways: besides
+just noting down the specific subtasks that were selected, the model can
+summarize past events (e.g., “pick up the yellow plate” after “pick up the green plate”
+turns into “I picked up the plates”) and dynamically select the right event
+representation while keeping the total size of the context manageable.
+Together, the long-term and short-term memories provide our model with a way to
+both track steps in very long and complex tasks and remember
+very recent events in great detail, compensating for occlusions and
+improving model robustness with in-context adaptation. Quantitatively,
+this leads to significant improvements across a range of difficult tasks.
+We show the quantitative results below, followed by a discussion of our
+qualitative observations.
+Task Progress (%)
+Task Progress (%)
+100%
+80%
+60%
+40%
+20%
+0%
+Swap 3 Mugs
+Find Object
+Unpack Groceries
+Scoop Coffee
+Grilled Cheese
+Window Cleaning
+Average
+No Memory
+Pool Memory
+Proprio Memory
+Ours
+In-context adaptation with short-term memory
+Incorporating memory into
+π
+0.6
+enabled in-context adaptation.
+Compared to a model without memory, the memory-augmented model
+exhibited greater robustness and reliability,
+as it could condition on its own past behavior in memory
+and adjust its strategy accordingly.
+In the example below, the robot tries to pick up a small flat chopstick.
+Without memory, the robot tends to fail in the same way repeatedly.
+Since it doesn’t remember the previous attempt, it simply retries the
+same behavior. With memory, the robot tries the task differently after the
+first failure, and eventually picks it up.
+Loading…
+Picking up a chopstick: without memory the robot repeats the same failed strategy, while with memory it successfully adapts its approach after observing its failures.
+Next, we set up a scenario where in-context adaptation is required to succeed:
+a refrigerator where it is unclear from the images which way the door should open.
+As expected, the policy with memory first tries to open it in one direction, and
+then the other:
+Loading…
+Opening a refrigerator: the model with memory adapts after trying the wrong direction, while the model without memory keeps repeating the same approach.
+This kind of in-context adaptation is a powerful tool:
+it’s very hard to get models that never make any mistakes, but if they can
+quickly adapt to these mistakes with just one or two attempts, then they
+are likely to be much more successful and robust for a wide range of tasks.
+Long-horizon tasks
+We evaluated
+π
+0.6
+with
+MEM
+on three long-horizon scenarios that present increasing levels of difficulty in terms of both short-term and long-term memory. First, we asked the robot to make a grilled cheese sandwich. This task presents a particular challenge for short-term memory, because the model needs to grill the sandwich for the right amount of time, while also performing each of the dexterous steps of the task, such as flipping and plating.
+Loading…
+Making a grilled cheese sandwich from scratch, using short-term memory for timing and progress tracking.
+Next, we tasked the robot with taking out ingredients for a recipe. This requires
+π
+0.6
+with
+MEM
+to keep track of the locations of the ingredients and remember to close cabinets and drawers, while correctly parsing the user instructions.
+Loading…
+The robot retrieves ingredients for a recipe, keeping track of items retrieved, locations and remembering to close cabinets and drawers.
+Finally, we tested our model on the longest of the tasks, which required cleaning up an entire kitchen. This requires stowing objects in the fridge and cabinets, washing dishes with soap and running water, and wiping countertops. Short-term memory is needed to scrub the dishes correctly, and long-term memory is needed to keep track of which stages have been done.
+Loading…
+The robot cleans the kitchen by wiping and drying the countertop, stowing objects, and washing dishes, using long and short-term memory to track progress across stages.
+Task Progress (%)
+Task Progress (%)
+90%
+70%
+50%
+30%
+10%
+Average
+π₀.₆ (no Memory)
+Only Video Memory
+Naive Text + Video Memory
+Only Text Memory
+π₀.₆-MEM
+What next?
+MEM
+provides our models with greater robustness and the ability to
+follow much more complex prompts over long time periods.
+We are getting closer to tasks that look like real jobs, rather than
+individual atomic movements. In the future, users might prompt their
+robot not just with simple commands like “fold my laundry,” but an entire
+schedule of chores (“I get home at 6 pm, please have dinner ready, and
+clean the house on Wednesdays”), and the model would need to parse the prompt,
+break it up into a concrete plan, and keep track of this plan over the course
+of hours, days, or weeks. Maintaining a classic video context over such time
+scales is infeasible, and we expect that the memory system for such a model
+would need multiple time scales and levels of abstraction.
+If you are interested in contributing to the development of this and other
+physical intelligence capabilities, please
+get in touch
+.

@@ -1,0 +1,399 @@
+Source: https://www.pi.website/research/knowledge_insulation
+Retrieved: 2026-11-06
+
+VLAs that Train Fast, Run Fast, and Generalize Better
+Physical Intelligence (π)
+Home
+Research
+Join Us
+VLAs that Train Fast, Run Fast, and Generalize Better
+Published
+May 28, 2025
+Email
+research@physicalintelligence.company
+Danny Driess, Jost Tobias Springenberg, Brian Ichter, Lili Yu, Adrian Li-Bell, Karl Pertsch, Allen Z. Ren, Homer Walke, Quan Vuong, Lucy Xiaoyang Shi, Sergey Levine
+Paper
+VLA COMPARISON
+Training Speed
+FAST
+SLOW
+π
+0
+π
+0
+FAST
+π
+0.5
++ KI
+WORSE
+BETTER
+VLM knowledge insulation
+Fast inference
+Slow inference
+π
+0.5
++ KI ARCHITECTURE
+Vision-language models (VLMs) are powerful because they combine encyclopedic web-scale knowledge with the ability to reason
+through complex problems, but bringing this capability to bear on the robotics domain requires us to add continuous action outputs.
+As an analogy, if we think of the vision encoder in a VLM as a
+visual cortex
+, and the LLM as the
+prefrontal cortex
+,
+vision-language-action (VLA) models also require an analogue to the
+motor cortex
+. This virtual motor cortex needs
+to master capabilities that are foreign to the base VLM, such as executing precise movements, while also maintaining a sophisticated
+high-bandwidth interface to the VLM's core reasoning and vision capabilities. In the evolution of brains, the motor
+cortex came first, but in modern AI things are backwards: we start with language, then add vision, and then hook up
+motor control. That means that we need to figure out how to "wire" our newly added virtual motor cortex into the VLA without
+destroying its pretrained reasoning capabilities and web-scale knowledge.
+How can we augment VLMs to get VLAs with continuous action outputs
+in a way that they maximally inherit all of the capabilities that come with web-scale pretraining?
+The first generation of VLAs, such as
+RT-2
+and
+OpenVLA
+,
+used a simple approach: they trained the VLA to output actions as tokenized numbers,
+discretizing each robot arm joint angle into fixed-size bins and assigning a token to each one, like in a question answering problem where
+the answer consists of numbers. While this works for basic manipulation, such as picking up objects, it is not suitable for
+high-frequency, precise, or fluent motions, as we observed in our
+π
+0
+and
+π
+0
+-FAST
+experiments. This representation is poorly suited for training the model,
+too crude for precise tasks, and very slow at runtime. To return to the motor cortex analogy, it's a bit like controlling your arm by verbally
+saying which muscles should contract. For more complex skills, like folding laundry or making a bed, our VLAs need a proper analogue to the motor cortex.
+The second generation of VLAs, starting with
+π
+0
+, addressed this by adding new neural modules during VLA
+training to produce continuous outputs, typically using continuous generative modeling techniques such as diffusion or flow matching.
+These new modules took the form of
+action experts
+or
+action heads
+,
+which could attend to the representations in the VLM backbone but also
+specialize themselves for continuous motor control. These second-generation VLAs could perform much more complex tasks, but adding new
+motor control weights to the model during VLA finetuning resulted in complex learning dynamics that could damage the VLM's internal
+representations. Essentially, grafting this "motor cortex" onto the VLM in such a crude way could cause a kind of "forgetfulness,"
+slowing down training significantly and harming the model's eventual ability to interpret language.
+In an extensive new study, we analyze this phenomenon and develop a solution that allows us to graft action experts onto VLMs without
+loss of pre-trained web-scale knowledge, resulting in fast training, good semantic generalization, and precise motor control.
+Our approach, which we call "knowledge insulating VLAs," formalizes the method we used in our recent
+π
+0.5
+model, and we extend it with a more refined single-stage training recipe that insulates the VLM backbone
+from the action expert. We call the resulting model
+π
+0.5
++ KnowledgeInsulation (KI).
+The key idea behind knowledge insulation is to fine-tune the VLM backbone
+with
+FAST-tokenized
+discretized actions for learning high-quality
+representations quickly, while simultaneously adapting the action expert to produce continuous actions without propagating its
+gradients back into the VLM backbone. After training, the action expert can produce fluent continuous actions via flow matching,
+and the discretized actions are discarded.
+The challenge with continuous-action VLAs
+Current second-generation VLA architectures use an additional module for continuous outputs, usually with diffusion or flow matching,
+but sometimes with
+other continuous distribution classes
+. This is often done by adding a regression head,
+a
+separate model that takes outputs from a larger LLM/VLM
+or, as introduced in
+π
+0
+and extended in
+many more recent VLA models
+,
+by adding an action expert that can decode continuous actions via diffusion or flow matching, rather than autoregressive generation.
+All of these designs share a common feature: they graft a virtual "motor cortex" onto the VLM backbone and train it with a continuous action
+generation loss.
+When adapting a VLM to a VLA in this action expert design, the VLM backbone representations are exposed to the gradients from the action
+expert. Our experiments show that those gradients from the action expert lead to unfavorable learning dynamics, which not only results
+in much slower learning, but also causes the VLM backbone to lose some of the knowledge acquired during web-scale pre-training.
+VLM Backbone (3B)
+Image Encoder
+Image encoder
+Loading…
+Loading…
+Loading…
+Prompt
+Text state
+When building a VLA by naively adding an action expert to a pretrained VLM backbone, the gradients from the action expert to the VLM backbone unfavorably influence the representations in the backbone.
+One of the consequences of these unfavorable learning dynamics is that the model's ability to follow language instructions is reduced.
+In this example below, the robot is instructed to put the spoon into the dish container. However, with a model that naively adds an action
+expert to the VLM backbone, the robot grasps the trash instead.
+Loading…
+Adding an action expert to a pretrained VLM naively can lead to a model that does not pay attention to language instructions (left). Our proposed solution (right) significantly improves language following.
+One hypothesis of why this is happening is the following. A pre-trained VLM, by its nature, pays attention to language inputs well.
+The gradients from the action expert now severly interfere with the model's ability to process language, which leads the model to
+pick up on other correlations first.
+In our experience, autoregressive VLAs such as
+π
+0
+-FAST
+do not have this issue but,
+as we show in the video below, are much slower in completing the task due to the need for expensive autoregressive inference.
+In the example below, the robot running an autoregressive VLA only just starts to perform the task by the time the robot running
+our approach, on the right, has already finished the instruction.
+Inference speed comparison
+table bussing
+shirt folding
+Loading…
+Knowledge insulation
+Language prediction
+Discrete actions
+Language prediction
+pick
+up
+the
+sleeve
+Discrete actions
+-17
+12
+34
+142
+VLM Backbone (3B)
+Image Encoder
+Image encoder
+Loading…
+Loading…
+Loading…
+Prompt
+Text state
+Stop Gradient
+Continuous actions
+-1.7
+1.25
+3.14
+1.42
+Action Expert
+(300M)
+Noise
+Overview of the our
+π
+0.5
+with KI architecture and training recipe. The model consists of a VLM backbone and an action expert. Gradients from the action expert do not flow into the VLM backbone. Instead, we use
+π
+0
+-FAST tokens as a representation learning objective to equip the backbone with representations for motor control quickly, which the action expert can then use. Further, the model is additionally trained on general VLM data and robot planning data. These choices lead to a VLA that trains quickly, runs fast at inference time, and generalizes well by maintaining the pre-trained knowledge of the backbone VLM.
+To overcome these issues, we develop a new technique to "insulate" the knowledge of the backbone from the action expert while adapting
+it to motor control. The first step is to stop the gradient flow from the action expert to the VLM backbone, which fully insulates
+the VLM backbone from the newly added action expert. However, as can be seen in the figure below, this approach alone is not sufficient.
+Since the VLM backbone no longer receives any gradients from the robot data, its representations are no longer adapted to the needs of
+robotic control, making it much harder for the action expert to generate
+correct motions. To go back to our analogy, if the visual and prefrontal cortex have never interacted with the physical world, they probably
+cannot communicate with the motor cortex effectively.
+Average Success
+60%
+50%
+40%
+30%
+20%
+10%
+0%
+π
+0.5
++ KI
+p=0.083
+joint-training
+p=0.782
+π
+0
+-FAST
+p=0.002
+π
+0
+p=0.001
+frozen backbone
+Performance on “shirt-folding” task. Our proposed
+π
+0.5
++ KI model performs best. Freezing the backbone as a knowledge insulation method is not possible for this task.
+Average Task Completion
+100%
+80%
+60%
+40%
+20%
+0%
+π
+0.5
++ KI
+p=0.049
+joint-training
+p=0.030
+π
+0
+-FAST
+p<0.001
+π
+0
+p<0.001
+frozen backbone
+Performance on “items-in-drawer” task with a static robot in an unseen environment.
+To fix this, we train the VLM backbone with
+π
+0
+-FAST
+action tokens.
+This way, we equip the VLM backbone with representations for motor control and the action expert can use these representations without
+having to back propagate its training signal that corrupts the backbone.
+π
+0
+-FAST
+action tokens make the model acquire motor representations significantly faster,
+and the cross-entropy loss interferes significantly less with the VLM backbone's pre-trained knowledge.
+Average Task Completion
+Average Task Completion
+Training Steps (K)
+1.0
+0.8
+0.6
+0.4
+0.2
+0.0
+20
+40
+100
+160
+1200
+π
+0.5
++ KI
+π
+0
+-FAST
+π
+0
+Performance over number of training steps on “bussing” task for generalist model. Our method requires 7.5 times less training steps than π0 while producing actions with an action expert with fast inference time.
+Since we are now training the model on both discrete tokens and continuous actions at the same time,
+we can also add other auxiliary next-token prediction tasks. We train the model on the full
+π
+0.5
+mixture,
+including general vision-language data from the web and high-level robot commands.
+This further reinforces the semantic knowledge in the VLM backbone and, as shown below, enables the model to generalize even more effectively.
+Average Task Completion and Language Rate
+Average Task Completion and Language Rate
+100%
+80%
+60%
+40%
+20%
+0%
+In-Distribution Language Following
+In-Distribution Performance
+OOD Language Following
+OOD Performance
+π
+0.5
++ KI
+joint-training w/ VLM Data
+π
+0.5
++ KI w/o VLM data
+π
+0
+-FAST
+joint-training w/o VLM Data
+π
+0
+Results on object generalization with mobile manipulator. The robot is asked to grasp unseen objects (OOD) and seen objects (in-distribution) in unseen environments. Co-training on web-data boosts generalization performance most. Insulating the knowledge of the VLM through stopping the gradient from the action expert also helps significantly if no web-data is present.
+Train fast, run fast, generalize better
+Training our model simultaneously on
+π
+0
+-FAST action tokens for representation learning, general web-data for generalization,
+and continuous actions through the action expert enables us to achieve the best of all worlds: The model trains significantly
+faster than
+π
+0
+(indeed as fast as
+π
+0
+-FAST
+),
+while having the same fast inference speed as
+π
+0
+, and shows very good semantic generalization capabilities.
+Below are some examples of our model solving tasks in completely unseen environments.
+Our
+paper
+includes detailed ablations and comparisons to other methods. In the figure below, we show a sneak peek of those ablations.
+Check out the
+paper
+for more details!
+Average Task Completion and Language Rate
+Average Task Completion and Language Rate
+100%
+80%
+60%
+40%
+20%
+0%
+Performance
+Language Following
+Time to Completion
+1000
+800
+600
+400
+200
+0
+Time (Seconds)
+π
+0.5
++ KI
+joint-training
+π
+0
+π
+0
+-FAST
+Results on “bussing” task (single embodiment model). Our method (
+π
+0.5
++ KI) has the highest performance, follows language well, and has low execution time. An autoregressive VLA (
+π
+0
+-FAST) requires twice the amount of time to solve the task.
+Where is this going?
+VLAs have gone from simple extensions of VLMs that frame
+robotic control as a question-answering
+problem
+to a sophisticated new class of models that combines visual perception, semantic understanding, problem solving, and motor control.
+The variety of sensors and actuators used by robotic systems means that VLAs are the most multimodal models out there, and the
+science of training these models is really the science of multimodal machine learning.
+The second generation VLAs, like
+π
+0
+and
+π
+0.5
+, bring with
+them unparalleled new capabilities, but also new challenges. Developing a better understanding of the learning dynamics of these models will allow us to not only
+improve their performance, but also build toward the next generation of VLAs, which will provide deeper integration of
+web-scale knowledge and robotic motor control, more sophisticated sequential reasoning, planning, and the ability to carry
+out complex tasks in a deliberate and goal-directed manner. We are still in the early days of VLA development,
+and we are seeing VLA-based robotic control mature from simple one-off experiments into a sophisticated research discipline
+with profound implications for practical, real-world applications. If you are interested in collaborating with us on this journey,
+please
+reach out
+. We are particularly excited to work with companies scaling up
+data collection with robots deployed for real-world applications, who are looking to collaborate on autonomy.
+We are also hiring! If you'd be interested in
+joining us
+please get in touch.
+For researchers interested in our work, collaborations, or other queries, please write to
+research@physicalintelligence.company
+.

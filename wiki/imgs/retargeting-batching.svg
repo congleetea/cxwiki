@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-label="离线批处理：并行的是动作片段，不是同一片段的所有帧">
+<defs><linearGradient id="header"><stop stop-color="#063c76"/><stop offset="1" stop-color="#087eae"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#397bad" stroke-width="1.6"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif} .label{font-weight:700}</style>
+<rect x="0" y="0" width="1600" height="900" rx="0" fill="#f3f7fc" stroke="none" stroke-width="2"/>
+<rect x="16" y="16" width="1568" height="110" rx="15" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="42" y="64" font-size="34" fill="#fff" font-weight="700" text-anchor="start">离线批处理：并行的是动作片段，不是同一片段的所有帧</text>
+<text x="44" y="103" font-size="21" fill="#d8efff" font-weight="400" text-anchor="start">横向依赖保留时间连续性；纵向并行提高总吞吐；两者回答不同的性能问题。</text>
+<rect x="16" y="146" width="1040" height="522" rx="12" fill="#fff" stroke="#087fca" stroke-width="2"/>
+<rect x="17" y="147" width="1038" height="52" rx="10" fill="#087fca" stroke="none" stroke-width="2"/>
+<circle cx="44" cy="173" r="18" fill="white"/>
+<text x="44" y="181" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">1</text>
+<text x="73" y="181" font-size="25" fill="white" font-weight="700" text-anchor="start">片段内顺序扫描，片段间独立并行</text>
+<text x="40" y="279" font-size="25" fill="#087fca" font-weight="700" text-anchor="start">片段 A</text>
+<rect x="170" y="242" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#087fca" stroke-width="2"/>
+<text x="255" y="276" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">帧 1</text>
+<text x="255" y="303" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M347 281 L378 281" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="388" y="242" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#087fca" stroke-width="2"/>
+<text x="473" y="276" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">帧 2</text>
+<text x="473" y="303" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M565 281 L596 281" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="606" y="242" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#087fca" stroke-width="2"/>
+<text x="691" y="276" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">帧 3</text>
+<text x="691" y="303" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M783 281 L814 281" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="824" y="242" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#087fca" stroke-width="2"/>
+<text x="909" y="276" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">帧 4</text>
+<text x="909" y="303" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<text x="40" y="409" font-size="25" fill="#7542c8" font-weight="700" text-anchor="start">片段 B</text>
+<rect x="170" y="372" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#7542c8" stroke-width="2"/>
+<text x="255" y="406" font-size="23" fill="#7542c8" font-weight="700" text-anchor="middle">帧 1</text>
+<text x="255" y="433" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M347 411 L378 411" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="388" y="372" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#7542c8" stroke-width="2"/>
+<text x="473" y="406" font-size="23" fill="#7542c8" font-weight="700" text-anchor="middle">帧 2</text>
+<text x="473" y="433" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M565 411 L596 411" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="606" y="372" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#7542c8" stroke-width="2"/>
+<text x="691" y="406" font-size="23" fill="#7542c8" font-weight="700" text-anchor="middle">帧 3</text>
+<text x="691" y="433" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M783 411 L814 411" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="824" y="372" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#7542c8" stroke-width="2"/>
+<text x="909" y="406" font-size="23" fill="#7542c8" font-weight="700" text-anchor="middle">帧 4</text>
+<text x="909" y="433" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<text x="40" y="539" font-size="25" fill="#099773" font-weight="700" text-anchor="start">片段 C</text>
+<rect x="170" y="502" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#099773" stroke-width="2"/>
+<text x="255" y="536" font-size="23" fill="#099773" font-weight="700" text-anchor="middle">帧 1</text>
+<text x="255" y="563" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M347 541 L378 541" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="388" y="502" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#099773" stroke-width="2"/>
+<text x="473" y="536" font-size="23" fill="#099773" font-weight="700" text-anchor="middle">帧 2</text>
+<text x="473" y="563" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M565 541 L596 541" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="606" y="502" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#099773" stroke-width="2"/>
+<text x="691" y="536" font-size="23" fill="#099773" font-weight="700" text-anchor="middle">帧 3</text>
+<text x="691" y="563" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<path d="M783 541 L814 541" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="824" y="502" width="171" height="78" rx="12" fill="#f2f7fd" stroke="#099773" stroke-width="2"/>
+<text x="909" y="536" font-size="23" fill="#099773" font-weight="700" text-anchor="middle">帧 4</text>
+<text x="909" y="563" font-size="18" fill="#4f6980" font-weight="400" text-anchor="middle">状态 → IK → 积分</text>
+<text x="40" y="644" font-size="23" fill="#4f6980" font-weight="400" text-anchor="start">每条片段首帧先收敛；后续传递配置与 QP 热启动状态。</text>
+<rect x="1073" y="146" width="511" height="522" rx="12" fill="#fff" stroke="#7542c8" stroke-width="2"/>
+<rect x="1074" y="147" width="509" height="52" rx="10" fill="#7542c8" stroke="none" stroke-width="2"/>
+<circle cx="1101" cy="173" r="18" fill="white"/>
+<text x="1101" y="181" font-size="23" fill="#7542c8" font-weight="700" text-anchor="middle">2</text>
+<text x="1130" y="181" font-size="25" fill="white" font-weight="700" text-anchor="start">为什么批处理快？</text>
+<rect x="1091" y="220" width="475" height="115" rx="12" fill="#f5efff" stroke="#7542c8" stroke-width="2"/>
+<text x="1109" y="254" font-size="25" fill="#7542c8" font-weight="700" text-anchor="start">JAX 编译 + 时间 scan</text>
+<text x="1109" y="292" font-size="22" fill="#103858" font-weight="400" text-anchor="start">减少 Python 逐帧调度开销</text>
+<rect x="1091" y="353" width="475" height="115" rx="12" fill="#f5efff" stroke="#7542c8" stroke-width="2"/>
+<text x="1109" y="387" font-size="25" fill="#7542c8" font-weight="700" text-anchor="start">长度分桶 + 编译缓存</text>
+<text x="1109" y="425" font-size="22" fill="#103858" font-weight="400" text-anchor="start">补齐长度，复用输入形状</text>
+<rect x="1091" y="486" width="475" height="150" rx="12" fill="#f5efff" stroke="#7542c8" stroke-width="2"/>
+<text x="1109" y="520" font-size="25" fill="#7542c8" font-weight="700" text-anchor="start">跨设备执行独立片段</text>
+<text x="1109" y="558" font-size="22" fill="#103858" font-weight="400" text-anchor="start">总帧数 / 总处理时间 → 批吞吐</text>
+<text x="1109" y="592" font-size="22" fill="#103858" font-weight="400" text-anchor="start">它不是在线单帧响应延迟</text>
+<rect x="16" y="689" width="1568" height="93" rx="12" fill="#fff5e5" stroke="#e7b45a" stroke-width="2"/>
+<text x="40" y="726" font-size="25" fill="#80531a" font-weight="700" text-anchor="start">公平计时：硬件 / 并行数 / 约束 / 精度 / 误差容忍度一致，并报告首次编译与 I/O。</text>
+<text x="40" y="763" font-size="23" fill="#80531a" font-weight="400" text-anchor="start">在线看 p50 / p95 单流延迟；离线看吞吐与总耗时。不能直接相除得出统一条件下的加速比。</text>
+<rect x="16" y="806" width="1568" height="78" rx="12" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="40" y="838" font-size="25" fill="#fff" font-weight="700" text-anchor="start">性能比较先对齐问题与计时边界，再比较数字。</text>
+<text x="40" y="867" font-size="18" fill="#d8efff" font-weight="400" text-anchor="start">原创原理示意 · 具体约定与适用条件见正文 · cxwiki / 2026-11-05</text>
+</svg>

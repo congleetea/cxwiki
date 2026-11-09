@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="960" viewBox="0 0 1600 960" role="img" aria-label="微分 IK：把“机器人应该到哪里”变成“下一步怎么动”">
+<defs><linearGradient id="header"><stop stop-color="#063c76"/><stop offset="1" stop-color="#087eae"/></linearGradient><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#397bad" stroke-width="1.6"/></marker></defs>
+<style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif} .label{font-weight:700}</style>
+<rect x="0" y="0" width="1600" height="960" rx="0" fill="#f3f7fc" stroke="none" stroke-width="2"/>
+<rect x="16" y="16" width="1568" height="110" rx="15" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="42" y="64" font-size="34" fill="#fff" font-weight="700" text-anchor="start">微分 IK：把“机器人应该到哪里”变成“下一步怎么动”</text>
+<text x="44" y="103" font-size="21" fill="#d8efff" font-weight="400" text-anchor="start">通用原理示意；实际旋转残差、雅可比和权重约定以实现为准。</text>
+<rect x="16" y="147" width="470" height="337" rx="12" fill="#fff" stroke="#087fca" stroke-width="2"/>
+<rect x="17" y="148" width="468" height="52" rx="10" fill="#087fca" stroke="none" stroke-width="2"/>
+<circle cx="44" cy="174" r="18" fill="white"/>
+<text x="44" y="182" font-size="23" fill="#087fca" font-weight="700" text-anchor="middle">1</text>
+<text x="73" y="182" font-size="25" fill="white" font-weight="700" text-anchor="start">比较目标与当前状态</text>
+<rect x="36" y="224" width="430" height="104" rx="12" fill="#eef7ff" stroke="#087fca" stroke-width="2"/>
+<text x="54" y="258" font-size="25" fill="#087fca" font-weight="700" text-anchor="start">目标：位置与朝向</text>
+<text x="54" y="296" font-size="22" fill="#103858" font-weight="400" text-anchor="start">人体映射、缩放和偏置后的结果</text>
+<rect x="36" y="351" width="430" height="106" rx="12" fill="#eef7ff" stroke="#087fca" stroke-width="2"/>
+<text x="54" y="385" font-size="25" fill="#087fca" font-weight="700" text-anchor="start">当前：FK(q)</text>
+<text x="54" y="423" font-size="22" fill="#103858" font-weight="400" text-anchor="start">输出身体位置、朝向与雅可比</text>
+<rect x="543" y="147" width="496" height="337" rx="12" fill="#fff" stroke="#07569b" stroke-width="2"/>
+<rect x="544" y="148" width="494" height="52" rx="10" fill="#07569b" stroke="none" stroke-width="2"/>
+<circle cx="571" cy="174" r="18" fill="white"/>
+<text x="571" y="182" font-size="23" fill="#07569b" font-weight="700" text-anchor="middle">2</text>
+<text x="600" y="182" font-size="25" fill="white" font-weight="700" text-anchor="start">局部线性化</text>
+<text x="568" y="245" font-size="27" fill="#103858" font-weight="400" text-anchor="start">误差 e：当前值 − 目标值</text>
+<text x="568" y="304" font-size="27" fill="#103858" font-weight="400" text-anchor="start">误差变化：ė ≈ Jv</text>
+<text x="568" y="363" font-size="27" fill="#103858" font-weight="400" text-anchor="start">希望误差下降：Jv ≈ −Ke</text>
+<text x="568" y="446" font-size="22" fill="#4f6980" font-weight="400" text-anchor="start">J 把广义速度映射到任务误差变化。</text>
+<rect x="1096" y="147" width="488" height="337" rx="12" fill="#fff" stroke="#7542c8" stroke-width="2"/>
+<rect x="1097" y="148" width="486" height="52" rx="10" fill="#7542c8" stroke="none" stroke-width="2"/>
+<circle cx="1124" cy="174" r="18" fill="white"/>
+<text x="1124" y="182" font-size="23" fill="#7542c8" font-weight="700" text-anchor="middle">3</text>
+<text x="1153" y="182" font-size="25" fill="white" font-weight="700" text-anchor="start">求解速度 v</text>
+<text x="1120" y="244" font-size="28" fill="#7542c8" font-weight="400" text-anchor="start">min  ½‖W(Jv + Ke)‖²</text>
+<text x="1120" y="301" font-size="28" fill="#7542c8" font-weight="400" text-anchor="start">       + ½vᵀΛv</text>
+<text x="1120" y="358" font-size="28" fill="#7542c8" font-weight="400" text-anchor="start">s.t.  Gv ≤ h，Av = b</text>
+<text x="1120" y="444" font-size="22" fill="#4f6980" font-weight="400" text-anchor="start">跟踪、正则与约束在同一问题中权衡。</text>
+<path d="M494 314 L532 314" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<path d="M1047 314 L1085 314" stroke="#397bad" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+<rect x="16" y="507" width="1023" height="326" rx="12" fill="#fff" stroke="#099773" stroke-width="2"/>
+<rect x="17" y="508" width="1021" height="52" rx="10" fill="#099773" stroke="none" stroke-width="2"/>
+<circle cx="44" cy="534" r="18" fill="white"/>
+<text x="44" y="542" font-size="23" fill="#099773" font-weight="700" text-anchor="middle">4</text>
+<text x="73" y="542" font-size="25" fill="white" font-weight="700" text-anchor="start">积分到下一配置，再重新计算</text>
+<rect x="36" y="583" width="983" height="110" rx="12" fill="#edf9f4" stroke="#099773" stroke-width="2"/>
+<text x="54" y="617" font-size="25" fill="#099773" font-weight="700" text-anchor="start">q⁺ = Integrate(q, v, Δt)</text>
+<text x="54" y="655" font-size="22" fill="#103858" font-weight="400" text-anchor="start">四元数基座：nq = n + 7，nv = n + 6；不能直接做 q + vΔt</text>
+<text x="42" y="742" font-size="24" fill="#103858" font-weight="400" text-anchor="start">当前配置 → 解一次局部 QP → 流形积分 → 新配置</text>
+<text x="42" y="787" font-size="24" fill="#103858" font-weight="400" text-anchor="start">下一帧继续热启动；首帧通常需要多次迭代建立初始姿态</text>
+<rect x="1096" y="507" width="488" height="326" rx="12" fill="#fff" stroke="#07569b" stroke-width="2"/>
+<rect x="1097" y="508" width="486" height="52" rx="10" fill="#07569b" stroke="none" stroke-width="2"/>
+<circle cx="1124" cy="534" r="18" fill="white"/>
+<text x="1124" y="542" font-size="23" fill="#07569b" font-weight="700" text-anchor="middle">5</text>
+<text x="1153" y="542" font-size="25" fill="white" font-weight="700" text-anchor="start">一个可算的小例子</text>
+<text x="1120" y="602" font-size="24" fill="#103858" font-weight="400" text-anchor="start">角度误差 −0.2 rad</text>
+<text x="1120" y="657" font-size="24" fill="#103858" font-weight="400" text-anchor="start">增益 10 /s → 希望速度 2 rad/s</text>
+<text x="1120" y="712" font-size="24" fill="#103858" font-weight="400" text-anchor="start">限速 0.8 rad/s → 取 0.8</text>
+<text x="1120" y="767" font-size="24" fill="#103858" font-weight="400" text-anchor="start">步长 0.01 s → 只移动 0.008 rad</text>
+<rect x="16" y="866" width="1568" height="78" rx="12" fill="url(#header)" stroke="none" stroke-width="2"/>
+<text x="40" y="898" font-size="25" fill="#fff" font-weight="700" text-anchor="start">局部 QP 决定这一小步；轨迹连续性、接触与物理稳定性需要另行建模和验证。</text>
+<text x="40" y="927" font-size="18" fill="#d8efff" font-weight="400" text-anchor="start">原创原理示意 · 具体约定与适用条件见正文 · cxwiki / 2026-11-05</text>
+</svg>
