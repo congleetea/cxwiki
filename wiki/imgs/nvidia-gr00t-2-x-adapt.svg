@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1120" viewBox="0 0 1440 1120" role="img" aria-label="X-Adapt：让任务与目标身体在同一模型中汇合"><defs><linearGradient id="head"><stop stop-color="#063c76"/><stop offset="1" stop-color="#087eae"/></linearGradient><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M1 1L10 5L1 9" fill="none" stroke="#397bad" stroke-width="1.8"/></marker></defs><style>text{font-family:"Noto Sans CJK SC",sans-serif}</style><rect width="1440" height="1120" fill="#f3f7fc"/><rect x="24" y="24" width="1392" height="118" rx="16" fill="url(#head)"/>
+<text x="48" y="73" font-size="36" fill="white" font-weight="700" text-anchor="start">X-Adapt：让任务与目标身体在同一模型中汇合</text>
+<text x="48" y="116" font-size="25" fill="#d8efff" font-weight="400" text-anchor="start">缺少的是目标机器人执行该任务的示范；目标身体仍须有依据。</text>
+<rect x="40" y="180" width="640" height="190" rx="14" fill="white" stroke="#7542c8" stroke-width="2.5"/>
+<text x="60" y="220" font-size="29" fill="#7542c8" font-weight="700" text-anchor="start">① 源示范：提供任务</text>
+<text x="60" y="263" font-size="26" fill="#103858" font-weight="400" text-anchor="start">人类动捕 / 手持 UMI</text>
+<text x="60" y="301" font-size="26" fill="#103858" font-weight="400" text-anchor="start">视频、语言、追踪的手部或夹爪轨迹</text>
+<text x="60" y="339" font-size="26" fill="#103858" font-weight="400" text-anchor="start">说明交互顺序、接触与运动策略</text>
+<rect x="760" y="180" width="640" height="190" rx="14" fill="white" stroke="#07569b" stroke-width="2.5"/>
+<text x="780" y="220" font-size="29" fill="#07569b" font-weight="700" text-anchor="start">② 目标机器人数据：提供身体</text>
+<text x="780" y="263" font-size="26" fill="#103858" font-weight="400" text-anchor="start">其他任务的 play / 遥操作</text>
+<text x="780" y="301" font-size="26" fill="#103858" font-weight="400" text-anchor="start">机器人外观、工作空间与控制响应</text>
+<text x="780" y="339" font-size="26" fill="#103858" font-weight="400" text-anchor="start">不含本次目标任务示范</text>
+<path d="M360 370V425" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<path d="M1080 370V425" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<rect x="40" y="430" width="640" height="175" rx="14" fill="white" stroke="#cf604d" stroke-width="2.5"/>
+<text x="60" y="470" font-size="29" fill="#cf604d" font-weight="700" text-anchor="start">③ 转换可计算的差异</text>
+<text x="60" y="513" font-size="26" fill="#103858" font-weight="400" text-anchor="start">人类：坐标锚定、指尖与手臂重定向</text>
+<text x="60" y="551" font-size="26" fill="#103858" font-weight="400" text-anchor="start">UMI：相机视角、控制点、开度语义</text>
+<rect x="760" y="430" width="640" height="175" rx="14" fill="white" stroke="#099773" stroke-width="2.5"/>
+<text x="780" y="470" font-size="29" fill="#099773" font-weight="700" text-anchor="start">④ 跨本体预训练 + 共训练</text>
+<text x="780" y="513" font-size="26" fill="#103858" font-weight="400" text-anchor="start">联合未来视频与动作目标</text>
+<text x="780" y="551" font-size="26" fill="#103858" font-weight="400" text-anchor="start">用目标机器人接口解释任务经验</text>
+<path d="M680 520H760" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<path d="M1080 605V655" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<rect x="40" y="650" width="640" height="315" rx="14" fill="white" stroke="#cf604d" stroke-width="2.5"/>
+<text x="65" y="695" font-size="29" fill="#cf604d" font-weight="700" text-anchor="start">局部展开：腕部参考点 → 抓取点</text>
+<circle cx="170" cy="790" r="10" fill="#07569b"/><circle cx="525" cy="790" r="10" fill="#099773"/>
+<path d="M185 790H505" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<text x="310" y="770" font-size="26" fill="#557087" font-weight="400" text-anchor="middle">旋转后的固定偏移</text>
+<text x="170" y="835" font-size="27" fill="#07569b" font-weight="700" text-anchor="middle">腕部 W</text>
+<text x="525" y="835" font-size="27" fill="#099773" font-weight="700" text-anchor="middle">抓取点 G</text>
+<text x="65" y="892" font-size="30" fill="#103858" font-weight="700" text-anchor="start">pG = pW + RW · d</text>
+<text x="65" y="936" font-size="26" fill="#103858" font-weight="400" text-anchor="start">UMI → YAM：沿接近轴偏移 0.1347 m</text>
+<rect x="760" y="660" width="640" height="170" rx="14" fill="white" stroke="#099773" stroke-width="2.5"/>
+<text x="780" y="700" font-size="29" fill="#099773" font-weight="700" text-anchor="start">⑤ 目标机器人执行</text>
+<text x="780" y="743" font-size="26" fill="#103858" font-weight="400" text-anchor="start">以真实机器人观测作为预测条件</text>
+<text x="780" y="781" font-size="26" fill="#103858" font-weight="400" text-anchor="start">输出目标本体的动作与未来画面</text>
+<rect x="760" y="860" width="640" height="150" rx="14" fill="white" stroke="#cf604d" stroke-width="2.5"/>
+<text x="780" y="900" font-size="29" fill="#cf604d" font-weight="700" text-anchor="start">相机几何仍然关键</text>
+<text x="780" y="943" font-size="26" fill="#103858" font-weight="400" text-anchor="start">UMI 腕部视角不对齐时</text>
+<text x="780" y="981" font-size="26" fill="#103858" font-weight="400" text-anchor="start">两项长程迁移完整成功均为 0%</text>
+<text x="50" y="1049" font-size="27" fill="#103858" font-weight="400" text-anchor="start">例外：匹配 XHAND 的 DexUMI 可仅用外骨骼示范；换手仍需适配。</text>
+<text x="40" y="1088" font-size="24" fill="#557087" font-weight="400" text-anchor="start">原创机制与几何示意 · 依据附录 B.1 / B.2 / E.3；不是论文实验图。</text>
+</svg>

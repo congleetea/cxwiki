@@ -3,7 +3,7 @@ title: GR00T Action Cascade：VLM 与动作扩散系统如何协作
 id: nvidia-gr00t-action-cascade
 type: concept
 created: 2026-11-07
-last_updated: 2026-11-07
+last_updated: 2026-11-10
 stage: budding
 verified_date: 2026-11-07
 institution: NVIDIA Research
@@ -16,6 +16,8 @@ tags: [NVIDIA, GR00T, VLA, Flow Matching, Diffusion Transformer]
 
 
 GR00T N1 系列把机器人策略拆成两个时间尺度：System 2 负责理解图像和语言、形成高层条件；System 1 负责在机器人状态约束下生成连续动作。这种设计解决的是频率冲突：语义推理不必每个控制周期运行，动作控制又不能等待一整个视觉语言模型完成复杂推理。
+
+本文讨论 N1 系列的动作级联。[GR00T 2](nvidia-gr00t-2-world-action-model.md) 的策略主干转向视频世界模型，联合预测未来视频和动作；其智能体系统仍可在外部连接高层推理模型，两种层次的“双系统”需要区分。
 
 ## 1. 输入、接口和输出
 

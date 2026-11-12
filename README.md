@@ -59,6 +59,8 @@ python -m pip install -r requirements-dev.txt
 python -m playwright install chromium
 ```
 
+基础概念图可用 `python scripts/draw_foundations.py --png` 重绘。图内公式使用 LaTeX 数学语法，排版为 SVG 矢量路径后导出 PNG，不依赖阅读端安装公式字体；中文排版使用 Noto Sans CJK 字体。
+
 ## 检查与提交
 
 ```bash

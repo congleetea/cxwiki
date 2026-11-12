@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation</title>
+  <meta name="description" content="GR00T 2 is a new generation of foundation world-action models that jointly predict future visual observations and embodied actions across grippers, dexterous hands, and humanoids.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="NVIDIA GEAR">
+  <meta property="og:title" content="GR00T 2: Scaling Robot Foundation Models for Generalization, Dexterity, and Adaptation">
+  <meta property="og:description" content="A new generation of foundation world-action models for grippers, dexterous hands, and humanoids.">
+  <meta property="og:image" content="https://research.nvidia.com/labs/gear/gr00t-2/assets/poster/hero_flip.jpg">
+  <meta property="og:url" content="https://research.nvidia.com/labs/gear/gr00t-2/">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2376b900'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/gr00t2.css?v=43">
+  <link rel="stylesheet" href="css/datamix.css?v=3">
+  <link rel="stylesheet" href="css/archfig.css?v=10">
+  <link rel="stylesheet" href="css/agentfig.css?v=1">
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- GEAR site header (mirrors components/Header.js so the page matches EgoScale) -->
+<header class="site-header">
+  <a class="logo" href="../">GEAR @ NVIDIA Research</a>
+  <nav class="site-nav" aria-label="GEAR">
+    <a href="../">Home</a>
+    <a href="../publications/">Publications</a>
+    <a href="../" class="dd">Blog</a>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="top">
+  <video id="hero-video" muted playsinline autoplay preload="auto" poster="assets/poster/hero_flip.jpg" aria-label="A dexterous robot hand turns the GR00T 1 block into GR00T 2">
+    <source src="assets/video/hero_flip_720.mp4" type="video/mp4" media="(max-width: 900px)">
+    <source src="assets/video/hero_flip.mp4" type="video/mp4" media="(max-width: 1366px) and (max-resolution: 1.5dppx)">
+    <source src="assets/video/hero_flip_4k.mp4" type="video/mp4">
+  </video>
+  <div class="copy">
+    <h1>GR00T 2</h1>
+    <p class="tagline">Scaling robot foundation models for generalization, dexterity, and adaptation.</p>
+    <div class="row">
+      <div class="btns">
+        <a class="btn primary" href="assets/gr00t2_whitepaper.pdf" target="_blank" rel="noopener">Paper</a>
+        <a class="btn" href="#cite">BibTeX</a>
+        <span class="btn soon" aria-disabled="true">Code <small>Available in December</small></span>
+      </div>
+      <p class="meta">November 2026</p>
+    </div>
+  </div>
+  <button class="replay" id="replay" type="button">↻ Replay</button>
+</section>
+
+<nav class="toc" id="toc" aria-label="On this page">
+  <p class="toc-h">On this page</p>
+  <ol>
+    <li><a href="#demos">Demos</a></li>
+    <li><a href="#intro">Introducing GR00T 2</a></li>
+    <li><a href="#model">Model Architecture</a></li>
+    <li><a href="#data">Pretraining Data</a></li>
+    <li><a href="#scaling">Scaling Human Video</a></li>
+    <li><a href="#x-adapt">X-Adaptability</a>
+      <ol>
+        <li><a href="#h2r">Human → Robot</a></li>
+        <li><a href="#umi">UMI → YAM</a></li>
+        <li><a href="#dexumi">DexUMI → Dexterous Hand</a></li>
+      </ol>
+    </li>
+    <li><a href="#dexterity">Dexterity</a></li>
+    <li><a href="#adaptation">Fast Adaptation</a></li>
+    <li><a href="#agentic">Agentic GR00T 2</a>
+      <ol>
+        <li><a href="#agentic-control">Agentic Control</a></li>
+        <li><a href="#steering">Visual Steering</a></li>
+      </ol>
+    </li>
+    <li><a href="#whole-body">Whole-Body Control</a></li>
+    <li><a href="#simulation">Simulation</a></li>
+    <li><a href="#cite">Citation</a></li>
+  </ol>
+</nav>
+
+<article class="post">
+
+<!-- ================= DEMOS ================= -->
+<section class="sec" id="demos" aria-label="Demos">
+  <div class="dexpt wide" data-picker="demopt">
+    <figure class="dexpt-main">
+      <div class="frame lift"><video data-src="assets/video/dex_microscope_hold.mp4" data-src4k="assets/video/dex_microscope_hold_4k.mp4" poster="assets/poster/dex_microscope_hold.jpg" muted loop playsinline preload="none"></video></div>
+      <figcaption><span><b class="dexpt-title">Microscope</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+    </figure>
+    <div class="dexpt-row" aria-label="Demos"></div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ================= INTRODUCING ================= -->
+<section class="sec" id="intro">
+  <h2>Introducing GR00T 2</h2>
+  <p>We introduce GR00T 2, a new generation of foundation <strong>world-action models (WAMs)</strong>. GR00T 2 predicts future video and robot actions together, learning how physical interactions unfold along with the actions that produce them. The models run on parallel grippers, dexterous hands, and humanoids. Learning to predict the world, not just act in it, unlocks three new capabilities.</p>
+
+  <div class="pillar">
+    <h3><span class="n">01</span><a href="#x-adapt">Emergence of X-Adaptability</a></h3>
+    <p>Skills shown only by humans, or with handheld and wearable devices, carry over to robots that never practiced them.</p>
+    <ul class="caps">
+      <li><a href="#h2r"><strong>Human → robot.</strong></a> Shown the task only by humans, never on the robot, a robot with two five-fingered hands lines a lab funnel with filter paper and wets it with a wash bottle in 65% of trials.</li>
+      <li><a href="#umi"><strong>Handheld UMI gripper → YAM.</strong></a> Shown only with a handheld UMI gripper, a different gripper from the robot's own, the YAM arm assembles a toy dump truck end to end in 60% of trials, a long-horizon task that takes up to 4 minutes.</li>
+      <li><a href="#dexumi"><strong>Wearable hand → robot hand.</strong></a> Shown only with DexUMI, a wearable hand that mirrors the robot's fingers, a two-handed robot handles long-horizon dexterous work, such as preparing banana yogurt and scooping granola for breakfast, and highly dynamic tasks like striking a match to light a lamp.</li>
+    </ul>
+  </div>
+
+  <div class="pillar">
+    <h3><span class="n">02</span><a href="#adaptation">Fast Adaptation and Agentic Control</a></h3>
+    <p>GR00T 2 performs many new tasks zero-shot and masters them from a handful of demonstrations. Because it predicts the outcome it is acting toward, a reasoning model can also direct it.</p>
+    <ul class="caps">
+      <li><a href="#dexter50"><strong>Zero-shot generalization and few-shot adaptation.</strong></a> On 50 tasks never seen on the target robot, only in human video or on other robots, GR00T 2 succeeds 40% of the time zero-shot. Five demonstrations per task, <strong>under 3 minutes of robot data</strong>, raise that to 95% after a 30-minute fine-tune on a single RTX 5090.</li>
+      <li><a href="#dexterity"><strong>Dexterity.</strong></a> With minimal post-training, GR00T 2 performs long-horizon, highly dexterous tasks with two 22-DoF Sharpa hands, such as seating GB300 memory modules (85%) and assembling a toy truck (65%). Previous models could not do these tasks.</li>
+      <li><a href="#rl"><strong>Self-improvement.</strong></a> Reinforcement learning on the real robot lifts three contact-rich insertion tasks to 88–96% success.</li>
+      <li><a href="#agentic-control"><strong>Agentic control.</strong></a> With a reasoning model calling GR00T 2 through the WAM API, YAM completes 97 or more of 100 back-to-back assemblies of each of three toys, recovering from stalls and errors along the way.</li>
+      <li><a href="#steering"><strong>Visual steering.</strong></a> When a reasoning model gives step instructions and marks where to grasp and release on GR00T 2's camera view, YAM follows what-and-where instructions 92% of the time, up from 40% with the task instruction alone, and finishes 17 of 20 long-horizon trash-sorting runs.</li>
+    </ul>
+  </div>
+
+  <div class="pillar">
+    <h3><span class="n">03</span><a href="#whole-body">Whole-Body Loco-Manipulation with GR00T 2 Turbo</a></h3>
+    <p>GR00T 2 Turbo is GR00T 2 built for speed. A smaller transformer and a more compact video representation make it light enough to run on the <strong>Unitree G1 humanoid</strong> itself, steering the robot's whole body as it walks, bends, reaches, and carries.</p>
+    <ul class="caps">
+      <li><a href="#turbo-latency"><strong>Real time on the robot.</strong></a> Each prediction takes 124 ms on the G1's own Jetson Thor.</li>
+      <li><a href="#whole-body"><strong>Whole-body skills.</strong></a> Through the SONIC whole-body controller, Turbo scoops and serves popcorn in all 48 trials and clears a table of diverse objects in 93% of trials.</li>
+    </ul>
+  </div>
+</section>
+
+<hr>
+
+<!-- ================= MODEL ================= -->
+<section class="sec" id="model">
+  <h2>Model Architecture</h2>
+  <p>One diffusion transformer denoises future video and robot actions together. Predicting how the scene should change lets GR00T 2 learn physics from human video; small per-robot heads turn the plan into motor commands for each body.</p>
+  <div class="archfig wide reveal" id="archfig" aria-label="GR00T 2 architecture: past video, instruction and robot state go into one diffusion transformer, which predicts future video and an action chunk"></div>
+  <p class="chart-foot">GR00T 2 reads recent video, the instruction and the robot state, denoises future video and an action chunk together, executes the chunk, and repeats. The footage is a GR00T 2 rollout of truck assembly on Dexter (Tianji robot + Sharpa hands), shown from the head camera and both wrist cameras at the model's own 320×224 resolution. The history panel is the real 0.8 s the model saw. The future panel is video that GR00T 2 generated from that moment for all three cameras, not the real footage.</p>
+</section>
+
+<hr>
+
+<!-- ================= DATA ================= -->
+<section class="sec" id="data">
+  <h2>Pretraining Data: Humans, Handheld Grippers, and Robots</h2>
+  <p>GR00T 2 is pretrained on one mixture of three kinds of data: <strong>402,730 hours</strong> of egocentric video of people at work, <strong>10,184 hours</strong> of demonstrations with a handheld UMI gripper across 2,897 tasks, and <strong>23,500 hours</strong> of robot teleoperation. The robot data spans parallel-gripper arms (YAM and Franka), dexterous hands (Sharpa and Wuji), and the Unitree G1 humanoid. The human video comes from our egocentric Human-1M dataset, and 100,000 hours of it are openly available as <a href="https://huggingface.co/datasets/nvidia/PhysicalAI-Human-1M-100K" target="_blank" rel="noopener">Human-1M-100K</a> on Hugging Face, which you can browse in the <a href="https://huggingface.co/spaces/nvidia/PhysicalAI-Human-1M-Explorer" target="_blank" rel="noopener">Human-1M Dataset Explorer</a>.</p>
+  <div class="datamix wide reveal" id="datamix" aria-label="GR00T 2 pretraining data: human video, UMI, and robot data merging into one mixture"></div>
+</section>
+
+<hr>
+
+<!-- ================= SCALING ================= -->
+<section class="sec" id="scaling">
+  <h2>Scaling Human Video in Pretraining</h2>
+  <p>Human video is by far the largest part of the mixture. To measure how much it helps the robot as it scales, we pretrain four models on none, 1%, 10%, and 100% of the human video, then evaluate each on 72 downstream Dexter tasks, both as video rollouts and on the real robot. Task progress rises at every step, from 64% to 77% in video rollouts and from 50% to 70% on the robot.</p>
+  <div class="grid-2 wide reveal">
+    <div class="chart" data-chart="scaleVideo">
+      <h4>Video rollout task progress (%)</h4>
+    </div>
+    <div class="chart" data-chart="scaleReal">
+      <h4>Real-robot task progress (%)</h4>
+    </div>
+  </div>
+  <p class="chart-foot">x: share of the human video in pretraining (log scale). Error bars: 1 SD across repeated runs, 72 tasks.</p>
+</section>
+
+<hr>
+
+<!-- ================= X-ADAPT ================= -->
+<section class="sec" id="x-adapt">
+  <h2>X-Adaptability: Learn from Humans, Run on Other Robots</h2>
+  <p>GR00T 2 uses human video and data from other robots to learn skills for a new robot. The target robot does not need to have demonstrated the task itself. We call this cross-adaptation, or X-Adapt, and show it three ways: from humans to a dexterous robot, from a handheld gripper to a robot arm, and from a wearable hand to a robot hand.</p>
+  <div class="xa wide reveal">
+    <a class="xa-col" href="#h2r"><span class="xa-h">Human <i>→</i> Dexter</span><img src="assets/img/xa_human_demo.jpg" alt="A person sets up filter paper in a funnel" loading="lazy"><span class="xa-ar" aria-hidden="true">↓</span><img src="assets/img/xa_human_robot.jpg" alt="Dexter sets up filter paper in a funnel" loading="lazy"></a>
+    <a class="xa-col" href="#umi"><span class="xa-h">UMI <i>→</i> YAM</span><img src="assets/img/xa_umi_demo.jpg?v=3" alt="A person with a handheld UMI gripper sorts packages from a conveyor belt into two bins" loading="lazy"><span class="xa-ar" aria-hidden="true">↓</span><img src="assets/img/xa_umi_yam.jpg?v=3" alt="YAM sorts packages from the same conveyor belt into the two bins" loading="lazy"></a>
+    <a class="xa-col" href="#dexumi"><span class="xa-h">DexUMI <i>→</i> Dex hand</span><img src="assets/img/xa_dexumi_demo.jpg" alt="A person wearing the DexUMI exoskeleton scoops granola" loading="lazy"><span class="xa-ar" aria-hidden="true">↓</span><img src="assets/img/xa_dexumi_robot.jpg" alt="A robot hand scoops granola" loading="lazy"></a>
+  </div>
+  <p class="xa-cap">Top: the demonstration GR00T 2 learns from. Bottom: GR00T 2 performing the same task on a robot that never saw a demonstration of it.</p>
+
+  <div class="block" id="h2r">
+    <h3>Human → Robot, with No Teleoperation</h3>
+    <p>Each chemistry-lab task is demonstrated only by people wearing gloves and head and wrist cameras. Task-agnostic play data teach Dexter how its own body looks and moves.</p>
+    <figure class="wide reveal">
+      <div class="frame lift"><video data-src="assets/video/xadapt_h2r_filter.mp4" poster="assets/poster/xadapt_h2r_filter.jpg" muted loop playsinline preload="none"></video></div>
+      <figcaption>Filter-paper setup: the human demonstration used for training, then GR00T 2 on Dexter, autonomous.</figcaption>
+    </figure>
+    <div class="chart reveal" data-chart="h2r">
+      <h4>Success with zero teleoperated demonstrations</h4>
+      <p class="note">Dexter, 20 trials per task. Learning from human demonstrations alone, with no teleoperation, GR00T 2 succeeds on all four tasks.</p>
+    </div>
+  </div>
+
+  <div class="block" id="umi">
+    <h3>UMI → YAM: From a Handheld Gripper to a Robot Arm</h3>
+    <p>Conveyor sorting and tossing, the toy dump-truck assembly and the NIST board disassembly are demonstrated only with a handheld <a href="https://research.nvidia.com/labs/gear/hardware-prototypes/GEAR_UMI/index.html" target="_blank" rel="noopener">GEAR UMI</a> gripper. YAM contributes only task-agnostic teleoperation data, with no demonstration of any of these tasks.</p>
+    <div class="dexpt wide" data-picker="umipt">
+      <figure class="dexpt-main">
+        <div class="grid-2">
+          <div>
+            <p class="pair-label"><i></i>UMI demo · training data</p>
+            <div class="frame lift"><video data-role="human" data-src="assets/video/xadapt_umi_toss_human.mp4" poster="assets/poster/xadapt_umi_toss_human.jpg" muted loop playsinline preload="none"></video></div>
+          </div>
+          <div>
+            <p class="pair-label g"><i></i>GR00T 2 on YAM · autonomous</p>
+            <div class="frame lift"><video data-src="assets/video/xadapt_umi_toss_robot.mp4" poster="assets/poster/xadapt_umi_toss_robot.jpg" muted loop playsinline preload="none"></video></div>
+          </div>
+        </div>
+        <figcaption><span><b class="dexpt-title">Conveyor sorting &amp; tossing</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Tasks"></div>
+    </div>
+    <div class="chart reveal" data-chart="umi">
+      <h4>End-to-End success rate on YAM with 0 YAM data for the task</h4>
+      <p class="note">Click a task to watch it. *Conveyor: share of the 50 items sorted.</p>
+    </div>
+  </div>
+
+  <div class="block" id="dexumi">
+    <h3>DexUMI → Dexterous Hand: From a Wearable Hand to a Robot Hand</h3>
+    <p><a href="https://research.nvidia.com/labs/gear/hardware-prototypes/GEAR_DexUMI/index.html" target="_blank" rel="noopener">GEAR DexUMI</a> is a wearable exoskeleton that matches a robot hand's joints, so what a person does with it maps directly onto the robot. From DexUMI demonstrations alone, GR00T 2 learns three bimanual tasks on a Tianji robot with two XHAND1 hands: preparing banana yogurt and scooping granola, the two halves of a breakfast task, and striking a match to light a lamp under a flask before putting the match out in water. For more information on GEAR Hardware, check out the <a href="https://research.nvidia.com/labs/gear/hardware-prototypes/" target="_blank" rel="noopener">open-source hardware website</a>.</p>
+    <div class="dexumi wide reveal" data-pairtabs>
+      <div class="pair-chart" data-task="Make breakfast" data-thumb="dexumi_breakfast_robot">
+        <figure>
+          <p class="pair-label"><i></i>DexUMI demo · training data</p>
+          <div class="frame"><video data-src="assets/video/dexumi_breakfast_human_full.mp4" poster="assets/poster/dexumi_breakfast_human_full.jpg" muted loop playsinline preload="none"></video></div>
+        </figure>
+        <figure>
+          <p class="pair-label g"><i></i>GR00T 2 on Tianji · autonomous</p>
+          <div class="frame"><video data-src="assets/video/dexumi_breakfast_robot.mp4" poster="assets/poster/dexumi_breakfast_robot.jpg" muted loop playsinline preload="none"></video></div>
+        </figure>
+      </div>
+      <div class="pair-chart" data-task="Strike a match" data-thumb="dexumi_strike_robot" hidden>
+        <figure>
+          <p class="pair-label"><i></i>DexUMI demo · training data</p>
+          <div class="frame"><video data-src="assets/video/dexumi_strike_human.mp4" poster="assets/poster/dexumi_strike_human.jpg" muted loop playsinline preload="none"></video></div>
+        </figure>
+        <figure>
+          <p class="pair-label g"><i></i>GR00T 2 on Tianji · autonomous</p>
+          <div class="frame"><video data-src="assets/video/dexumi_strike_robot.mp4" poster="assets/poster/dexumi_strike_robot.jpg" muted loop playsinline preload="none"></video></div>
+        </figure>
+      </div>
+      <div class="dexpt-row" aria-label="Tasks"></div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ================= DEXTERITY ================= -->
+<section class="sec" id="dexterity">
+  <h2>Dexterity: Fine Motor Control for Five-Fingered Hands</h2>
+  <p>With only a small amount of teleoperation data per task, post-training lets GR00T 2 perform long-horizon dexterous tasks with Dexter's two 22-DoF Sharpa hands: labeling packages, swapping parts, assembling toys, and running chemistry-lab procedures end to end.</p>
+
+  <div class="block" id="dex-tasks">
+    <div class="dexpt wide" id="dexpt" data-picker="dexpt">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/dexd_ship_cm.mp4" poster="assets/poster/dexd_ship_cm.jpg" muted loop playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Make shipping label</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Tasks"></div>
+    </div>
+    <div class="chart reveal" data-chart="dex7">
+      <h4>Success on the Dexter post-training tasks</h4>
+      <p class="note">Click a task to watch it.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Human → Sim → Real: From One Human Demo to In-Hand Tool Use</h3>
+    <p>Starting from a single human demonstration of using a hammer, we reconstruct the task in simulation and refine the skill with reinforcement learning. GR00T 2 learns from that simulation data and transfers directly to a real robot with Sharpa hands.</p>
+    <div class="dexpt wide" data-picker="hammerpt">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/dexsonic_human.mp4" poster="assets/poster/dexsonic_human.jpg" muted playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Human demo</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Videos"></div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ================= ADAPTATION ================= -->
+<section class="sec" id="adaptation">
+  <h2>Fast Adaptation: A New Task from a Few Demonstrations</h2>
+  <p>Post-trained for about six epochs on a small dataset per task, GR00T 2 learns each task from a few hours of demonstrations.</p>
+
+  <div class="block" id="dexter50">
+    <h3>Zero-Shot Generalization, Few-Shot Mastery</h3>
+    <p>GR00T 2 is pretrained on teleoperation data from many robots and on large-scale human video, and it learns by predicting how the world changes as it acts. Because it has seen so many tasks, a skill shown on one embodiment, or only in human video, carries over to a robot that has never practiced it. We test this on 50 tasks that appear in other robots' data or in human video but never in the target robot's own data: a bimanual robot with two Sharpa hands.</p>
+    <div class="stats four reveal">
+      <div class="stat g"><b data-count="40">40<small>/ 50</small></b><span>unseen tasks already succeed zero-shot, with no data from the target robot</span></div>
+      <div class="stat g"><b data-count="95">95<small>%</small></b><span>success with five demonstrations per task, up from 40% zero-shot</span></div>
+      <div class="stat"><b>&lt;3<small>min</small></b><span>of robot data per task: the five demonstrations</span></div>
+      <div class="stat"><b>30<small>min</small></b><span>of fine-tuning on a single RTX 5090</span></div>
+    </div>
+    <p>Zero-shot, from the instruction alone, GR00T 2 succeeds in 40% of trials, and on 40 of the 50 tasks it succeeds at least once. Most misses come from execution, not intent: GR00T 2 does the right steps in the right order, and a single step falls short on precision. A little robot data closes that gap. One demonstration per task lifts success to 71%, and five, <strong>under 3 minutes of robot data</strong>, lift it to 95%, with 37 of the 50 tasks succeeding in every trial. Each adaptation is a <strong>30-minute</strong> LoRA fine-tune on a <strong>single RTX 5090</strong>.</p>
+    <figure class="wide reveal">
+      <div class="frame blend"><video data-src="assets/video/dexter50_reel.mp4?v=2" poster="assets/poster/dexter50_reel.jpg?v=2" aria-label="50 tasks the robot had never seen, each clip GR00T 2 running autonomously; mean success over the 50 tasks rises from 40% zero-shot to 71% with one demonstration and 95% with five" muted playsinline preload="none"></video></div>
+    </figure>
+    <div class="chart-pair wide">
+      <div class="chart reveal" data-chart="fewshotAvg"><h4>Average success over 50 tasks</h4></div>
+      <div class="chart reveal" data-chart="fewshotBins"><h4>Tasks by success rate</h4></div>
+    </div>
+    <p class="chart-foot">Zero-shot runs the pretrained model as is; 1-shot and 5-shot fine-tune it with LoRA on 1 or 5 demonstrations per task.</p>
+  </div>
+
+  <div class="block">
+    <h3>YAM Post-Training</h3>
+    <p>Six long-horizon assembly and insertion tasks on YAM, each post-trained for about six epochs.</p>
+    <div class="chart reveal" data-chart="yam">
+      <h4>YAM post-training success</h4>
+      <p class="note">20 trials per task and model.</p>
+    </div>
+  </div>
+
+  <div class="block" id="rl">
+    <h3>Contact-Rich Skills with Real-World RL</h3>
+    <p>Reinforcement learning on the real robot, driven only by task-level success signals, lifts all three contact-rich tasks: from 40–76% success after supervised post-training to 88–96% with GRPO-induced self-imitation.</p>
+    <div class="dexpt wide" data-picker="rlpt">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/rl_screw_pipe_v10.mp4" poster="assets/poster/rl_screw_pipe_v10.jpg" muted loop playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Fixed-pipe fittings</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Tasks"></div>
+    </div>
+    <div class="chart reveal" data-chart="rl">
+      <h4>Success on three contact-rich tasks with real-world RL</h4>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ================= AGENTIC ================= -->
+<section class="sec" id="agentic">
+  <h2>Agentic GR00T 2: Control and Steering</h2>
+  <p>A frontier reasoning agent and GR00T 2 handle complementary parts of a task. The agent decides <em>what</em> to do: it breaks a long task into steps, checks progress, and writes code. GR00T 2 decides <em>how</em>, performing the contact-rich manipulation that is hard to script. Through the WAM API, the agent can control GR00T 2 as a tool and steer it by marking targets on its camera view.</p>
+
+  <div class="block" id="agentic-control">
+    <h3>Agentic Control: 97 or More Successes out of 100 Assembly Trials</h3>
+    <p>The agent runs as System 2 (S2). In an observe–reason–act–verify loop, it calls GR00T 2 as a tool alongside tools for camera images, robot state, and code-as-policy (CaP) skills. On real robots, GR00T 2 performs most of the manipulation. The agent watches it, and when a part drops or progress stalls, it repairs the scene with a CaP skill learned with ASPIRE and hands control back. In simulation, the agent instead runs a task-level program that calls GR00T 2 for each manipulation step. We also used simulation to develop recovery skills for some assembly tasks and then transferred them to the real robot.</p>
+    <figure class="wide reveal">
+      <div class="agentfig" id="agentfig" aria-label="Agentic runtime. The agent, given a system prompt, skills and task context, runs an observe, reason, act, verify loop. Through an MCP server it calls GR00T 2 (wam_act, stop_wam), observation tools (get_image, get_robot_state, localize_object) and CaP skills (move_to_pose, set_gripper, drop_any_object, flip_tractor). GR00T 2 and CaP programs drive the real or simulated robot."></div>
+      <figcaption>The agent reaches GR00T 2, observation tools, and CaP skills through one tool server.</figcaption>
+    </figure>
+    <p>Each assembly trial starts by dumping all parts onto the table, so every trial begins from a cluttered layout that does not appear in the post-training data. With the agent, GR00T 2 assembles the toy plane, the toy tractor, and the Hot Wheels car in 98, 97, and 97 of 100 trials. The same post-trained policy without the agent succeeds in 71–84, and supervised post-training alone in 23–69.</p>
+    <div class="dexpt wide" data-picker="agentpt">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/agentic_assembly_plane.mp4" poster="assets/poster/agentic_assembly_plane.jpg" muted loop playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Toy plane</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Tasks"></div>
+    </div>
+    <p class="chart-foot">Each video is one continuous session. Top left: the agent's reasoning. Bottom: playback speed and episode count.</p>
+    <div class="chart reveal" data-chart="assembly">
+      <h4>Successful assemblies out of 100 trials</h4>
+      <p class="note">YAM, continuous runs.</p>
+    </div>
+    <p>The agent also composes the skills from <a href="#rl">real-world RL</a> into longer tasks: inserting five Ethernet cables into a network switch, or plugging five chargers into the outlets a person points at. CaP localizes, grasps, and positions each part; GR00T 2 performs the precision-critical insertion; and the agent sequences the steps, verifies each insertion, and calls a CaP recovery when needed. Replacing the supervised policy with the RL-trained GR00T 2 raises full-task success from 12 to 19 of 20 runs on cables and from 2 to 20 of 20 on chargers.</p>
+    <div class="dexpt wide" data-picker="cablept">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/agentic_five_cables.mp4" poster="assets/poster/agentic_five_cables.jpg" muted loop playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Multi-cable insertion</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Videos"></div>
+    </div>
+    <p class="chart-foot">Top left: the agent's plan and progress. Bottom: playback speed.</p>
+    <div class="stats four reveal">
+      <div class="stat g"><b>19<small>/ 20</small></b><span>runs inserting 5 Ethernet cables in sequence (12/20 without RL)</span></div>
+      <div class="stat g"><b>20<small>/ 20</small></b><span>runs plugging 5 chargers into pointed-at outlets (2/20 without RL)</span></div>
+      <div class="stat"><b>292<small>/ 300</small></b><span>assembly trials succeeded, across all three toys</span></div>
+      <div class="stat"><b data-count="98">98<small>/ 100</small></b><span>toy-plane trials succeeded, up from 69 with SFT alone</span></div>
+    </div>
+  </div>
+
+  <div class="block" id="steering">
+    <h3>Visual Steering: Showing GR00T 2 Where to Act</h3>
+    <p>A language instruction can leave the target object, its destination, or the acting arm unclear, especially in clutter. With visual steering, the planner marks a grasp point on the target object and a release point at its destination on GR00T 2's camera view, colored by the arm that should act. GR00T 2 generates the rest of the motion: approach, grasp, transport, and release. After each step, the planner looks again and decides whether to continue, retry, or stop. Training needs no new data: the marks are extracted from the gripper and hand states in existing demonstrations, and the same model still follows language alone.</p>
+    <div class="dexpt wide" data-picker="steerpt">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/agentic_hanoi.mp4" poster="assets/poster/agentic_hanoi.jpg" muted loop playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Tower of Hanoi</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Videos"></div>
+    </div>
+    <p>Both robots are evaluated with the same protocol, in three settings: GR00T 2 given only the task instruction, the planner's step instructions, or the step instructions together with marks. On short-horizon instructions about what to move and where, visual steering (step instructions plus marks) raises success from 40% to 92% on YAM and from 30% to 70% on Dexter, whereas the planner's step instructions alone reach 66% and 33%. On instructions about how to move, such as the action type or the grasp type, the gain is smaller: 44% to 59% on YAM.</p>
+    <div class="chart reveal" data-chart="steerShort">
+      <h4>Short-horizon instruction following, success rate</h4>
+      <p class="note">YAM: 90 what-and-where and 54 how trials per setting. Dexter: 64 trials per setting, all what-and-where.</p>
+    </div>
+    <p>Over long horizons, these single-step gains compound. On YAM, GR00T 2 without marks completes no trash-sorting or board-disassembly episode, even with the planner's step instructions; with marks, it completes 17 of 20 and 3 of 10. On Dexter, the marks place more items in trash sorting but rarely complete the full task, which is the current limit of the system. Marks also convey neither an object's final orientation nor the motion between grasp and release, such as pouring or wiping; those still come from language.</p>
+    <div class="chart reveal" data-chart="steerLong">
+      <h4>Long-horizon tasks, full-task success</h4>
+      <p class="note">20 trash-sorting and 10 NIST board-disassembly episodes per setting.</p>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ================= WHOLE-BODY ================= -->
+<section class="sec" id="whole-body">
+  <h2>GR00T 2 Turbo: Whole-Body Loco-Manipulation</h2>
+  <p>A humanoid must place its hands precisely while staying balanced as its whole body moves, often quickly. With its lower prediction cost, GR00T 2 Turbo runs onboard a Unitree G1 and steers the SONIC whole-body controller through latent whole-body commands. The videos below show it serving popcorn, cleaning up a spill, and picking up trash in an office cafeteria.</p>
+  <div class="dexpt wide" data-picker="g1pt">
+    <figure class="dexpt-main">
+      <div class="frame lift"><video data-src="assets/video/g1_popcorn.mp4" poster="assets/poster/g1_popcorn.jpg" muted loop playsinline preload="none"></video></div>
+      <figcaption><span><b class="dexpt-title">Popcorn serving</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+    </figure>
+    <div class="dexpt-row" aria-label="Tasks"></div>
+  </div>
+
+  <div class="block" id="turbo">
+    <h3>GR00T 2 Turbo: Efficient World-Action Modeling</h3>
+    <p>GR00T 2 Turbo lowers the cost of world-action modeling in two ways: a smaller joint video–action transformer (2B parameters) and a higher-compression video encoder that exploits redundancy in video. It still predicts future observations and actions jointly, with the same action horizon, and it is the model behind the onboard G1 results below. Turbo also remains competitive on other embodiments. On YAM it reaches 90% on fixed-pipe fittings and 100% on inserting a wire into a breaker, ahead of GR00T 2 on both. It trails GR00T 2 on the other four YAM tasks and on five of the six Dexter tasks in the post-training charts above, tying on the sixth. The Dexterity and YAM post-training charts report both variants task by task.</p>
+  </div>
+
+  <div class="block" id="turbo-latency">
+    <h3>Fast Enough to Run on the Robot</h3>
+    <p>Turbo's smaller transformer and compact video representation, together with inference optimizations shared by every configuration below, make onboard execution possible. The optimizations cut median prediction latency by 66–86% (2.9–7.2×) relative to eager BF16 execution of the same checkpoint. Optimized, a Turbo prediction for G1 takes 38 ms on an RTX 5090 and 124 ms onboard Jetson Thor, where it plans 1.6 s chunks of whole-body motion tokens about once per second; SONIC executes them at 50 Hz.</p>
+    <div class="chart reveal" data-chart="latency">
+      <h4>Median prediction latency, milliseconds</h4>
+      <p class="note">Eager BF16 → optimized.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Think Slow, Move Fast</h3>
+    <p>A reasoning model chooses the task; GR00T 2 Turbo imagines and plans; SONIC turns latent whole-body tokens into joint targets. Everything but the reasoning model runs onboard.</p>
+    <div class="diagram wide reveal" data-anim>
+      <svg viewBox="0 0 1200 330" role="img" aria-label="System diagram. A reasoning model sends a WAM API call to GR00T 2 Turbo, which streams latent whole-body tokens to SONIC, a 50 hertz whole-body controller, which sends joint targets at 50 hertz to the Unitree G1 joint controllers at 1 kilohertz. GR00T 2 Turbo runs onboard on NVIDIA Jetson AGX Thor and SONIC on a Jetson Orin NX. Camera images and proprioception flow back to GR00T 2 Turbo.">
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#9ca3af"/></marker>
+          <marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#76b900"/></marker>
+        </defs>
+        <rect x="314" y="18" width="880" height="292" rx="18" fill="#fbfaf7" stroke="#c9c9c9" stroke-dasharray="5 6"/>
+        <text x="336" y="46" class="d-mono">Onboard · GR00T 2 Turbo on NVIDIA Jetson AGX Thor · SONIC on Jetson Orin NX</text>
+
+        <rect x="8" y="92" width="200" height="140" rx="16" class="d-box"/>
+        <text x="108" y="150" text-anchor="middle" class="d-label">Reasoning model</text>
+        <text x="108" y="176" text-anchor="middle" class="d-sub">picks the task</text>
+        <text x="108" y="196" text-anchor="middle" class="d-sub">and the target</text>
+
+        <path d="M210 162 H 326" class="d-arrow" marker-end="url(#ah)"/>
+        <text x="262" y="150" text-anchor="middle" class="d-mono">WAM API</text>
+
+        <rect x="330" y="92" width="220" height="140" rx="16" class="d-box g"/>
+        <text x="440" y="150" text-anchor="middle" class="d-label">GR00T 2 Turbo</text>
+        <text x="440" y="176" text-anchor="middle" class="d-sub">world-action model</text>
+        <text x="440" y="196" text-anchor="middle" class="d-sub">imagines + plans</text>
+
+        <path d="M552 162 H 716" class="d-arrow g flow" marker-end="url(#ahg)"/>
+        <text x="634" y="134" text-anchor="middle" class="d-mono g">latent</text>
+        <text x="634" y="150" text-anchor="middle" class="d-mono g">whole-body tokens</text>
+
+        <rect x="720" y="92" width="190" height="140" rx="16" class="d-box"/>
+        <text x="815" y="150" text-anchor="middle" class="d-label">SONIC</text>
+        <text x="815" y="176" text-anchor="middle" class="d-sub">whole-body controller</text>
+        <text x="815" y="196" text-anchor="middle" class="d-sub">50 Hz</text>
+
+        <path d="M912 162 H 1016" class="d-arrow" marker-end="url(#ah)"/>
+        <text x="964" y="134" text-anchor="middle" class="d-mono">joints</text>
+        <text x="964" y="150" text-anchor="middle" class="d-mono">50 Hz</text>
+
+        <rect x="1020" y="92" width="166" height="140" rx="16" class="d-box"/>
+        <text x="1103" y="150" text-anchor="middle" class="d-label">Unitree G1</text>
+        <text x="1103" y="176" text-anchor="middle" class="d-sub">joint PD control</text>
+        <text x="1103" y="196" text-anchor="middle" class="d-sub">1 kHz</text>
+
+        <path d="M1103 234 V 282 H 440 V 238" class="d-arrow dash" marker-end="url(#ah)"/>
+        <text x="772" y="274" text-anchor="middle" class="d-mono">camera images + proprioception</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Real-World G1 Tasks</h3>
+    <p>Scooping and serving popcorn, cleaning up a spill, and clearing a table of diverse objects, all on the same humanoid: bimanual tool use, whole-body reach, and long-horizon clean-up.</p>
+    <div class="chart reveal" data-chart="g1">
+      <h4>G1 success rate</h4>
+      <p class="note">48 trials for popcorn, 30 for each other task.</p>
+    </div>
+  </div>
+
+  <div class="block">
+    <h3>Sim → Real: World-Action Models Use Simulation Better</h3>
+    <p>With simulated data added, GR00T 2 Turbo's out-of-distribution success rises from 6.7% to 63.3%. GR00T 1.7 rises to 40.0%.</p>
+    <div class="chart reveal" data-chart="sim2real">
+      <h4>Adding simulation data, real-world G1 success</h4>
+      <p class="note">Same real data; one arm adds simulated episodes.</p>
+    </div>
+    <div class="dexpt wide" data-picker="simrealpt">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/g1_crown_sim.mp4" poster="assets/poster/g1_crown_sim.jpg" muted playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Simulation</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Videos"></div>
+    </div>
+  </div>
+</section>
+
+<hr>
+
+<!-- ================= SIMULATION (Yuke: replaces the public sim leaderboards) ================= -->
+<section class="sec" id="simulation">
+  <h2>Simulation for Evaluation and Development</h2>
+  <p>We developed an agentic real-to-sim workflow that recreates high-fidelity digital twins of real-world tasks and use these simulation environments for policy evaluation and development. The task set spans rigid and articulated objects, deformable materials, high-precision assembly, and particles with diverse interactions including, but not limited to, sliding, pushing and scooping.</p>
+  <div class="block wide" id="simulation-reconstruction">
+    <h3>Real-to-Sim Reconstruction</h3>
+    <p>Agent-assisted workflows build the environments. Agents take inputs such as real robot videos, 3D scans, and photographs and use tools from <a href="https://research.nvidia.com/labs/gear/simfoundry/" target="_blank" rel="noopener">SimFoundry</a> to reconstruct the scene and assets, including geometry, appearance, and collision modeling. Reconstructed environments are validated through a combination of automated tests (replaying existing demonstrations and stability tests) and human expert feedback given to the agent for refinement. We highlight a collection of reconstructed tasks below.</p>
+    <div class="dexpt wide" data-picker="simpt">
+      <figure class="dexpt-main">
+        <div class="frame lift"><video data-src="assets/video/real_world_to_simulation_polished.mp4" poster="assets/poster/real_world_to_simulation_polished.jpg" muted loop playsinline preload="none"></video></div>
+        <figcaption><span><b class="dexpt-title">Overview</b><span class="dexpt-note"></span></span><span class="dexpt-res"></span></figcaption>
+      </figure>
+      <div class="dexpt-row" aria-label="Reconstructed tasks and overview"></div>
+    </div>
+  </div>
+  <div class="block wide" id="simulation-evaluation">
+    <h3>Simulation Tracks Real-World Performance</h3>
+    <p>Policy evaluations in these high-fidelity digital twins proved to have strong correlations with real-world evaluations, allowing them to accelerate GR00T 2 development. 
+      Changes to the data loading and processing pipeline were tested with small-scale training and closed-loop simulation before adoption in pretraining. Inference settings were screened in simulation before robot tests.</p>
+    <div class="grid-2 wide reveal">
+      <div class="chart" data-chart="simSucc">
+        <h4>Matched-task success rate</h4>
+        <p class="note">Pearson 0.92 · Spearman 0.89 · MMRV 0.055</p>
+      </div>
+      <div class="chart" data-chart="simElo">
+        <h4>Elo (centered)</h4>
+        <p class="note">Pearson 0.93 · Spearman 0.90</p>
+      </div>
+    </div>
+    <p class="chart-foot">Real-world (x) vs. simulated (y) performance for 14 GR00T 2 policies on the 25-task YAM benchmark. Each letter marks the same policy in both plots. Elo scores are centered within comparison groups. The dashed line is y = x for success rate and a least-squares fit for Elo, whose simulated and real scales differ.</p>
+  </div>
+</section>
+
+<!-- ================= PAPER INFO (EgoScale layout) ================= -->
+<section class="paper-info" id="cite">
+  <div class="pi-h">Authors:</div>
+  <p>NVIDIA</p>
+  <div class="pi-h">BibTeX</div>
+<pre class="bib">@techreport{nvidia2026gr00t2,
+  title       = {{GR00T 2}: Scaling Robot Foundation Models for
+                 Generalization, Dexterity, and Adaptation},
+  author      = {{NVIDIA et al.}},
+  institution = {NVIDIA},
+  type        = {Whitepaper},
+  year        = {2026},
+  url         = {https://research.nvidia.com/labs/gear/gr00t-2/assets/gr00t2_whitepaper.pdf}
+}</pre>
+</section>
+
+</article>
+
+<!-- NVIDIA global footer (mirrors components/Footer.js) -->
+<footer class="global-footer">
+  <svg class="nv-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 407.8 1000 184.4" role="img" aria-label="NVIDIA"><title>NVIDIA</title><path d="M987.1 555.7v-2.8h1.7c0.9 0 2.3 0.1 2.3 1.2 0 1.2-0.7 1.5-1.8 1.5H987.1M987.1 557.6h1.2l2.8 4.8h3l-3.1-5c1.5-0.1 2.9-0.8 2.9-3 0-2.7-1.8-3.5-4.9-3.5h-4.4v11.5h2.6L987.1 557.6M1000 556.7c0-6.8-5.2-10.7-11.1-10.7 -5.8 0-11.1 3.9-11.1 10.7 0 6.8 5.2 10.7 11.1 10.7S1000 563.5 1000 556.7M996.8 556.7c0 4.9-3.6 8.2-7.9 8.2l0 0c-4.4 0-7.9-3.3-7.9-8.2 0-4.9 3.6-8.2 7.9-8.2C993.2 548.6 996.8 551.9 996.8 556.7z"/><path d="M593.2 442.7v121.1h34.2V442.7H593.2zM324.4 442.5v121.2h34.5v-94.1l26.9 0.1c8.8 0 15 2.2 19.2 6.7 5.4 5.7 7.6 15.1 7.6 32v55.3H446v-66.9c0-47.8-30.5-54.3-60.2-54.3C385.8 442.5 324.4 442.5 324.4 442.5zM648.3 442.7v121.1h55.4c29.5 0 39.2-4.9 49.6-15.9 7.4-7.7 12.1-24.7 12.1-43.3 0-17-4-32.2-11.1-41.7 -12.5-16.9-30.8-20.2-58.1-20.2H648.3zM682.2 469h14.7c21.3 0 35.1 9.5 35.1 34.4 0 24.8-13.7 34.4-35.1 34.4h-14.7V469zM544 442.7l-28.5 95.9 -27.3-95.9h-36.9l39 121.1h49.2l39.3-121.1H544zM781.4 563.7h34.2v-121h-34.2V563.7zM877.2 442.7l-47.7 121h33.7l7.6-21.3h56.5l7.2 21.3h36.6l-48.2-121H877.2zM899.4 464.8l20.7 56.6H878L899.4 464.8z"/><path d="M103.9 462.8v-16.6c1.6-0.1 3.3-0.2 4.9-0.2 45.6-1.4 75.4 39.1 75.4 39.1s-32.2 44.8-66.8 44.8c-5 0-9.4-0.8-13.4-2.2v-50.5c17.7 2.2 21.3 10 32 27.7l23.7-20c0 0-17.3-22.7-46.5-22.7C110 462.3 106.9 462.5 103.9 462.8M103.9 407.8v24.8c1.6-0.1 3.3-0.2 4.9-0.3 63.3-2.2 104.6 51.9 104.6 51.9s-47.4 57.7-96.7 57.7c-4.5 0-8.7-0.4-12.7-1.1v15.4c3.4 0.4 7 0.7 10.6 0.7 46 0 79.2-23.5 111.4-51.2 5.3 4.3 27.2 14.7 31.7 19.2 -30.6 25.6-101.9 46.3-142.3 46.3 -3.9 0-7.6-0.2-11.3-0.6v21.6h174.7V407.8H103.9zM103.9 527.8v13.1c-42.5-7.6-54.3-51.8-54.3-51.8s20.4-22.6 54.3-26.3v14.4c0 0 0 0-0.1 0 -17.7-2.2-31.7 14.5-31.7 14.5S80 519.6 103.9 527.8M28.4 487.2c0 0 25.2-37.1 75.5-41v-13.5C48.2 437.2 0 484.4 0 484.4s27.3 79 103.9 86.3v-14.4C47.7 549.2 28.4 487.2 28.4 487.2z"/></svg>
+  <ul>
+    <li><a href="https://www.nvidia.com/en-us/about-nvidia/privacy-policy/" target="_blank" rel="noopener">Privacy Policy</a></li>
+    <li><a href="https://www.nvidia.com/en-us/privacy-center/" target="_blank" rel="noopener">Your Privacy Choices</a></li>
+    <li><a href="https://www.nvidia.com/en-us/about-nvidia/terms-of-service/" target="_blank" rel="noopener">Terms of Service</a></li>
+    <li><a href="https://www.nvidia.com/en-us/about-nvidia/accessibility/" target="_blank" rel="noopener">Accessibility</a></li>
+    <li><a href="https://www.nvidia.com/en-us/about-nvidia/company-policies/">Corporate Policies</a></li>
+    <li><a href="https://www.nvidia.com/en-us/contact/" target="_blank" rel="noopener">Contact</a></li>
+  </ul>
+  <div class="copyright">Copyright © 2026 NVIDIA Corporation</div>
+</footer>
+
+<div class="tip" id="tip" role="status" aria-live="polite"></div>
+<script src="js/gr00t2.js?v=67" defer></script>
+<script src="js/datamix.js?v=3" defer></script>
+<script src="js/archfig.js?v=11" defer></script>
+<script src="js/agentfig.js?v=1" defer></script>
+</body>
+</html>

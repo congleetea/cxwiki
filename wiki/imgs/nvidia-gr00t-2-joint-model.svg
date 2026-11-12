@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1100" viewBox="0 0 1440 1100" role="img" aria-label="GR00T 2：未来视频与动作共同生成"><defs><linearGradient id="head"><stop stop-color="#063c76"/><stop offset="1" stop-color="#087eae"/></linearGradient><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M1 1L10 5L1 9" fill="none" stroke="#397bad" stroke-width="1.8"/></marker></defs><style>text{font-family:"Noto Sans CJK SC",sans-serif}</style><rect width="1440" height="1100" fill="#f3f7fc"/><rect x="24" y="24" width="1392" height="118" rx="16" fill="url(#head)"/>
+<text x="48" y="73" font-size="36" fill="white" font-weight="700" text-anchor="start">GR00T 2：未来视频与动作共同生成</text>
+<text x="48" y="116" font-size="25" fill="#d8efff" font-weight="400" text-anchor="start">真实观测提供条件；同一主干连接视觉变化与可执行动作。</text>
+<rect x="40" y="180" width="450" height="155" rx="14" fill="white" stroke="#07569b" stroke-width="2.5"/>
+<text x="60" y="220" font-size="29" fill="#07569b" font-weight="700" text-anchor="start">① 多视角真实历史</text>
+<text x="60" y="263" font-size="26" fill="#103858" font-weight="400" text-anchor="start">0.8 秒 · 5 帧 / 相机</text>
+<text x="60" y="301" font-size="26" fill="#103858" font-weight="400" text-anchor="start">224 × 320 · 最多 4 个槽位</text>
+<rect x="530" y="180" width="360" height="155" rx="14" fill="white" stroke="#07569b" stroke-width="2.5"/>
+<text x="550" y="220" font-size="29" fill="#07569b" font-weight="700" text-anchor="start">② 机器人状态</text>
+<text x="550" y="263" font-size="26" fill="#103858" font-weight="400" text-anchor="start">本体特定的 MLP</text>
+<text x="550" y="301" font-size="26" fill="#103858" font-weight="400" text-anchor="start">按平台定义维度与单位</text>
+<rect x="930" y="180" width="470" height="155" rx="14" fill="white" stroke="#7542c8" stroke-width="2.5"/>
+<text x="950" y="220" font-size="29" fill="#7542c8" font-weight="700" text-anchor="start">③ 语言指令</text>
+<text x="950" y="263" font-size="26" fill="#103858" font-weight="400" text-anchor="start">冻结 Cosmos-Reason1 编码</text>
+<text x="950" y="301" font-size="26" fill="#103858" font-weight="400" text-anchor="start">通过交叉注意力进入主干</text>
+<path d="M265 335V375" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<path d="M710 335V375" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<path d="M1165 335V540" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<rect x="40" y="380" width="450" height="115" rx="14" fill="white" stroke="#07569b" stroke-width="2.5"/>
+<text x="60" y="420" font-size="29" fill="#07569b" font-weight="700" text-anchor="start">冻结 Wan 2.1 VAE</text>
+<text x="60" y="463" font-size="26" fill="#103858" font-weight="400" text-anchor="start">视频潜变量 → patch token</text>
+<rect x="530" y="380" width="360" height="115" rx="14" fill="white" stroke="#07569b" stroke-width="2.5"/>
+<text x="550" y="420" font-size="29" fill="#07569b" font-weight="700" text-anchor="start">状态 token</text>
+<text x="550" y="463" font-size="26" fill="#103858" font-weight="400" text-anchor="start">共享主干的表示宽度</text>
+<rect x="40" y="540" width="1360" height="280" rx="14" fill="white" stroke="#7542c8" stroke-width="2.5"/>
+<text x="65" y="585" font-size="31" fill="#7542c8" font-weight="700" text-anchor="start">④ 共享 2B DiT：联合去噪未来视频与动作</text>
+<rect x="70" y="620" width="330" height="65" rx="14" fill="#f3f7fc" stroke="#07569b" stroke-width="2.5"/>
+<text x="235.0" y="662" font-size="27" fill="#07569b" font-weight="700" text-anchor="middle">历史视频 token</text>
+<rect x="425" y="620" width="350" height="65" rx="14" fill="#f3f7fc" stroke="#7542c8" stroke-width="2.5"/>
+<text x="600.0" y="662" font-size="27" fill="#7542c8" font-weight="700" text-anchor="middle">带噪未来视频</text>
+<rect x="800" y="620" width="220" height="65" rx="14" fill="#f3f7fc" stroke="#07569b" stroke-width="2.5"/>
+<text x="910.0" y="662" font-size="27" fill="#07569b" font-weight="700" text-anchor="middle">状态</text>
+<rect x="1045" y="620" width="325" height="65" rx="14" fill="#f3f7fc" stroke="#099773" stroke-width="2.5"/>
+<text x="1207.5" y="662" font-size="27" fill="#099773" font-weight="700" text-anchor="middle">带噪动作块</text>
+<path d="M265 495V540" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<path d="M710 495V540" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<path d="M600 700H1195" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<text x="700" y="744" font-size="28" fill="#7542c8" font-weight="700" text-anchor="start">动作读取正在生成的未来视频</text>
+<text x="70" y="788" font-size="27" fill="#103858" font-weight="400" text-anchor="start">视频与动作分别计算流匹配损失；动作损失仅用于有效标签。</text>
+<path d="M330 820V870" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<path d="M1110 820V870" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<rect x="40" y="880" width="590" height="135" rx="14" fill="white" stroke="#7542c8" stroke-width="2.5"/>
+<text x="60" y="920" font-size="29" fill="#7542c8" font-weight="700" text-anchor="start">⑤ 未来视频潜变量</text>
+<text x="60" y="963" font-size="26" fill="#103858" font-weight="400" text-anchor="start">可选解码 RGB，用于查看预测</text>
+<rect x="690" y="880" width="710" height="135" rx="14" fill="white" stroke="#099773" stroke-width="2.5"/>
+<text x="710" y="920" font-size="29" fill="#099773" font-weight="700" text-anchor="start">⑥ 未来动作块 → 本体控制接口</text>
+<text x="710" y="963" font-size="26" fill="#103858" font-weight="400" text-anchor="start">执行一部分 → 读取真实新观测 → 重新预测</text>
+<text x="40" y="1068" font-size="24" fill="#557087" font-weight="400" text-anchor="start">原创示意 · 依据白皮书 §2 / §4.1 / I.1；未展开完整注意力掩码。</text>
+</svg>

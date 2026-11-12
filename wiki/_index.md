@@ -5,7 +5,7 @@
 ## 主题综述 · 具身智能
 
 - [π 系列 VLA：从连续动作到可控通用策略](01-comprehensive/01-embodied-ai/pi-series-overview.md)：时间线、模型主线、方法支线、差异与阅读顺序。
-- [NVIDIA GR00T 系列：从双系统 VLA 到人类数据与长上下文](01-comprehensive/01-embodied-ai/nvidia-gr00t-series-overview.md)：GR00T N1–N1.7、EgoScale、SONIC、RoboTTT 与智能体路线的关系。
+- [NVIDIA GR00T 系列：从双系统 VLA 到世界动作模型](01-comprehensive/01-embodied-ai/nvidia-gr00t-series-overview.md)：GR00T N1–N1.7、GR00T 2 WAM、EgoScale、SONIC、RoboTTT 与智能体路线的关系。
 
 ## 概念 · 具身智能
 
@@ -20,6 +20,7 @@
 - [RLT 强化学习 Token](00-concepts/01-embodied-ai/pi-rlt-token.md)
 - [π₀.₇ 可控通用策略](00-concepts/01-embodied-ai/pi-07-steerable.md)
 - [GR00T Action Cascade：VLM 与动作扩散系统如何协作](00-concepts/01-embodied-ai/nvidia-gr00t-action-cascade.md)
+- [GR00T 2：联合预测未来视频与动作的世界动作模型](00-concepts/01-embodied-ai/nvidia-gr00t-2-world-action-model.md)
 - [NVIDIA SONIC：规模化运动追踪与人形全身控制](00-concepts/01-embodied-ai/nvidia-sonic.md)
 - [EgoScale：用自中心视角人类视频缩放灵巧操控](00-concepts/01-embodied-ai/nvidia-egoscale.md)
 - [RoboTTT：上下文缩放机器人策略](00-concepts/01-embodied-ai/nvidia-robottt.md)
@@ -34,7 +35,20 @@
 
 ## 概念与工具 · 经典机器人
 
+- [刚体运动学基础](00-concepts/02-classical-robotics/rigid-body-kinematics.md)：坐标系、旋转、齐次变换、角速度与刚体点速度。
 - [FRAX 与微分 IK](00-concepts/02-classical-robotics/frax-differential-ik.md)
+
+## 概念 · 人工智能基础
+
+- [KL 散度](00-concepts/03-ai-foundations/kl-divergence.md)
+- [交叉熵损失函数](00-concepts/03-ai-foundations/cross-entropy.md)
+- [马尔可夫决策过程 MDP](00-concepts/03-ai-foundations/mdp.md)
+- [CNN 卷积神经网络](00-concepts/03-ai-foundations/cnn.md)
+- [RNN 循环神经网络](00-concepts/03-ai-foundations/rnn.md)
+- [注意力机制及变体](00-concepts/03-ai-foundations/attention-mechanisms.md)
+- [激活函数](00-concepts/03-ai-foundations/activation-functions.md)
+- [PEFT 参数高效微调](00-concepts/03-ai-foundations/peft.md)
+- [多卡训练原理](00-concepts/03-ai-foundations/multi-gpu-training.md)
 
 ## 主题综述 · 人工智能基础
 
@@ -44,4 +58,5 @@
 
 - [π 系列来源与证据](../raw/entries/2026-11-06-pi-series.md)
 - [动作重定向来源与证据](../raw/entries/2026-11-05-motion-retargeting.md)
-- [更新记录](logs/2026-11-06.md)
+- [GR00T 2 来源与证据](../raw/entries/2026-11-10-nvidia-gr00t-2.md)
+- [更新记录](logs/2026-11-10.md)

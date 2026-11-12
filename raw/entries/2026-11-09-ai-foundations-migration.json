@@ -1,0 +1,115 @@
+{
+  "date": "2026-11-09",
+  "files": [
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/KL散度.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/kl-divergence.md",
+      "sha256": "f740c99ce3e274a13284a1e00d02bb9a2a6530cd3f8dba8e5ec3c0ccffe72b14",
+      "unmigrated_links": [
+        "../01-embodied-ai/GEN-0规模化具身基础模型.md",
+        "VAE与CVAE变分自编码器.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/RNN循环神经网络.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/rnn.md",
+      "sha256": "22ca1601612200438a29438033234aaecc54bddeeffcc6269ef8c58fd72a0524",
+      "unmigrated_links": [
+        "../../01-comprehensive/03-ai-foundations/深度学习基础.md",
+        "./Transformer架构.md",
+        "Transformer架构.md",
+        "前向与反向传播——Transformer参数更新详解.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/交叉熵损失函数.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/cross-entropy.md",
+      "sha256": "3a0a2374c555498ece2e7d39a537519b0703169e652e91d498ebd42693652cf6",
+      "unmigrated_links": [
+        "VAE与CVAE变分自编码器.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/MDP马尔可夫决策过程.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/mdp.md",
+      "sha256": "0ce6fd24e186b6deeb9f98da81eed919d5c152aeaffd982ea30f39082dbfc9b6",
+      "unmigrated_links": [
+        "../../01-comprehensive/01-embodied-ai/具身智能的RewardModel.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/CNN卷积神经网络.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/cnn.md",
+      "sha256": "2d18a88cefa27044a36be4485aebd92f6eb5c145a676ac41274ee8dce3133fcc",
+      "unmigrated_links": [
+        "./DiffusionModel扩散模型.md",
+        "./ResNet深度残差网络.md",
+        "./Transformer架构.md",
+        "DiffusionModel扩散模型.md",
+        "ResNet深度残差网络.md",
+        "Transformer架构.md",
+        "前向与反向传播——Transformer参数更新详解.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/Attention注意力机制.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/attention-mechanisms.md",
+      "sha256": "8241e05a97244864addafe527e9357792d135599f67a643eee9b0567240dcbee",
+      "unmigrated_links": [
+        "../../01-comprehensive/03-ai-foundations/深度学习基础.md",
+        "../01-embodied-ai/FlowMatching流匹配原理.md",
+        "../01-embodied-ai/Performer-MPC注意力MPC控制器.md",
+        "../01-embodied-ai/VLA视觉语言动作模型.md",
+        "Transformer架构.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/ActivateFunction激活函数.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/activation-functions.md",
+      "sha256": "2c85083c184089e1f48860c3eceef8e2467b871f6e909b79569cd98b1fcdda46",
+      "unmigrated_links": [
+        "../../01-comprehensive/03-ai-foundations/大模型训练基础.md",
+        "./Transformer架构.md",
+        "./VAE与CVAE变分自编码器.md",
+        "Transformer架构.md",
+        "VAE与CVAE变分自编码器.md",
+        "前向与反向传播——Transformer参数更新详解.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/PEFT参数高效微调.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/peft.md",
+      "sha256": "6e195acd87fcfe3f71f685b1cc75c9bac1067aa98b7b7b5976d21b0051473c3b",
+      "unmigrated_links": [
+        "../../01-comprehensive/03-ai-foundations/大模型训练基础.md",
+        "../01-embodied-ai/LeRobot机器人学习教程.md",
+        "../01-embodied-ai/OpenPI-LoRA微调实现.md",
+        "../01-embodied-ai/SmolVLA小型高效廉价机器人VLA.md",
+        "../01-embodied-ai/VLA视觉语言动作模型.md",
+        "Transformer架构.md"
+      ]
+    },
+    {
+      "original": "/home/xuancong/gitlab/cwiki/wiki/00-concepts/03-ai-foundations/多卡训练原理.md",
+      "destination": "wiki/00-concepts/03-ai-foundations/multi-gpu-training.md",
+      "sha256": "e971fdc80a1d34f85d505df45822edff977fbd4d416fd7247e3816aa718cdc5f",
+      "unmigrated_links": [
+        "../../01-comprehensive/03-ai-foundations/大模型训练基础.md",
+        "../03-ai-foundations/Transformer架构.md",
+        "DistFlow全分布式RL框架.md",
+        "Transformer架构.md"
+      ]
+    }
+  ],
+  "images": [
+    "cnn-model-working.png",
+    "cnn-typical-architecture.png",
+    "kl_divergence.webp",
+    "mdp-agent-env-loop.png",
+    "peft-evolutionary.png",
+    "peft-lora-overview.png",
+    "peft-taxonomy.png",
+    "rnn-neurons.png",
+    "rnn-working.png"
+  ]
+}

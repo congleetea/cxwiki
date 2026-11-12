@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="550" viewBox="0 0 1200 550" role="img" aria-label="最大池化：每个局部区域只保留最大值"><defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9" fill="#647f93"/></marker></defs><style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif}</style><rect width="1200" height="550" rx="18" fill="#f4f7fb"/><rect width="1200" height="95" rx="18" fill="#153d5c"/><rect y="75" width="1200" height="20" fill="#153d5c"/><text x="30" y="40" font-size="29" fill="white" text-anchor="start" font-weight="600">最大池化：每个局部区域只保留最大值</text><text x="30" y="76" font-size="19" fill="#d1e4f1" font-weight="400">窗口 </text><svg x="72.25" y="63.0" width="37.0" height="14.0" viewBox="0 0 37 14" data-latex="$2\times2$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-09T11:36:16.273553</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #d1e4f1" transform="translate(0 13) scale(0.19 -0.19)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Regular-32" d="M 3034 877  L 2688 0  L 186 0  L 186 77  L 1325 1286  Q 1773 1754 1965 2144  Q 2157 2534 2157 2950  Q 2157 3379 1920 3616  Q 1683 3853 1267 3853  Q 922 3853 720 3673  Q 518 3494 326 3021  L 192 3053  Q 301 3648 630 3987  Q 960 4326 1523 4326  Q 2054 4326 2380 4006  Q 2707 3686 2707 3200  Q 2707 2477 1888 1613  L 832 486  L 2330 486  Q 2541 486 2665 569  Q 2790 653 2944 915  L 3034 877  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-d7" d="M 3821 141  L 3526 -160  L 2048 1312  L 570 -160  L 275 134  L 1747 1613  L 275 3091  L 576 3386  L 2048 1914  L 3526 3386  L 3821 3098  L 2349 1613  L 3821 141  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Regular-32" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-d7" transform="translate(64.439981 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-32" transform="translate(142.879962 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="109.25" y="76" font-size="19" fill="#d1e4f1" font-weight="400">，步长 2；没有可训练的卷积核。</text><rect x="75" y="155" width="65" height="65" rx="0" fill="#dcecf6" stroke="#bdd1df" stroke-width="2"/><text x="107.5" y="197.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">1</text><rect x="140" y="155" width="65" height="65" rx="0" fill="#dcecf6" stroke="#bdd1df" stroke-width="2"/><text x="172.5" y="197.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">2</text><rect x="205" y="155" width="65" height="65" rx="0" fill="#e9e1f5" stroke="#bdd1df" stroke-width="2"/><text x="237.5" y="197.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">3</text><rect x="270" y="155" width="65" height="65" rx="0" fill="#e9e1f5" stroke="#bdd1df" stroke-width="2"/><text x="302.5" y="197.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">4</text><rect x="75" y="220" width="65" height="65" rx="0" fill="#dcecf6" stroke="#bdd1df" stroke-width="2"/><text x="107.5" y="262.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">5</text><rect x="140" y="220" width="65" height="65" rx="0" fill="#dcecf6" stroke="#bdd1df" stroke-width="2"/><text x="172.5" y="262.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">6</text><rect x="205" y="220" width="65" height="65" rx="0" fill="#e9e1f5" stroke="#bdd1df" stroke-width="2"/><text x="237.5" y="262.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">7</text><rect x="270" y="220" width="65" height="65" rx="0" fill="#e9e1f5" stroke="#bdd1df" stroke-width="2"/><text x="302.5" y="262.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">8</text><rect x="75" y="285" width="65" height="65" rx="0" fill="#dcefe8" stroke="#bdd1df" stroke-width="2"/><text x="107.5" y="327.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">9</text><rect x="140" y="285" width="65" height="65" rx="0" fill="#dcefe8" stroke="#bdd1df" stroke-width="2"/><text x="172.5" y="327.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">10</text><rect x="205" y="285" width="65" height="65" rx="0" fill="#f6e7dc" stroke="#bdd1df" stroke-width="2"/><text x="237.5" y="327.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">11</text><rect x="270" y="285" width="65" height="65" rx="0" fill="#f6e7dc" stroke="#bdd1df" stroke-width="2"/><text x="302.5" y="327.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">12</text><rect x="75" y="350" width="65" height="65" rx="0" fill="#dcefe8" stroke="#bdd1df" stroke-width="2"/><text x="107.5" y="392.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">13</text><rect x="140" y="350" width="65" height="65" rx="0" fill="#dcefe8" stroke="#bdd1df" stroke-width="2"/><text x="172.5" y="392.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">14</text><rect x="205" y="350" width="65" height="65" rx="0" fill="#f6e7dc" stroke="#bdd1df" stroke-width="2"/><text x="237.5" y="392.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">15</text><rect x="270" y="350" width="65" height="65" rx="0" fill="#f6e7dc" stroke="#bdd1df" stroke-width="2"/><text x="302.5" y="392.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">16</text><path d="M390 285L690 285" fill="none" stroke="#647f93" stroke-width="2" marker-end="url(#arrow)"/><text x="530" y="240" font-size="23" fill="#18364d" text-anchor="middle" font-weight="400">取各区域最大值</text><rect x="780" y="205" width="85" height="85" rx="0" fill="#eef4fa" stroke="#bdd1df" stroke-width="2"/><text x="822.5" y="260.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">6</text><rect x="865" y="205" width="85" height="85" rx="0" fill="#eef4fa" stroke="#bdd1df" stroke-width="2"/><text x="907.5" y="260.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">8</text><rect x="780" y="290" width="85" height="85" rx="0" fill="#eef4fa" stroke="#bdd1df" stroke-width="2"/><text x="822.5" y="345.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">14</text><rect x="865" y="290" width="85" height="85" rx="0" fill="#eef4fa" stroke="#bdd1df" stroke-width="2"/><text x="907.5" y="345.25" font-size="22" fill="#18364d" text-anchor="middle" font-weight="400">16</text><text x="148.0" y="460" font-size="25" fill="#2473a6" font-weight="400">输入：</text><svg x="223.0" y="443.0" width="49.0" height="18.0" viewBox="0 0 49 18" data-latex="$4\times4$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-09T11:36:16.278180</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #2473a6" transform="translate(0 17) scale(0.25 -0.25)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Regular-34" d="M 3027 1069  L 2368 1069  L 2368 0  L 1869 0  L 1869 1069  L 77 1069  L 77 1478  L 2086 4326  L 2368 4326  L 2368 1478  L 3027 1478  L 3027 1069  z M 1869 1478  L 1869 3674  L 333 1478  L 1869 1478  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-d7" d="M 3821 141  L 3526 -160  L 2048 1312  L 570 -160  L 275 134  L 1747 1613  L 275 3091  L 576 3386  L 2048 1914  L 3526 3386  L 3821 3098  L 2349 1613  L 3821 141  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Regular-34" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-d7" transform="translate(64.439981 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-34" transform="translate(142.879962 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="803.0" y="460" font-size="25" fill="#278977" font-weight="400">输出：</text><svg x="878.0" y="443.0" width="49.0" height="18.0" viewBox="0 0 49 18" data-latex="$2\times2$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-09T11:36:16.282316</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #278977" transform="translate(0 17) scale(0.25 -0.25)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Regular-32" d="M 3034 877  L 2688 0  L 186 0  L 186 77  L 1325 1286  Q 1773 1754 1965 2144  Q 2157 2534 2157 2950  Q 2157 3379 1920 3616  Q 1683 3853 1267 3853  Q 922 3853 720 3673  Q 518 3494 326 3021  L 192 3053  Q 301 3648 630 3987  Q 960 4326 1523 4326  Q 2054 4326 2380 4006  Q 2707 3686 2707 3200  Q 2707 2477 1888 1613  L 832 486  L 2330 486  Q 2541 486 2665 569  Q 2790 653 2944 915  L 3034 877  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-d7" d="M 3821 141  L 3526 -160  L 2048 1312  L 570 -160  L 275 134  L 1747 1613  L 275 3091  L 576 3386  L 2048 1914  L 3526 3386  L 3821 3098  L 2349 1613  L 3821 141  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Regular-32" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-d7" transform="translate(64.439981 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-32" transform="translate(142.879962 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="30" y="526" font-size="19" fill="#607789" text-anchor="start" font-weight="400">保留局部强响应，降低空间分辨率；池化不会自动保证所有平移下的输出不变。</text></svg>

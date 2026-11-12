@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="780" viewBox="0 0 1440 780" role="img" aria-label="Turbo + SONIC：推理、运动与平衡各有时间尺度"><defs><linearGradient id="head"><stop stop-color="#063c76"/><stop offset="1" stop-color="#087eae"/></linearGradient><marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="5" orient="auto"><path d="M1 1L10 5L1 9" fill="none" stroke="#397bad" stroke-width="1.8"/></marker></defs><style>text{font-family:"Noto Sans CJK SC",sans-serif}</style><rect width="1440" height="780" fill="#f3f7fc"/><rect x="24" y="24" width="1392" height="118" rx="16" fill="url(#head)"/>
+<text x="48" y="73" font-size="36" fill="white" font-weight="700" text-anchor="start">Turbo + SONIC：推理、运动与平衡各有时间尺度</text>
+<text x="48" y="116" font-size="25" fill="#d8efff" font-weight="400" text-anchor="start">1 Hz 重规划 ≠ 50 Hz 运动追踪 ≠ 1 kHz 电机控制。</text>
+<rect x="40" y="260" width="280" height="175" rx="14" fill="white" stroke="#7542c8" stroke-width="2.5"/>
+<text x="60" y="300" font-size="29" fill="#7542c8" font-weight="700" text-anchor="start">S2 · 任务推理</text>
+<text x="60" y="343" font-size="26" fill="#103858" font-weight="400" text-anchor="start">可选外部智能体</text>
+<text x="60" y="381" font-size="26" fill="#103858" font-weight="400" text-anchor="start">选择任务与目标</text>
+<rect x="390" y="260" width="310" height="175" rx="14" fill="white" stroke="#07569b" stroke-width="2.5"/>
+<text x="410" y="300" font-size="29" fill="#07569b" font-weight="700" text-anchor="start">S1 · Turbo</text>
+<text x="410" y="343" font-size="26" fill="#103858" font-weight="400" text-anchor="start">Jetson AGX Thor</text>
+<text x="410" y="381" font-size="26" fill="#103858" font-weight="400" text-anchor="start">约 1 Hz 重规划</text>
+<rect x="770" y="260" width="300" height="175" rx="14" fill="white" stroke="#099773" stroke-width="2.5"/>
+<text x="790" y="300" font-size="29" fill="#099773" font-weight="700" text-anchor="start">S0 · SONIC</text>
+<text x="790" y="343" font-size="26" fill="#103858" font-weight="400" text-anchor="start">Jetson Orin NX</text>
+<text x="790" y="381" font-size="26" fill="#103858" font-weight="400" text-anchor="start">50 Hz 状态反馈</text>
+<rect x="1140" y="260" width="260" height="175" rx="14" fill="white" stroke="#cf604d" stroke-width="2.5"/>
+<text x="1160" y="300" font-size="29" fill="#cf604d" font-weight="700" text-anchor="start">关节 PD</text>
+<text x="1160" y="343" font-size="26" fill="#103858" font-weight="400" text-anchor="start">跟踪位置目标</text>
+<text x="1160" y="381" font-size="26" fill="#103858" font-weight="400" text-anchor="start">1 kHz</text>
+<path d="M320 340H390" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<text x="353" y="239" font-size="25" fill="#557087" font-weight="400" text-anchor="middle">指令</text>
+<path d="M700 340H770" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<text x="735" y="239" font-size="25" fill="#557087" font-weight="400" text-anchor="middle">token</text>
+<path d="M1070 340H1140" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<text x="1105" y="239" font-size="25" fill="#557087" font-weight="400" text-anchor="middle">关节</text>
+<text x="545" y="495" font-size="29" fill="#07569b" font-weight="700" text-anchor="middle">每块 1.6 秒</text>
+<text x="545" y="536" font-size="28" fill="#07569b" font-weight="400" text-anchor="middle">80 个运动 token</text>
+<text x="920" y="495" font-size="29" fill="#099773" font-weight="700" text-anchor="middle">每 20 ms 解码</text>
+<text x="920" y="536" font-size="28" fill="#099773" font-weight="400" text-anchor="middle">读取当前本体状态</text>
+<rect x="1140" y="560" width="260" height="90" rx="14" fill="white" stroke="#099773" stroke-width="2.5"/>
+<text x="1270" y="615" font-size="29" fill="#099773" font-weight="700" text-anchor="middle">夹爪控制</text>
+<path d="M545 565V618H1140" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)"/>
+<text x="820" y="605" font-size="27" fill="#103858" font-weight="400" text-anchor="middle">夹爪开度 · 独立接口</text>
+<path d="M1400 430H1420V685H405V565" fill="none" stroke="#397bad" stroke-width="3" marker-end="url(#a)" stroke-dasharray="9 7"/>
+<text x="860" y="722" font-size="27" fill="#557087" font-weight="400" text-anchor="middle">真实相机与本体状态持续反馈到策略和控制器</text>
+<text x="40" y="748" font-size="24" fill="#557087" font-weight="400" text-anchor="start">原创控制示意 · 依据白皮书图 9 / 附录 H.1；未按算时比例绘制。</text>
+</svg>

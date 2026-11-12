@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-label="CNN 分类网络：空间特征逐层汇聚"><defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9" fill="#647f93"/></marker></defs><style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif}</style><rect width="1200" height="440" rx="18" fill="#f4f7fb"/><rect width="1200" height="95" rx="18" fill="#153d5c"/><rect y="75" width="1200" height="20" fill="#153d5c"/><text x="30" y="40" font-size="29" fill="white" text-anchor="start" font-weight="600">CNN 分类网络：空间特征逐层汇聚</text><text x="30" y="76" font-size="19" fill="#d1e4f1" text-anchor="start" font-weight="400">示意架构；卷积层数、通道数及分类头由任务决定。</text><rect x="30.0" y="145" width="264.0" height="200" rx="12" fill="white" stroke="#2473a6" stroke-width="2"/><rect x="30.0" y="145" width="5" height="200" rx="0" fill="#2473a6" stroke="#2473a6" stroke-width="2"/><text x="48.0" y="179" font-size="24" fill="#2473a6" text-anchor="start" font-weight="600">输入</text><svg x="48.0" y="203.0" width="86.0" height="15.0" viewBox="0 0 86 15" data-latex="$H\times W\times C$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-09T11:36:16.478562</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 14) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-48" d="M 4922 4179  L 4922 4077  Q 4640 4026 4550 3949  Q 4461 3872 4384 3603  L 3539 525  Q 3520 448 3520 371  Q 3520 237 3616 185  Q 3712 134 4026 102  L 4026 0  L 2272 0  L 2272 102  Q 2598 128 2729 237  Q 2861 346 2925 595  L 3334 2086  L 1510 2086  L 1088 525  Q 1069 461 1069 384  Q 1069 243 1149 192  Q 1229 141 1517 102  L 1517 0  L -51 0  L -51 102  Q 211 128 310 230  Q 410 333 499 653  L 1254 3405  Q 1331 3699 1331 3814  Q 1331 3949 1238 3997  Q 1146 4045 838 4077  L 838 4179  L 2573 4179  L 2573 4077  Q 2285 4058 2141 3955  Q 1997 3853 1933 3622  L 1587 2355  L 3411 2355  L 3706 3405  Q 3795 3738 3795 3808  Q 3795 3930 3692 3994  Q 3590 4058 3334 4077  L 3334 4179  L 4922 4179  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-d7" d="M 3821 141  L 3526 -160  L 2048 1312  L 570 -160  L 275 134  L 1747 1613  L 275 3091  L 576 3386  L 2048 1914  L 3526 3386  L 3821 3098  L 2349 1613  L 3821 141  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-57" d="M 5798 4179  L 5798 4077  Q 5613 4019 5526 3936  Q 5440 3853 5306 3597  L 3379 -115  L 3251 -115  L 2931 2784  L 2899 2784  L 1478 -115  L 1357 -115  L 966 3174  Q 915 3622 883 3766  Q 851 3910 781 3981  Q 717 4045 454 4077  L 454 4179  L 1958 4179  L 1958 4077  Q 1696 4051 1597 3987  Q 1498 3923 1498 3750  Q 1498 3667 1504 3622  L 1786 1037  L 2886 3264  L 2835 3680  Q 2810 3923 2723 3993  Q 2637 4064 2355 4077  L 2355 4179  L 3866 4179  L 3866 4077  Q 3616 4051 3523 3987  Q 3430 3923 3430 3770  Q 3430 3750 3436 3715  Q 3443 3680 3443 3674  L 3699 1037  L 4902 3373  Q 5050 3654 5050 3808  Q 5050 4070 4621 4077  L 4621 4179  L 5798 4179  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-43" d="M 4410 4250  L 4173 2970  L 4058 2989  Q 3942 4032 3104 4032  Q 2406 4032 1830 3411  Q 1491 3053 1315 2541  Q 1139 2029 1139 1485  Q 1139 173 2259 173  Q 2656 173 2985 339  Q 3315 506 3725 934  L 3840 838  Q 3411 333 2998 109  Q 2586 -115 2093 -115  Q 1344 -115 883 329  Q 422 774 422 1555  Q 422 2214 748 2812  Q 1075 3411 1619 3795  Q 2272 4262 3021 4262  Q 3462 4262 3770 4154  Q 3898 4109 4032 4109  Q 4205 4109 4275 4250  L 4410 4250  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-48" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-d7" transform="translate(86.639978 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-57" transform="translate(165.079959 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-d7" transform="translate(262.819943 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-43" transform="translate(341.259924 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="48.0" y="257" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">图像或网格信号</text><path d="M298.0 244L317.0 244" fill="none" stroke="#647f93" stroke-width="2" marker-end="url(#arrow)"/><rect x="322.0" y="145" width="264.0" height="200" rx="12" fill="white" stroke="#8061bb" stroke-width="2"/><rect x="322.0" y="145" width="5" height="200" rx="0" fill="#8061bb" stroke="#8061bb" stroke-width="2"/><text x="340.0" y="179" font-size="24" fill="#8061bb" text-anchor="start" font-weight="600">特征提取</text><text x="340.0" y="217" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">卷积 + 激活</text><text x="340.0" y="257" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">可选池化 / 下采样</text><path d="M590.0 244L609.0 244" fill="none" stroke="#647f93" stroke-width="2" marker-end="url(#arrow)"/><rect x="614.0" y="145" width="264.0" height="200" rx="12" fill="white" stroke="#278977" stroke-width="2"/><rect x="614.0" y="145" width="5" height="200" rx="0" fill="#278977" stroke="#278977" stroke-width="2"/><text x="632.0" y="179" font-size="24" fill="#278977" text-anchor="start" font-weight="600">特征汇聚</text><text x="632.0" y="217" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">全局平均池化</text><text x="632.0" y="257" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">或 Flatten</text><path d="M882.0 244L901.0 244" fill="none" stroke="#647f93" stroke-width="2" marker-end="url(#arrow)"/><rect x="906.0" y="145" width="264.0" height="200" rx="12" fill="white" stroke="#cf7446" stroke-width="2"/><rect x="906.0" y="145" width="5" height="200" rx="0" fill="#cf7446" stroke="#cf7446" stroke-width="2"/><text x="924.0" y="179" font-size="24" fill="#cf7446" text-anchor="start" font-weight="600">任务输出</text><text x="924.0" y="217" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">线性分类器</text><text x="924.0" y="257" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">类别分数 / 概率</text><text x="30" y="416" font-size="19" fill="#607789" text-anchor="start" font-weight="400">原创原理示意；箭头表示数据或计算流。</text></svg>
