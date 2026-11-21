@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-label="强化学习算法：按模型使用与更新对象理解"><defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9" fill="#647f93"/></marker></defs><style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif}</style><rect width="1200" height="600" rx="18" fill="#f4f7fb"/><rect width="1200" height="95" rx="18" fill="#153d5c"/><rect y="75" width="1200" height="20" fill="#153d5c"/><text x="30" y="40" font-size="29" fill="white" text-anchor="start" font-weight="600">强化学习算法：按模型使用与更新对象理解</text><text x="30" y="76" font-size="19" fill="#d1e4f1" text-anchor="start" font-weight="400">这是一种常见组织方式；Actor–Critic 同时使用策略和价值。</text><rect x="30" y="135" width="340" height="345" rx="12" fill="white" stroke="#2473a6" stroke-width="2"/><rect x="30" y="135" width="5" height="345" rx="0" fill="#2473a6" stroke="#2473a6" stroke-width="2"/><text x="48" y="169" font-size="24" fill="#2473a6" text-anchor="start" font-weight="600">使用环境模型</text><text x="48" y="207" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">已知或学习模型</text><text x="48" y="247" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">用预测进行规划</text><text x="48" y="287" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">动态规划 / 模型预测控制</text><rect x="410" y="135" width="760" height="110" rx="12" fill="white" stroke="#8061bb" stroke-width="2"/><rect x="410" y="135" width="5" height="110" rx="0" fill="#8061bb" stroke="#8061bb" stroke-width="2"/><text x="428" y="169" font-size="24" fill="#8061bb" text-anchor="start" font-weight="600">不显式用模型规划</text><text x="428" y="207" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">直接由经验更新价值或策略</text><rect x="410" y="285" width="240" height="195" rx="12" fill="white" stroke="#2473a6" stroke-width="2"/><rect x="410" y="285" width="5" height="195" rx="0" fill="#2473a6" stroke="#2473a6" stroke-width="2"/><text x="428" y="319" font-size="24" fill="#2473a6" text-anchor="start" font-weight="600">价值方法</text><text x="428" y="357" font-size="21" fill="#18364d" font-weight="400">学习 </text><svg x="474.703125" y="342.0" width="57.0" height="19.0" viewBox="0 0 57 19" data-latex="$Q(s,a)$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.102166</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-51" d="M 442 -1082  L 378 -979  Q 749 -717 912 -589  Q 1075 -461 1510 -77  Q 966 32 675 425  Q 384 819 384 1440  Q 384 2035 678 2624  Q 973 3213 1491 3661  Q 2202 4262 3034 4262  Q 3680 4262 4077 3833  Q 4474 3405 4474 2746  Q 4474 1997 4019 1277  Q 3565 557 2835 173  Q 2400 -64 1786 -102  L 1440 -467  L 1600 -467  Q 1824 -467 2387 -595  Q 2938 -730 3098 -730  Q 3443 -730 3673 -624  Q 3904 -518 4173 -237  L 4275 -307  Q 4122 -525 3942 -685  Q 3411 -1165 2720 -1165  Q 2298 -1165 1773 -998  Q 1421 -883 1178 -883  Q 800 -883 442 -1082  z M 3802 3072  Q 3802 3526 3581 3788  Q 3360 4051 2976 4051  Q 2272 4051 1734 3251  Q 1446 2822 1251 2230  Q 1056 1638 1056 1171  Q 1056 691 1273 400  Q 1491 109 1850 109  Q 2579 109 3117 902  Q 3411 1350 3606 1964  Q 3802 2579 3802 3072  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-28" d="M 1946 -1030  L 1869 -1133  Q 1126 -710 716 32  Q 307 774 307 1613  Q 307 3386 1888 4326  L 1946 4224  Q 1293 3667 1075 3126  Q 858 2586 858 1632  Q 858 685 1082 96  Q 1306 -493 1946 -1030  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-73" d="M 2342 2829  L 2214 1933  L 2112 1933  Q 2022 2675 1542 2675  Q 1370 2675 1267 2579  Q 1165 2483 1165 2310  Q 1165 2067 1510 1658  Q 1946 1152 1946 787  Q 1946 397 1686 163  Q 1427 -70 1024 -70  Q 838 -70 672 -6  Q 538 51 390 51  Q 262 51 205 -83  L 102 -83  L 230 934  L 333 934  Q 461 64 973 64  Q 1203 64 1331 192  Q 1459 320 1459 557  Q 1459 845 1101 1293  Q 698 1798 698 2131  Q 698 2451 909 2636  Q 1120 2822 1472 2822  Q 1600 2822 1830 2758  Q 1971 2714 2061 2714  Q 2189 2714 2253 2829  L 2342 2829  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2c" d="M 531 -902  L 467 -781  Q 998 -422 998 -96  Q 998 -13 909 -13  Q 883 -13 822 -25  Q 762 -38 723 -38  Q 352 -38 352 288  Q 352 454 457 553  Q 563 653 736 653  Q 954 653 1101 496  Q 1248 339 1248 96  Q 1248 -198 1053 -473  Q 858 -749 531 -902  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-61" d="M 2963 710  L 3046 640  Q 2688 205 2518 70  Q 2349 -64 2157 -64  Q 1901 -64 1901 198  Q 1901 358 2048 934  Q 1690 397 1389 163  Q 1088 -70 749 -70  Q 467 -70 288 125  Q 109 320 109 672  Q 109 1158 387 1664  Q 666 2170 1094 2496  Q 1523 2822 1939 2822  Q 2368 2822 2451 2451  L 2522 2758  L 2541 2778  L 2931 2822  L 2976 2803  Q 2970 2778 2938 2669  Q 2368 595 2368 346  Q 2368 262 2458 262  Q 2554 262 2790 525  L 2963 710  z M 2336 2310  Q 2336 2477 2240 2579  Q 2144 2682 1978 2682  Q 1542 2682 1139 2093  Q 928 1779 787 1395  Q 646 1011 646 717  Q 646 243 1030 243  Q 1408 243 1843 870  Q 2336 1581 2336 2310  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-29" d="M 186 4224  L 262 4326  Q 992 3891 1408 3148  Q 1824 2406 1824 1581  Q 1824 -166 243 -1133  L 186 -1030  Q 845 -486 1059 54  Q 1274 595 1274 1562  Q 1274 2534 1059 3120  Q 845 3706 186 4224  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-51" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-28" transform="translate(72.199982 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-73" transform="translate(105.499969 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2c" transform="translate(144.399963 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-61" transform="translate(183.839944 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-29" transform="translate(233.939935 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="428" y="397" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">Q-learning / DQN</text><rect x="670" y="285" width="240" height="195" rx="12" fill="white" stroke="#278977" stroke-width="2"/><rect x="670" y="285" width="5" height="195" rx="0" fill="#278977" stroke="#278977" stroke-width="2"/><text x="688" y="319" font-size="24" fill="#278977" text-anchor="start" font-weight="600">策略方法</text><text x="688" y="357" font-size="21" fill="#18364d" font-weight="400">直接优化 </text><svg x="776.703125" y="348.0" width="19.0" height="12.0" viewBox="0 0 19 12" data-latex="$\pi_\theta$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.106355</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 9) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-3c0" d="M 3430 2739  L 3296 2266  L 2643 2266  Q 2624 2195 2502 1782  Q 2381 1370 2297 1072  Q 2214 774 2214 717  Q 2214 448 2413 448  Q 2694 448 2867 838  L 2970 838  Q 2886 486 2652 208  Q 2419 -70 2093 -70  Q 1901 -70 1808 67  Q 1715 205 1715 410  Q 1715 627 1824 922  L 2310 2266  L 1645 2266  Q 1568 2061 1401 1469  Q 1235 877 1068 512  Q 902 147 672 -38  Q 563 -115 442 -115  Q 314 -115 218 -32  Q 122 51 122 166  Q 122 429 314 480  Q 634 563 774 928  L 1299 2266  L 1261 2266  Q 973 2266 819 2208  Q 666 2150 474 1914  L 371 1914  Q 640 2362 931 2550  Q 1222 2739 1696 2739  L 3430 2739  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-3b8" d="M 3162 3270  Q 3162 2534 2925 1862  Q 2688 1190 2304 678  Q 1741 -70 992 -70  Q 608 -70 390 224  Q 173 518 173 1030  Q 173 1997 592 2813  Q 1011 3629 1594 4070  Q 1952 4339 2374 4339  Q 2733 4339 2947 4076  Q 3162 3814 3162 3270  z M 941 2221  L 2432 2221  Q 2624 2874 2624 3533  Q 2624 4205 2285 4205  Q 2029 4205 1728 3814  Q 1427 3424 1232 2992  Q 1037 2560 941 2221  z M 2387 2016  L 896 2016  Q 710 1530 710 960  Q 710 64 1069 64  Q 1286 64 1510 275  Q 1734 486 1904 806  Q 2074 1126 2198 1440  Q 2323 1754 2387 2016  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-3c0" transform="translate(0 0.203125)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-3b8" transform="translate(50.399994 -13.025) scale(0.7)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="688" y="397" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">REINFORCE</text><rect x="930" y="285" width="240" height="195" rx="12" fill="white" stroke="#cf7446" stroke-width="2"/><rect x="930" y="285" width="5" height="195" rx="0" fill="#cf7446" stroke="#cf7446" stroke-width="2"/><text x="948" y="319" font-size="24" fill="#cf7446" text-anchor="start" font-weight="600">Actor–Critic</text><text x="948" y="357" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">策略 + 价值</text><text x="948" y="397" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">如 A2C / SAC</text><text x="30" y="576" font-size="19" fill="#607789" text-anchor="start" font-weight="400">原创分类示意；分类轴可交叉：基于模型的系统也可以包含 Actor–Critic。</text></svg>

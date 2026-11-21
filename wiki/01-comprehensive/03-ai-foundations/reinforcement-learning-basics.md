@@ -3,7 +3,7 @@ title: 强化学习基础
 id: reinforcement-learning-basics
 type: comprehensive
 created: 2026-04-12
-last_updated: 2026-07-16
+last_updated: 2026-11-20
 stage: seedling
 verified_date:
 tags:
@@ -23,7 +23,7 @@ tags:
 
 **机器学习**是让计算机从数据中自动学习规律和模式的技术。根据学习方式的不同，主要分为三大类：
 
-![ml-three-paradigms.png](../../imgs/ml-three-paradigms.png)
+![机器学习三种反馈方式](../../imgs/ml-three-paradigms.png)
 *机器学习三大学习范式对比：监督学习、非监督学习、强化学习*
 
 #### 1.1.1. 监督学习 (Supervised Learning)
@@ -107,7 +107,7 @@ tags:
 
 ### 1.3. 智能体与环境交互
 
-![rl-agent-env-loop.png](../../imgs/rl-agent-env-loop.png)
+![智能体与环境交互闭环](../../imgs/rl-agent-env-loop.png)
 *智能体与环境交互循环：策略输出动作，环境返回状态和奖励，形成闭环*
 
 **时间步 $t$ 的交互流程**：
@@ -120,7 +120,7 @@ tags:
 
 强化学习的要素可以分为两类：**环境要素**（定义问题）和**学习目标**（智能体要学的内容）。
 
-![rl-elements-classification.png](../../imgs/rl-elements-classification.png)
+![MDP 要素与智能体求解对象](../../imgs/rl-elements-classification.png)
 *强化学习要素分类：环境要素定义MDP问题，学习目标是智能体需要掌握的内容*
 
 #### 1.4.1. 环境要素
@@ -249,11 +249,11 @@ $$V^\pi(s) = \sum_a \pi(a|s) \cdot Q^\pi(s,a)\tag{8}$$
 >
 > 注意：两者都可以用神经网络来表示——区别不在于"用不用函数"，而在于网络学的是什么：model-based 的 network 输出**下一状态（也就是状态转移）和奖励的预测**，model-free 的 network 输出**动作概率或 Q 值**。
 
-![rl-algorithm-taxonomy.png](../../imgs/rl-algorithm-taxonomy.png)
+![环境模型与价值策略方法分类](../../imgs/rl-algorithm-taxonomy.png)
 *强化学习算法分类体系：基于模型 vs 无模型，无模型下基于价值/策略/Actor-Critic三大类。后续章节将按此体系展开*
 
 RL的理论学习主要有下面的联系和分类，根据这个层层深入吧。
-![rl-overview.png](../../imgs/rl-overview.png)
+![强化学习理论与算法阅读路线](../../imgs/rl-overview.png)
 ## 2. 马尔可夫决策过程
 
 ### 2.1. 随机过程与马尔可夫性质
@@ -418,7 +418,9 @@ $$
 
 其中 $P^\pi$ 是 $n\times n$ 状态转移矩阵。**怎么理解这个式子**：等号右边第一项是"立刻能拿到的平均奖励"，第二项是"下一步平均状态值再打个折扣"——这正是"当前价值 = 即时奖励 + 折扣的未来价值"的矩阵版本。
 给出一个例子：
-![rl-bellman-equation-four-grid-example.png](../../imgs/rl-bellman-equation-four-grid-example.png)
+![固定策略下四状态贝尔曼递推](../../imgs/rl-bellman-equation-four-grid-example.png)
+*原创示意，按下文固定策略重画；目标状态的自环每步仍获得奖励，图中公式由 LaTeX 排版。*
+
 如上图所示，奖励 $R_{\text{target}}=1$、$R_{\text{forbidden}}=-1$，$s_1\to s_3\to s_4$（奖励 0,1），$s_2\to s_4$（奖励1），$s_4\to s_4$（奖励1）。贝尔曼方程为
 
 $$V(s_1)=0+\gamma V(s_3),\quad V(s_2)=1+\gamma V(s_4),\quad V(s_3)=1+\gamma V(s_4),\quad V(s_4)=1+\gamma V(s_4).\tag{22}$$
@@ -572,7 +574,9 @@ $$
 
 #### 3.2.1. 手算例题（2×2 网格）
 
-![rl-value-iteration-example.png](../../imgs/rl-value-iteration-example.png)
+![值迭代前三轮的价值传播](../../imgs/rl-value-iteration-example.png)
+
+*原创示意：按正文的奖励表同步计算 $V_0,V_1,V_2$。图中每格显示对应状态的价值，绿色格为目标状态。*
 
 2×2 网格，4 个状态，$\gamma=0.9$。初始 $v_0(s)=0,\;\forall s$。
 > 其中 $r=-1$ 对应撞边界或禁行区域、$r=0$ 对应正常转移、$r=1$ 对应到达目标。注意 $s_4$ 向左走到 $s_3$ 是正常转移 $(r=0)$，而 $s_2$ 停留 $(a_5)$ 因处于禁行区域故 $r=-1$。
@@ -768,7 +772,9 @@ $$
 
 #### 3.3.1. 手算例题（2 状态 × 3 动作）
 
-![rl-policy-iteration-example.png](../../imgs/rl-policy-iteration-example.png)
+![两状态策略迭代的评估与改进](../../imgs/rl-policy-iteration-example.png)
+
+*原创示意：从两状态都停留的策略开始，展示完整评估、贪心改进与重新评估。*
 
 两个状态 $s_1, s_2$，三个动作 $a_l$（左移）、$a_0$（不动）、$a_r$（右移）。$\gamma=0.9$，撞边界 $r=-1$，到达/停留目标 $s_2$ 得 $r=+1$，其余 $r=0$。
 
@@ -1793,3 +1799,6 @@ $$
 - David Silver. *Reinforcement Learning Course*. UCL/DeepMind.
 - OpenAI. *Spinning Up in Deep RL*.
 - 赵世钰 (Shiyu Zhao). *Mathematical Foundations of Reinforcement Learning*（强化学习的数学基础）. 本书侧重数学推导与直觉，本笔记中贝尔曼方程矩阵形式、压缩映射最优性、TD 随机逼近视角、策略梯度与 Actor-Critic 的推导均参考此书。
+## 概念延伸
+
+- [Online Learning、Offline Learning、On-policy 与 Off-policy：理解两个分类维度](../../00-concepts/03-ai-foundations/online-offline-learning.md)

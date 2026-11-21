@@ -178,7 +178,7 @@ $$
 
 **优点**：平滑连续，没有 ReLU 在 $x=0$ 的硬转折，优化更稳定
 **缺点**：计算比 ReLU 慢（涉及指数和 log）；输出非零中心且无上界；没有 ReLU 的稀疏激活优势
-**常用场景**：极少单独使用，更多出现在概率模型中（如 VAE 的重参数化技巧用 $\log(1+e^x)$ 确保 std 为正）
+**常用场景**：极少单独使用，更多出现在概率模型中（如 [VAE](vae-cvae.md) 可用 SoftPlus 参数化正标准差，也常预测对数方差后取指数；这与重参数化采样本身是两个步骤）
 
 ---
 
@@ -271,6 +271,6 @@ ReLU 将所有负输入置零，使网络中大部分神经元处于未激活状
 - [RNN 循环神经网络](rnn.md) — LSTM/GRU 使用 Sigmoid 做门控、Tanh 做状态计算
 - Transformer 架构 — Transformer 前馈网络使用 ReLU 或 GELU
 - [交叉熵损失函数](cross-entropy.md) — Sigmoid/Softmax 输出层与交叉熵损失配合使用
-- VAE 与 CVAE 变分自编码器 — SoftPlus 用于确保标准差为正
+- [VAE 与 CVAE](vae-cvae.md) — SoftPlus 是正尺度参数化的一种选择
 
 <!-- 反向链接 -->

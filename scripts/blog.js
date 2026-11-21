@@ -39,26 +39,35 @@
       items().forEach((item) => { if (!saved.includes(item.dataset.articleId)) list.appendChild(item); });
     }
     let dragged = null;
-    list.addEventListener('dragstart', (event) => {
-      const handle = event.target.closest('.drag-handle');
-      if (!handle) { event.preventDefault(); return; }
+    let handle = null;
+    list.addEventListener('pointerdown', (event) => {
+      handle = event.target.closest('.drag-handle');
+      if (!handle || event.button !== 0) return;
+      event.preventDefault();
       dragged = handle.closest('.article-list-item');
       dragged.classList.add('is-dragging');
-      event.dataTransfer.effectAllowed = 'move';
+      list.setPointerCapture(event.pointerId);
     });
-    list.addEventListener('dragover', (event) => {
+    list.addEventListener('pointermove', (event) => {
       if (!dragged) return;
-      event.preventDefault();
-      const target = event.target.closest('.article-list-item');
-      if (!target || target === dragged) return;
+      const target = items().find((item) => {
+        const box = item.getBoundingClientRect();
+        return item !== dragged && event.clientY >= box.top && event.clientY <= box.bottom;
+      });
+      if (!target) return;
       const box = target.getBoundingClientRect();
       list.insertBefore(dragged, event.clientY < box.top + box.height / 2 ? target : target.nextSibling);
     });
-    list.addEventListener('dragend', () => {
+    const finish = () => {
       if (!dragged) return;
       dragged.classList.remove('is-dragging');
       dragged = null;
+      handle = null;
       save();
-    });
+    };
+    list.addEventListener('pointerup', finish);
+    list.addEventListener('pointercancel', finish);
+    list.addEventListener('lostpointercapture', finish);
+    list.addEventListener('dragstart', (event) => event.preventDefault());
   });
 })();

@@ -343,5 +343,5 @@ KL散度要求 $Q$ 在 $P$ 的支撑集上处处非零，否则结果不稳定�
 
 - GEN-0规模化具身基础模型 - GEN-0 中使用 KL 散度评估策略分布
 - [强化学习基础](../../01-comprehensive/03-ai-foundations/reinforcement-learning-basics.md) - PPO 等强化学习算法中的 KL 散度约束
-- VAE与CVAE变分自编码器 - VAE/CVAE ELBO 中的 KL 散度正则项
+- [VAE 与 CVAE](vae-cvae.md) - VAE/CVAE ELBO 中的 KL 散度正则项
 - [交叉熵损失函数](cross-entropy.md) - 交叉熵 = 熵 + KL散度

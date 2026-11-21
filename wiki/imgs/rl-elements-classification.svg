@@ -1,0 +1,268 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-label="强化学习要素：问题定义与求解对象"><defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9" fill="#647f93"/></marker></defs><style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif}</style><rect width="1200" height="560" rx="18" fill="#f4f7fb"/><rect width="1200" height="95" rx="18" fill="#153d5c"/><rect y="75" width="1200" height="20" fill="#153d5c"/><text x="30" y="40" font-size="29" fill="white" text-anchor="start" font-weight="600">强化学习要素：问题定义与求解对象</text><text x="30" y="76" font-size="19" fill="#d1e4f1" text-anchor="start" font-weight="400">环境定义决策问题；智能体需要学习或使用其中一部分对象。</text><rect x="35" y="135" width="545" height="330" rx="12" fill="white" stroke="#2473a6" stroke-width="2"/><rect x="35" y="135" width="5" height="330" rx="0" fill="#2473a6" stroke="#2473a6" stroke-width="2"/><text x="53" y="169" font-size="24" fill="#2473a6" text-anchor="start" font-weight="600">01  问题：MDP</text><text x="53" y="207" font-size="21" fill="#18364d" font-weight="400">状态与动作：</text><svg x="179.0" y="192.0" width="45.0" height="18.0" viewBox="0 0 45 18" data-latex="$\mathcal{S},\ \mathcal{A}$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.061552</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXNonUnicode-Italic-e23f" d="M 243 1235  L 410 1254  Q 518 582 1139 365  Q 1421 262 1766 262  Q 2304 262 2685 515  Q 3066 768 3066 1235  Q 3066 1427 2883 1571  Q 2701 1715 2445 1817  Q 2189 1920 1929 2045  Q 1670 2170 1488 2403  Q 1306 2637 1306 2970  Q 1306 3290 1507 3555  Q 1709 3821 2000 3974  Q 2291 4128 2572 4211  Q 2854 4294 3059 4294  Q 3603 4294 3948 4134  Q 4294 3974 4294 3642  Q 4294 3462 4182 3299  Q 4070 3136 3853 3136  Q 3712 3136 3603 3232  Q 3494 3328 3494 3456  Q 3494 3603 3590 3708  Q 3686 3814 3686 3840  Q 3686 3917 3628 3965  Q 3571 4013 3456 4032  Q 3341 4051 3264 4054  Q 3187 4058 3059 4058  Q 2931 4058 2745 4010  Q 2560 3962 2352 3866  Q 2144 3770 2000 3581  Q 1856 3392 1856 3155  Q 1856 2931 2057 2771  Q 2259 2611 2550 2502  Q 2842 2394 3133 2269  Q 3424 2144 3625 1920  Q 3827 1696 3827 1376  Q 3827 902 3206 451  Q 2586 0 1805 0  Q 992 0 617 339  Q 243 678 243 1235  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2c" d="M 531 -902  L 467 -781  Q 998 -422 998 -96  Q 998 -13 909 -13  Q 883 -13 822 -25  Q 762 -38 723 -38  Q 352 -38 352 288  Q 352 454 457 553  Q 563 653 736 653  Q 954 653 1101 496  Q 1248 339 1248 96  Q 1248 -198 1053 -473  Q 858 -749 531 -902  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXNonUnicode-Italic-e22d" d="M 5075 416  L 5197 320  Q 4928 -198 4365 -198  Q 4013 -198 3865 74  Q 3718 346 3706 1024  L 2182 1024  Q 2112 922 1961 717  Q 1811 512 1750 425  Q 1690 339 1571 192  Q 1453 45 1382 -16  Q 1312 -77 1209 -153  Q 1107 -230 1014 -259  Q 922 -288 819 -288  Q 595 -288 435 -131  Q 275 26 275 243  Q 275 416 364 521  Q 454 627 614 627  Q 717 627 784 572  Q 851 518 873 457  Q 896 397 941 342  Q 986 288 1056 288  Q 1376 288 1965 1178  L 4026 4333  L 4205 4333  L 4378 883  Q 4416 198 4691 198  Q 4941 198 5075 416  z M 3699 1280  L 3616 3232  L 2330 1280  Q 2291 1229 2291 1197  Q 2291 1190 2294 1190  Q 2298 1190 2298 1184  Q 2336 1184 2502 1280  L 3699 1280  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXNonUnicode-Italic-e23f" transform="translate(0 0.296875)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2c" transform="translate(63.399994 0.296875)" />
+    <ns0:use ns1:href="#STIXNonUnicode-Italic-e22d" transform="translate(126.906395 0.296875)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="53" y="247" font-size="21" fill="#18364d" font-weight="400">转移：</text><svg x="116.0" y="229.0" width="81.0" height="22.0" viewBox="0 0 81 22" data-latex="$P(s^{\prime}\mid s,a)$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.068352</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 18) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-50" d="M 934 4179  L 2477 4179  Q 3872 4179 3872 3232  Q 3872 2976 3753 2729  Q 3635 2483 3437 2317  Q 2995 1952 2125 1952  Q 1773 1952 1549 2003  L 1210 768  Q 1120 422 1120 365  Q 1120 250 1216 189  Q 1312 128 1562 102  L 1562 0  L 0 0  L 0 102  Q 275 141 361 227  Q 448 314 538 627  L 1280 3277  Q 1389 3667 1389 3808  Q 1389 3936 1299 3990  Q 1210 4045 934 4077  L 934 4179  z M 2048 3789  L 1606 2221  Q 1792 2189 1939 2189  Q 2496 2189 2758 2342  Q 3213 2598 3213 3200  Q 3213 3987 2381 3987  Q 2099 3987 2048 3789  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-28" d="M 1946 -1030  L 1869 -1133  Q 1126 -710 716 32  Q 307 774 307 1613  Q 307 3386 1888 4326  L 1946 4224  Q 1293 3667 1075 3126  Q 858 2586 858 1632  Q 858 685 1082 96  Q 1306 -493 1946 -1030  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-73" d="M 2342 2829  L 2214 1933  L 2112 1933  Q 2022 2675 1542 2675  Q 1370 2675 1267 2579  Q 1165 2483 1165 2310  Q 1165 2067 1510 1658  Q 1946 1152 1946 787  Q 1946 397 1686 163  Q 1427 -70 1024 -70  Q 838 -70 672 -6  Q 538 51 390 51  Q 262 51 205 -83  L 102 -83  L 230 934  L 333 934  Q 461 64 973 64  Q 1203 64 1331 192  Q 1459 320 1459 557  Q 1459 845 1101 1293  Q 698 1798 698 2131  Q 698 2451 909 2636  Q 1120 2822 1472 2822  Q 1600 2822 1830 2758  Q 1971 2714 2061 2714  Q 2189 2714 2253 2829  L 2342 2829  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2032" d="M 480 2630  L 909 4045  Q 934 4141 960 4195  Q 986 4250 1043 4294  Q 1101 4339 1190 4339  Q 1274 4339 1322 4278  Q 1370 4218 1370 4128  Q 1370 4058 1280 3878  L 602 2573  L 480 2630  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2223" d="M 1062 -1210  L 640 -1210  L 640 4416  L 1062 4416  L 1062 -1210  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2c" d="M 531 -902  L 467 -781  Q 998 -422 998 -96  Q 998 -13 909 -13  Q 883 -13 822 -25  Q 762 -38 723 -38  Q 352 -38 352 288  Q 352 454 457 553  Q 563 653 736 653  Q 954 653 1101 496  Q 1248 339 1248 96  Q 1248 -198 1053 -473  Q 858 -749 531 -902  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-61" d="M 2963 710  L 3046 640  Q 2688 205 2518 70  Q 2349 -64 2157 -64  Q 1901 -64 1901 198  Q 1901 358 2048 934  Q 1690 397 1389 163  Q 1088 -70 749 -70  Q 467 -70 288 125  Q 109 320 109 672  Q 109 1158 387 1664  Q 666 2170 1094 2496  Q 1523 2822 1939 2822  Q 2368 2822 2451 2451  L 2522 2758  L 2541 2778  L 2931 2822  L 2976 2803  Q 2970 2778 2938 2669  Q 2368 595 2368 346  Q 2368 262 2458 262  Q 2554 262 2790 525  L 2963 710  z M 2336 2310  Q 2336 2477 2240 2579  Q 2144 2682 1978 2682  Q 1542 2682 1139 2093  Q 928 1779 787 1395  Q 646 1011 646 717  Q 646 243 1030 243  Q 1408 243 1843 870  Q 2336 1581 2336 2310  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-29" d="M 186 4224  L 262 4326  Q 992 3891 1408 3148  Q 1824 2406 1824 1581  Q 1824 -166 243 -1133  L 186 -1030  Q 845 -486 1059 54  Q 1274 595 1274 1562  Q 1274 2534 1059 3120  Q 845 3706 186 4224  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-50" transform="translate(0 0.267188)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-28" transform="translate(61.099991 0.267188)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-73" transform="translate(94.399979 0.267188)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2032" transform="translate(139.496066 35.542188) scale(0.7)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2223" transform="translate(178.575433 0.267188)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-73" transform="translate(219.615421 0.267188)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2c" transform="translate(258.515414 0.267188)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-61" transform="translate(297.955396 0.267188)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-29" transform="translate(348.055386 0.267188)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="53" y="287" font-size="21" fill="#18364d" font-weight="400">期望奖励：</text><svg x="158.0" y="272.0" width="50.0" height="19.0" viewBox="0 0 50 19" data-latex="$r(s,a)$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.075035</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-72" d="M 1126 1427  L 1229 1651  Q 1446 2131 1830 2534  Q 2106 2822 2336 2822  Q 2470 2822 2553 2732  Q 2637 2643 2637 2496  Q 2637 2349 2557 2249  Q 2477 2150 2336 2150  Q 2214 2150 2112 2317  Q 2061 2406 2010 2406  Q 1837 2406 1485 1805  Q 1267 1434 1136 1104  Q 1005 774 774 0  L 288 0  L 806 1869  Q 909 2246 909 2394  Q 909 2560 666 2560  Q 614 2560 467 2541  L 467 2650  L 1459 2822  L 1478 2810  L 1126 1427  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-28" d="M 1946 -1030  L 1869 -1133  Q 1126 -710 716 32  Q 307 774 307 1613  Q 307 3386 1888 4326  L 1946 4224  Q 1293 3667 1075 3126  Q 858 2586 858 1632  Q 858 685 1082 96  Q 1306 -493 1946 -1030  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-73" d="M 2342 2829  L 2214 1933  L 2112 1933  Q 2022 2675 1542 2675  Q 1370 2675 1267 2579  Q 1165 2483 1165 2310  Q 1165 2067 1510 1658  Q 1946 1152 1946 787  Q 1946 397 1686 163  Q 1427 -70 1024 -70  Q 838 -70 672 -6  Q 538 51 390 51  Q 262 51 205 -83  L 102 -83  L 230 934  L 333 934  Q 461 64 973 64  Q 1203 64 1331 192  Q 1459 320 1459 557  Q 1459 845 1101 1293  Q 698 1798 698 2131  Q 698 2451 909 2636  Q 1120 2822 1472 2822  Q 1600 2822 1830 2758  Q 1971 2714 2061 2714  Q 2189 2714 2253 2829  L 2342 2829  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2c" d="M 531 -902  L 467 -781  Q 998 -422 998 -96  Q 998 -13 909 -13  Q 883 -13 822 -25  Q 762 -38 723 -38  Q 352 -38 352 288  Q 352 454 457 553  Q 563 653 736 653  Q 954 653 1101 496  Q 1248 339 1248 96  Q 1248 -198 1053 -473  Q 858 -749 531 -902  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-61" d="M 2963 710  L 3046 640  Q 2688 205 2518 70  Q 2349 -64 2157 -64  Q 1901 -64 1901 198  Q 1901 358 2048 934  Q 1690 397 1389 163  Q 1088 -70 749 -70  Q 467 -70 288 125  Q 109 320 109 672  Q 109 1158 387 1664  Q 666 2170 1094 2496  Q 1523 2822 1939 2822  Q 2368 2822 2451 2451  L 2522 2758  L 2541 2778  L 2931 2822  L 2976 2803  Q 2970 2778 2938 2669  Q 2368 595 2368 346  Q 2368 262 2458 262  Q 2554 262 2790 525  L 2963 710  z M 2336 2310  Q 2336 2477 2240 2579  Q 2144 2682 1978 2682  Q 1542 2682 1139 2093  Q 928 1779 787 1395  Q 646 1011 646 717  Q 646 243 1030 243  Q 1408 243 1843 870  Q 2336 1581 2336 2310  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-29" d="M 186 4224  L 262 4326  Q 992 3891 1408 3148  Q 1824 2406 1824 1581  Q 1824 -166 243 -1133  L 186 -1030  Q 845 -486 1059 54  Q 1274 595 1274 1562  Q 1274 2534 1059 3120  Q 845 3706 186 4224  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-72" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-28" transform="translate(38.899994 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-73" transform="translate(72.199982 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2c" transform="translate(111.099976 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-61" transform="translate(150.539957 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-29" transform="translate(200.639948 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="53" y="327" font-size="21" fill="#18364d" font-weight="400">折扣：</text><svg x="116.0" y="312.0" width="73.0" height="20.0" viewBox="0 0 73 20" data-latex="$\gamma \in [0,1)$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.080582</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-3b3" d="M 2803 2739  L 1050 250  Q 1037 32 1030 -73  Q 1024 -179 998 -406  Q 973 -634 934 -758  Q 896 -883 835 -1033  Q 774 -1184 681 -1251  Q 589 -1318 467 -1318  Q 224 -1318 224 -998  Q 224 -845 329 -608  Q 435 -371 608 -57  Q 781 256 845 397  Q 941 1293 941 1555  Q 941 2381 634 2381  Q 538 2381 422 2259  Q 307 2138 224 1894  L 122 1894  Q 358 2784 755 2784  Q 986 2784 1075 2589  Q 1165 2394 1165 2029  Q 1165 1850 1145 1632  Q 1126 1414 1091 1148  Q 1056 883 1050 813  L 2189 2739  L 2803 2739  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2208" d="M 4000 -173  L 2138 -173  Q 1382 -173 883 355  Q 384 883 384 1612  Q 384 2342 877 2870  Q 1370 3398 2118 3398  L 4000 3398  L 4000 2976  L 2144 2976  Q 1664 2976 1286 2633  Q 909 2291 826 1824  L 4000 1824  L 4000 1402  L 819 1402  Q 902 934 1280 592  Q 1658 250 2138 250  L 4000 250  L 4000 -173  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-5b" d="M 1914 -998  L 563 -998  L 563 4237  L 1914 4237  L 1914 4077  L 1382 4077  Q 1216 4077 1133 4006  Q 1050 3936 1050 3770  L 1050 -493  Q 1050 -838 1382 -838  L 1914 -838  L 1914 -998  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-30" d="M 3046 2112  Q 3046 1683 2963 1302  Q 2880 922 2717 602  Q 2554 282 2266 96  Q 1978 -90 1600 -90  Q 1210 -90 915 108  Q 621 307 461 640  Q 301 973 227 1350  Q 154 1728 154 2150  Q 154 2746 301 3222  Q 448 3699 790 4012  Q 1133 4326 1626 4326  Q 2253 4326 2649 3712  Q 3046 3098 3046 2112  z M 2432 2080  Q 2432 3091 2217 3625  Q 2003 4160 1587 4160  Q 1190 4160 979 3622  Q 768 3085 768 2106  Q 768 1120 979 598  Q 1190 77 1600 77  Q 2003 77 2217 598  Q 2432 1120 2432 2080  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2c" d="M 531 -902  L 467 -781  Q 998 -422 998 -96  Q 998 -13 909 -13  Q 883 -13 822 -25  Q 762 -38 723 -38  Q 352 -38 352 288  Q 352 454 457 553  Q 563 653 736 653  Q 954 653 1101 496  Q 1248 339 1248 96  Q 1248 -198 1053 -473  Q 858 -749 531 -902  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-31" d="M 2522 0  L 755 0  L 755 96  Q 1107 115 1235 227  Q 1363 339 1363 608  L 1363 3482  Q 1363 3795 1171 3795  Q 1082 3795 883 3718  L 710 3654  L 710 3744  L 1856 4326  L 1914 4307  L 1914 486  Q 1914 275 2042 185  Q 2170 96 2522 96  L 2522 0  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-29" d="M 186 4224  L 262 4326  Q 992 3891 1408 3148  Q 1824 2406 1824 1581  Q 1824 -166 243 -1133  L 186 -1030  Q 845 -486 1059 54  Q 1274 595 1274 1562  Q 1274 2534 1059 3120  Q 845 3706 186 4224  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-3b3" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2208" transform="translate(55.439981 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-5b" transform="translate(138.379962 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-30" transform="translate(171.67995 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2c" transform="translate(221.679935 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-31" transform="translate(261.119916 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-29" transform="translate(311.119901 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="53" y="367" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">奖励可更一般地写成联合转移分布</text><rect x="620" y="135" width="545" height="330" rx="12" fill="white" stroke="#8061bb" stroke-width="2"/><rect x="620" y="135" width="5" height="330" rx="0" fill="#8061bb" stroke="#8061bb" stroke-width="2"/><text x="638" y="169" font-size="24" fill="#8061bb" text-anchor="start" font-weight="600">02  求解：学什么、用什么</text><text x="638" y="207" font-size="21" fill="#18364d" font-weight="400">策略：</text><svg x="701.0" y="192.0" width="55.0" height="19.0" viewBox="0 0 55 19" data-latex="$\pi(a\mid s)$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.085946</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-3c0" d="M 3430 2739  L 3296 2266  L 2643 2266  Q 2624 2195 2502 1782  Q 2381 1370 2297 1072  Q 2214 774 2214 717  Q 2214 448 2413 448  Q 2694 448 2867 838  L 2970 838  Q 2886 486 2652 208  Q 2419 -70 2093 -70  Q 1901 -70 1808 67  Q 1715 205 1715 410  Q 1715 627 1824 922  L 2310 2266  L 1645 2266  Q 1568 2061 1401 1469  Q 1235 877 1068 512  Q 902 147 672 -38  Q 563 -115 442 -115  Q 314 -115 218 -32  Q 122 51 122 166  Q 122 429 314 480  Q 634 563 774 928  L 1299 2266  L 1261 2266  Q 973 2266 819 2208  Q 666 2150 474 1914  L 371 1914  Q 640 2362 931 2550  Q 1222 2739 1696 2739  L 3430 2739  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-28" d="M 1946 -1030  L 1869 -1133  Q 1126 -710 716 32  Q 307 774 307 1613  Q 307 3386 1888 4326  L 1946 4224  Q 1293 3667 1075 3126  Q 858 2586 858 1632  Q 858 685 1082 96  Q 1306 -493 1946 -1030  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-61" d="M 2963 710  L 3046 640  Q 2688 205 2518 70  Q 2349 -64 2157 -64  Q 1901 -64 1901 198  Q 1901 358 2048 934  Q 1690 397 1389 163  Q 1088 -70 749 -70  Q 467 -70 288 125  Q 109 320 109 672  Q 109 1158 387 1664  Q 666 2170 1094 2496  Q 1523 2822 1939 2822  Q 2368 2822 2451 2451  L 2522 2758  L 2541 2778  L 2931 2822  L 2976 2803  Q 2970 2778 2938 2669  Q 2368 595 2368 346  Q 2368 262 2458 262  Q 2554 262 2790 525  L 2963 710  z M 2336 2310  Q 2336 2477 2240 2579  Q 2144 2682 1978 2682  Q 1542 2682 1139 2093  Q 928 1779 787 1395  Q 646 1011 646 717  Q 646 243 1030 243  Q 1408 243 1843 870  Q 2336 1581 2336 2310  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2223" d="M 1062 -1210  L 640 -1210  L 640 4416  L 1062 4416  L 1062 -1210  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-73" d="M 2342 2829  L 2214 1933  L 2112 1933  Q 2022 2675 1542 2675  Q 1370 2675 1267 2579  Q 1165 2483 1165 2310  Q 1165 2067 1510 1658  Q 1946 1152 1946 787  Q 1946 397 1686 163  Q 1427 -70 1024 -70  Q 838 -70 672 -6  Q 538 51 390 51  Q 262 51 205 -83  L 102 -83  L 230 934  L 333 934  Q 461 64 973 64  Q 1203 64 1331 192  Q 1459 320 1459 557  Q 1459 845 1101 1293  Q 698 1798 698 2131  Q 698 2451 909 2636  Q 1120 2822 1472 2822  Q 1600 2822 1830 2758  Q 1971 2714 2061 2714  Q 2189 2714 2253 2829  L 2342 2829  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-29" d="M 186 4224  L 262 4326  Q 992 3891 1408 3148  Q 1824 2406 1824 1581  Q 1824 -166 243 -1133  L 186 -1030  Q 845 -486 1059 54  Q 1274 595 1274 1562  Q 1274 2534 1059 3120  Q 845 3706 186 4224  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-3c0" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-28" transform="translate(50.399994 0)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-61" transform="translate(83.699982 0)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2223" transform="translate(148.239969 0)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-73" transform="translate(189.279956 0)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-29" transform="translate(228.17995 0)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="638" y="247" font-size="21" fill="#18364d" font-weight="400">状态价值：</text><svg x="743.0" y="232.0" width="46.0" height="19.0" viewBox="0 0 46 19" data-latex="$V^\pi(s)$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.090784</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-56" d="M 4403 4179  L 4403 4077  Q 4198 4070 4045 3821  L 1658 -115  L 1536 -115  L 1011 3104  Q 902 3776 828 3910  Q 755 4045 486 4077  L 486 4179  L 2022 4179  L 2022 4077  Q 1722 4045 1629 3981  Q 1536 3917 1536 3750  Q 1536 3686 1542 3654  L 1958 819  L 3302 3123  Q 3616 3661 3616 3859  Q 3616 4032 3219 4077  L 3219 4179  L 4403 4179  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-3c0" d="M 3430 2739  L 3296 2266  L 2643 2266  Q 2624 2195 2502 1782  Q 2381 1370 2297 1072  Q 2214 774 2214 717  Q 2214 448 2413 448  Q 2694 448 2867 838  L 2970 838  Q 2886 486 2652 208  Q 2419 -70 2093 -70  Q 1901 -70 1808 67  Q 1715 205 1715 410  Q 1715 627 1824 922  L 2310 2266  L 1645 2266  Q 1568 2061 1401 1469  Q 1235 877 1068 512  Q 902 147 672 -38  Q 563 -115 442 -115  Q 314 -115 218 -32  Q 122 51 122 166  Q 122 429 314 480  Q 634 563 774 928  L 1299 2266  L 1261 2266  Q 973 2266 819 2208  Q 666 2150 474 1914  L 371 1914  Q 640 2362 931 2550  Q 1222 2739 1696 2739  L 3430 2739  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-28" d="M 1946 -1030  L 1869 -1133  Q 1126 -710 716 32  Q 307 774 307 1613  Q 307 3386 1888 4326  L 1946 4224  Q 1293 3667 1075 3126  Q 858 2586 858 1632  Q 858 685 1082 96  Q 1306 -493 1946 -1030  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-73" d="M 2342 2829  L 2214 1933  L 2112 1933  Q 2022 2675 1542 2675  Q 1370 2675 1267 2579  Q 1165 2483 1165 2310  Q 1165 2067 1510 1658  Q 1946 1152 1946 787  Q 1946 397 1686 163  Q 1427 -70 1024 -70  Q 838 -70 672 -6  Q 538 51 390 51  Q 262 51 205 -83  L 102 -83  L 230 934  L 333 934  Q 461 64 973 64  Q 1203 64 1331 192  Q 1459 320 1459 557  Q 1459 845 1101 1293  Q 698 1798 698 2131  Q 698 2451 909 2636  Q 1120 2822 1472 2822  Q 1600 2822 1830 2758  Q 1971 2714 2061 2714  Q 2189 2714 2253 2829  L 2342 2829  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-29" d="M 186 4224  L 262 4326  Q 992 3891 1408 3148  Q 1824 2406 1824 1581  Q 1824 -166 243 -1133  L 186 -1030  Q 845 -486 1059 54  Q 1274 595 1274 1562  Q 1274 2534 1059 3120  Q 845 3706 186 4224  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-56" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-3c0" transform="translate(71.725772 35.68125) scale(0.7)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-28" transform="translate(111.415143 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-73" transform="translate(144.715131 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-29" transform="translate(183.615125 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="638" y="287" font-size="21" fill="#18364d" font-weight="400">动作价值：</text><svg x="743.0" y="272.0" width="67.0" height="19.0" viewBox="0 0 67 19" data-latex="$Q^\pi(s,a)$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T19:28:04.096473</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-51" d="M 442 -1082  L 378 -979  Q 749 -717 912 -589  Q 1075 -461 1510 -77  Q 966 32 675 425  Q 384 819 384 1440  Q 384 2035 678 2624  Q 973 3213 1491 3661  Q 2202 4262 3034 4262  Q 3680 4262 4077 3833  Q 4474 3405 4474 2746  Q 4474 1997 4019 1277  Q 3565 557 2835 173  Q 2400 -64 1786 -102  L 1440 -467  L 1600 -467  Q 1824 -467 2387 -595  Q 2938 -730 3098 -730  Q 3443 -730 3673 -624  Q 3904 -518 4173 -237  L 4275 -307  Q 4122 -525 3942 -685  Q 3411 -1165 2720 -1165  Q 2298 -1165 1773 -998  Q 1421 -883 1178 -883  Q 800 -883 442 -1082  z M 3802 3072  Q 3802 3526 3581 3788  Q 3360 4051 2976 4051  Q 2272 4051 1734 3251  Q 1446 2822 1251 2230  Q 1056 1638 1056 1171  Q 1056 691 1273 400  Q 1491 109 1850 109  Q 2579 109 3117 902  Q 3411 1350 3606 1964  Q 3802 2579 3802 3072  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-3c0" d="M 3430 2739  L 3296 2266  L 2643 2266  Q 2624 2195 2502 1782  Q 2381 1370 2297 1072  Q 2214 774 2214 717  Q 2214 448 2413 448  Q 2694 448 2867 838  L 2970 838  Q 2886 486 2652 208  Q 2419 -70 2093 -70  Q 1901 -70 1808 67  Q 1715 205 1715 410  Q 1715 627 1824 922  L 2310 2266  L 1645 2266  Q 1568 2061 1401 1469  Q 1235 877 1068 512  Q 902 147 672 -38  Q 563 -115 442 -115  Q 314 -115 218 -32  Q 122 51 122 166  Q 122 429 314 480  Q 634 563 774 928  L 1299 2266  L 1261 2266  Q 973 2266 819 2208  Q 666 2150 474 1914  L 371 1914  Q 640 2362 931 2550  Q 1222 2739 1696 2739  L 3430 2739  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-28" d="M 1946 -1030  L 1869 -1133  Q 1126 -710 716 32  Q 307 774 307 1613  Q 307 3386 1888 4326  L 1946 4224  Q 1293 3667 1075 3126  Q 858 2586 858 1632  Q 858 685 1082 96  Q 1306 -493 1946 -1030  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-73" d="M 2342 2829  L 2214 1933  L 2112 1933  Q 2022 2675 1542 2675  Q 1370 2675 1267 2579  Q 1165 2483 1165 2310  Q 1165 2067 1510 1658  Q 1946 1152 1946 787  Q 1946 397 1686 163  Q 1427 -70 1024 -70  Q 838 -70 672 -6  Q 538 51 390 51  Q 262 51 205 -83  L 102 -83  L 230 934  L 333 934  Q 461 64 973 64  Q 1203 64 1331 192  Q 1459 320 1459 557  Q 1459 845 1101 1293  Q 698 1798 698 2131  Q 698 2451 909 2636  Q 1120 2822 1472 2822  Q 1600 2822 1830 2758  Q 1971 2714 2061 2714  Q 2189 2714 2253 2829  L 2342 2829  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2c" d="M 531 -902  L 467 -781  Q 998 -422 998 -96  Q 998 -13 909 -13  Q 883 -13 822 -25  Q 762 -38 723 -38  Q 352 -38 352 288  Q 352 454 457 553  Q 563 653 736 653  Q 954 653 1101 496  Q 1248 339 1248 96  Q 1248 -198 1053 -473  Q 858 -749 531 -902  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-61" d="M 2963 710  L 3046 640  Q 2688 205 2518 70  Q 2349 -64 2157 -64  Q 1901 -64 1901 198  Q 1901 358 2048 934  Q 1690 397 1389 163  Q 1088 -70 749 -70  Q 467 -70 288 125  Q 109 320 109 672  Q 109 1158 387 1664  Q 666 2170 1094 2496  Q 1523 2822 1939 2822  Q 2368 2822 2451 2451  L 2522 2758  L 2541 2778  L 2931 2822  L 2976 2803  Q 2970 2778 2938 2669  Q 2368 595 2368 346  Q 2368 262 2458 262  Q 2554 262 2790 525  L 2963 710  z M 2336 2310  Q 2336 2477 2240 2579  Q 2144 2682 1978 2682  Q 1542 2682 1139 2093  Q 928 1779 787 1395  Q 646 1011 646 717  Q 646 243 1030 243  Q 1408 243 1843 870  Q 2336 1581 2336 2310  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-29" d="M 186 4224  L 262 4326  Q 992 3891 1408 3148  Q 1824 2406 1824 1581  Q 1824 -166 243 -1133  L 186 -1030  Q 845 -486 1059 54  Q 1274 595 1274 1562  Q 1274 2534 1059 3120  Q 845 3706 186 4224  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-51" transform="translate(0 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-3c0" transform="translate(83.098107 35.68125) scale(0.7)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-28" transform="translate(122.787477 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-73" transform="translate(156.087465 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2c" transform="translate(194.987459 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-61" transform="translate(234.42744 0.40625)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-29" transform="translate(284.527431 0.40625)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="638" y="327" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">可选：学习转移与奖励模型</text><text x="638" y="367" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">模型用于预测、规划或生成经验</text><text x="30" y="536" font-size="19" fill="#607789" text-anchor="start" font-weight="400">原创教学示意；符号与正文对应。</text></svg>

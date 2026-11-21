@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-label="同一柔顺目标，两种控制信号流"><defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9" fill="#647f93"/></marker></defs><style>text{font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif}</style><rect width="1200" height="660" rx="18" fill="#f4f7fb"/><rect width="1200" height="95" rx="18" fill="#153d5c"/><rect y="75" width="1200" height="20" fill="#153d5c"/><text x="30" y="40" font-size="29" fill="white" text-anchor="start" font-weight="600">同一柔顺目标，两种控制信号流</text><text x="30" y="76" font-size="19" fill="#d1e4f1" text-anchor="start" font-weight="400">对比常见实现：力矩接口上的阻抗控制，与位置／速度接口上的导纳控制。</text><rect x="30" y="150" width="330" height="170" rx="12" fill="white" stroke="#278977" stroke-width="2"/><rect x="30" y="150" width="5" height="170" rx="0" fill="#278977" stroke="#278977" stroke-width="2"/><text x="48" y="184" font-size="24" fill="#278977" text-anchor="start" font-weight="600">运动反馈</text><svg x="48.0" y="208.0" width="28.0" height="17.0" viewBox="0 0 28 17" data-latex="$x,\dot x$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T21:41:48.933181</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 14) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-78" d="M 1555 2272  L 1632 1907  Q 1971 2426 2179 2624  Q 2387 2822 2598 2822  Q 2714 2822 2787 2755  Q 2861 2688 2861 2585  Q 2861 2483 2800 2419  Q 2739 2355 2643 2355  Q 2586 2355 2490 2409  Q 2394 2464 2310 2464  Q 2125 2464 1683 1690  Q 1683 1606 1734 1402  L 1939 544  Q 2003 282 2131 282  Q 2234 282 2432 538  Q 2451 563 2476 598  Q 2502 634 2521 662  Q 2541 691 2566 717  L 2662 659  Q 2387 230 2227 80  Q 2067 -70 1882 -70  Q 1728 -70 1645 26  Q 1562 122 1504 365  L 1318 1126  L 755 365  Q 557 96 432 13  Q 307 -70 147 -70  Q 0 -70 -86 0  Q -173 70 -173 198  Q -173 294 -112 361  Q -51 429 45 429  Q 122 429 250 358  Q 346 301 416 301  Q 525 301 742 614  L 1267 1357  L 1088 2150  Q 1024 2432 969 2509  Q 915 2586 794 2586  Q 717 2586 544 2541  L 429 2509  L 410 2611  L 480 2637  Q 992 2822 1229 2822  Q 1350 2822 1420 2707  Q 1491 2592 1555 2272  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-2c" d="M 531 -902  L 467 -781  Q 998 -422 998 -96  Q 998 -13 909 -13  Q 883 -13 822 -25  Q 762 -38 723 -38  Q 352 -38 352 288  Q 352 454 457 553  Q 563 653 736 653  Q 954 653 1101 496  Q 1248 339 1248 96  Q 1248 -198 1053 -473  Q 858 -749 531 -902  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-307" d="M -1158 3661  Q -1158 3526 -1251 3436  Q -1344 3347 -1478 3347  Q -1606 3347 -1699 3440  Q -1792 3533 -1792 3661  Q -1792 3795 -1705 3888  Q -1619 3981 -1478 3981  Q -1331 3981 -1244 3891  Q -1158 3802 -1158 3661  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-78" transform="translate(0 0.5)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-2c" transform="translate(44.399994 0.5)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-307" transform="translate(136.687631 4.796875)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-78" transform="translate(83.839975 0.5)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="76.0" y="222" font-size="21" fill="#18364d" font-weight="400">、参考运动</text><rect x="435" y="150" width="330" height="170" rx="12" fill="white" stroke="#8061bb" stroke-width="2"/><rect x="435" y="150" width="5" height="170" rx="0" fill="#8061bb" stroke="#8061bb" stroke-width="2"/><text x="453" y="184" font-size="24" fill="#8061bb" text-anchor="start" font-weight="600">阻抗控制器</text><text x="453" y="222" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">误差 → 恢复力／力矩</text><rect x="840" y="150" width="330" height="170" rx="12" fill="white" stroke="#2473a6" stroke-width="2"/><rect x="840" y="150" width="5" height="170" rx="0" fill="#2473a6" stroke="#2473a6" stroke-width="2"/><text x="858" y="184" font-size="24" fill="#2473a6" text-anchor="start" font-weight="600">力矩内环 + 机器人</text><text x="858" y="222" font-size="21" fill="#18364d" font-weight="400">接受 </text><svg x="904.703125" y="213.0" width="35.0" height="12.0" viewBox="0 0 35 12" data-latex="$\tau_{\mathrm{cmd}}$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T21:41:48.939620</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 9) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-3c4" d="M 2726 2739  L 2592 2266  L 1741 2266  Q 1293 1248 1293 742  Q 1293 416 1523 416  Q 1638 416 1779 547  Q 1920 678 2003 858  L 2106 858  Q 1990 467 1731 198  Q 1472 -70 1178 -70  Q 768 -70 768 384  Q 768 890 1395 2266  L 1005 2266  Q 493 2266 179 1702  L 77 1702  Q 237 2093 569 2416  Q 902 2739 1331 2739  L 2726 2739  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-63" d="M 2547 998  L 2637 941  Q 2362 403 2112 205  Q 1786 -64 1376 -64  Q 845 -64 502 336  Q 160 736 160 1357  Q 160 2170 698 2618  Q 1094 2944 1562 2944  Q 1965 2944 2256 2749  Q 2547 2554 2547 2285  Q 2547 2176 2457 2096  Q 2368 2016 2246 2016  Q 2022 2016 1939 2310  L 1901 2451  Q 1850 2630 1773 2694  Q 1696 2758 1523 2758  Q 1133 2758 893 2451  Q 653 2144 653 1645  Q 653 1094 928 745  Q 1203 397 1645 397  Q 1920 397 2118 528  Q 2317 659 2547 998  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-6d" d="M 4960 0  L 3565 0  L 3565 96  Q 3834 122 3907 208  Q 3981 294 3981 576  L 3981 1894  Q 3981 2278 3869 2444  Q 3757 2611 3488 2611  Q 3264 2611 3107 2521  Q 2950 2432 2803 2221  L 2803 608  Q 2803 301 2896 201  Q 2989 102 3264 96  L 3264 0  L 1830 0  L 1830 96  Q 2112 115 2189 188  Q 2266 262 2266 550  L 2266 1901  Q 2266 2611 1850 2611  Q 1670 2611 1468 2531  Q 1267 2451 1171 2336  Q 1088 2240 1088 2227  L 1088 448  Q 1088 243 1177 176  Q 1267 109 1523 96  L 1523 0  L 102 0  L 102 96  Q 371 102 460 195  Q 550 288 550 563  L 550 2150  Q 550 2387 499 2480  Q 448 2573 326 2573  Q 230 2573 122 2547  L 122 2656  Q 557 2778 1011 2944  L 1062 2925  L 1062 2451  L 1075 2451  Q 1363 2752 1584 2848  Q 1805 2944 2054 2944  Q 2560 2944 2733 2406  Q 3232 2944 3776 2944  Q 4518 2944 4518 1792  L 4518 493  Q 4518 282 4582 202  Q 4646 122 4794 109  L 4960 96  L 4960 0  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-64" d="M 3142 269  L 2202 -64  L 2176 -45  L 2176 365  Q 1869 -64 1357 -64  Q 826 -64 499 317  Q 173 698 173 1312  Q 173 1990 563 2467  Q 954 2944 1504 2944  Q 1850 2944 2176 2669  L 2176 3667  Q 2176 3866 2118 3930  Q 2061 3994 1882 3994  Q 1792 3994 1741 3987  L 1741 4090  Q 2323 4243 2682 4371  L 2714 4358  L 2714 730  Q 2714 506 2768 435  Q 2822 365 2995 365  Q 3034 365 3142 371  L 3142 269  z M 2176 653  L 2176 2125  Q 2176 2381 1981 2573  Q 1786 2765 1523 2765  Q 1158 2765 940 2438  Q 723 2112 723 1568  Q 723 979 963 624  Q 1203 269 1606 269  Q 1907 269 2080 474  Q 2176 582 2176 653  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-3c4" transform="translate(0 0.203125)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-63" transform="translate(40.999985 -13.025) scale(0.7)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-6d" transform="translate(72.07998 -13.025) scale(0.7)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-64" transform="translate(126.539972 -13.025) scale(0.7)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="858" y="262" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">真实外力作用于机器人</text><path d="M370 235L425 235" fill="none" stroke="#2473a6" stroke-width="3" marker-end="url(#arrow)"/><path d="M775 235L830 235" fill="none" stroke="#2473a6" stroke-width="3" marker-end="url(#arrow)"/><path d="M1005 325 L1005 345 L195 345 L195 325" fill="none" stroke="#278977" stroke-width="2" stroke-linejoin="round"/><path d="M195 340L195 322" fill="none" stroke="#278977" stroke-width="3" marker-end="url(#arrow)"/><rect x="30" y="410" width="330" height="170" rx="12" fill="white" stroke="#278977" stroke-width="2"/><rect x="30" y="410" width="5" height="170" rx="0" fill="#278977" stroke="#278977" stroke-width="2"/><text x="48" y="444" font-size="24" fill="#278977" text-anchor="start" font-weight="600">外力测量</text><svg x="48.0" y="467.0" width="25.0" height="20.0" viewBox="0 0 25 20" data-latex="$f_{\mathrm{ext}}$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T21:41:48.946486</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 15) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-66" d="M 262 2739  L 858 2739  Q 1107 3546 1318 3846  Q 1664 4339 2163 4339  Q 2400 4339 2557 4227  Q 2714 4115 2714 3942  Q 2714 3834 2634 3750  Q 2554 3667 2445 3667  Q 2355 3667 2281 3737  Q 2208 3808 2208 3917  Q 2208 3981 2240 4038  Q 2272 4096 2272 4115  Q 2272 4198 2131 4198  Q 1862 4198 1676 3849  Q 1491 3501 1350 2739  L 2035 2739  L 1997 2534  L 1306 2534  L 845 486  Q 435 -1325 -435 -1325  Q -653 -1325 -797 -1213  Q -941 -1101 -941 -934  Q -941 -826 -870 -746  Q -800 -666 -698 -666  Q -589 -666 -521 -733  Q -454 -800 -454 -902  Q -454 -947 -483 -1001  Q -512 -1056 -512 -1088  Q -512 -1190 -384 -1190  Q 13 -1190 237 -154  L 800 2534  L 218 2534  L 262 2739  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-65" d="M 2611 1050  L 2714 1005  Q 2330 -64 1376 -64  Q 813 -64 486 329  Q 160 723 160 1389  Q 160 2074 525 2509  Q 890 2944 1485 2944  Q 2061 2944 2374 2502  Q 2560 2246 2592 1773  L 621 1773  Q 646 1370 700 1158  Q 755 947 915 730  Q 1184 378 1626 378  Q 1939 378 2153 531  Q 2368 685 2611 1050  z M 634 1978  L 1939 1978  Q 1882 2381 1750 2547  Q 1619 2714 1312 2714  Q 1043 2714 864 2525  Q 685 2336 634 1978  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-78" d="M 3066 0  L 1779 0  L 1779 96  Q 1939 109 1987 137  Q 2035 166 2035 250  Q 2035 307 1997 365  L 1414 1261  L 909 474  Q 781 275 781 211  Q 781 96 1037 96  L 1037 0  L 109 0  L 109 96  Q 269 109 355 169  Q 442 230 576 422  L 1306 1478  L 704 2400  Q 557 2624 454 2704  Q 352 2784 211 2784  L 154 2784  L 154 2880  L 1478 2880  L 1478 2784  Q 1203 2778 1203 2643  Q 1203 2509 1498 2074  Q 1581 1958 1587 1946  Q 1619 1990 1779 2227  Q 1811 2285 1856 2349  Q 1901 2413 1923 2451  Q 1946 2490 1971 2528  Q 1997 2566 2006 2595  Q 2016 2624 2016 2643  Q 2016 2765 1760 2784  L 1760 2880  L 2771 2880  L 2771 2784  Q 2445 2771 2253 2502  L 1722 1734  L 2541 480  Q 2790 96 3066 96  L 3066 0  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Regular-74" d="M 1702 493  L 1786 422  Q 1478 -64 1011 -64  Q 448 -64 448 749  L 448 2675  L 109 2675  Q 83 2694 83 2720  Q 83 2771 192 2842  Q 435 2982 813 3526  Q 826 3546 874 3606  Q 922 3667 941 3706  Q 986 3706 986 3622  L 986 2880  L 1632 2880  L 1632 2675  L 986 2675  L 986 845  Q 986 538 1062 403  Q 1139 269 1318 269  Q 1510 269 1702 493  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-66" transform="translate(0 0.203125)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-65" transform="translate(27.799988 -13.025) scale(0.7)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-78" transform="translate(58.879984 -13.025) scale(0.7)" />
+    <ns0:use ns1:href="#STIXGeneral-Regular-74" transform="translate(93.879973 -13.025) scale(0.7)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><text x="48" y="522" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">去偏置与工具重力</text><rect x="435" y="410" width="330" height="170" rx="12" fill="white" stroke="#8061bb" stroke-width="2"/><rect x="435" y="410" width="5" height="170" rx="0" fill="#8061bb" stroke="#8061bb" stroke-width="2"/><text x="453" y="444" font-size="24" fill="#8061bb" text-anchor="start" font-weight="600">虚拟导纳模型</text><text x="453" y="482" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">力 → 运动修正</text><text x="453" y="522" font-size="21" fill="#18364d" font-weight="400">数值积分得到 </text><svg x="583.703125" y="512.0" width="17.0" height="13.0" viewBox="0 0 17 13" data-latex="$x_c$"><ns0:metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns2="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <rdf:RDF>
+   <ns2:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+    <dc:date>2026-11-20T21:41:48.951138</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <ns2:Agent>
+      <dc:title>Matplotlib v3.7.5, https://matplotlib.org/</dc:title>
+     </ns2:Agent>
+    </dc:creator>
+   </ns2:Work>
+  </rdf:RDF>
+ </ns0:metadata>
+ <ns0:defs xmlns:ns0="http://www.w3.org/2000/svg">
+  <ns0:style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</ns0:style>
+ </ns0:defs>
+ <ns0:g xmlns:ns0="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" id="figure_1">
+  <ns0:g id="text_1">
+   
+   <ns0:g style="fill: #18364d" transform="translate(0 10) scale(0.21 -0.21)">
+    <ns0:defs>
+     <ns0:path id="STIXGeneral-Italic-78" d="M 1555 2272  L 1632 1907  Q 1971 2426 2179 2624  Q 2387 2822 2598 2822  Q 2714 2822 2787 2755  Q 2861 2688 2861 2585  Q 2861 2483 2800 2419  Q 2739 2355 2643 2355  Q 2586 2355 2490 2409  Q 2394 2464 2310 2464  Q 2125 2464 1683 1690  Q 1683 1606 1734 1402  L 1939 544  Q 2003 282 2131 282  Q 2234 282 2432 538  Q 2451 563 2476 598  Q 2502 634 2521 662  Q 2541 691 2566 717  L 2662 659  Q 2387 230 2227 80  Q 2067 -70 1882 -70  Q 1728 -70 1645 26  Q 1562 122 1504 365  L 1318 1126  L 755 365  Q 557 96 432 13  Q 307 -70 147 -70  Q 0 -70 -86 0  Q -173 70 -173 198  Q -173 294 -112 361  Q -51 429 45 429  Q 122 429 250 358  Q 346 301 416 301  Q 525 301 742 614  L 1267 1357  L 1088 2150  Q 1024 2432 969 2509  Q 915 2586 794 2586  Q 717 2586 544 2541  L 429 2509  L 410 2611  L 480 2637  Q 992 2822 1229 2822  Q 1350 2822 1420 2707  Q 1491 2592 1555 2272  z " transform="scale(0.015625)" />
+     <ns0:path id="STIXGeneral-Italic-63" d="M 2240 685  L 2342 621  Q 2048 250 1769 90  Q 1491 -70 1133 -70  Q 678 -70 435 179  Q 192 429 192 915  Q 192 1344 409 1744  Q 627 2144 979 2432  Q 1472 2822 2048 2822  Q 2342 2822 2531 2675  Q 2720 2528 2720 2304  Q 2720 2176 2630 2086  Q 2541 1997 2413 1997  Q 2285 1997 2224 2070  Q 2163 2144 2163 2253  Q 2163 2310 2211 2403  Q 2259 2496 2259 2560  Q 2259 2688 2022 2688  Q 1619 2688 1325 2381  Q 742 1766 742 890  Q 742 544 889 352  Q 1037 160 1312 160  Q 1562 160 1766 281  Q 1971 403 2240 685  z " transform="scale(0.015625)" />
+    </ns0:defs>
+    <ns0:use ns1:href="#STIXGeneral-Italic-78" transform="translate(0 0.90625)" />
+    <ns0:use ns1:href="#STIXGeneral-Italic-63" transform="translate(44.399994 -12.321875) scale(0.7)" />
+   </ns0:g>
+  </ns0:g>
+ </ns0:g>
+</svg><rect x="840" y="410" width="330" height="170" rx="12" fill="white" stroke="#2473a6" stroke-width="2"/><rect x="840" y="410" width="5" height="170" rx="0" fill="#2473a6" stroke="#2473a6" stroke-width="2"/><text x="858" y="444" font-size="24" fill="#2473a6" text-anchor="start" font-weight="600">位置／速度内环</text><text x="858" y="482" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">跟踪运动指令</text><text x="858" y="522" font-size="21" fill="#18364d" text-anchor="start" font-weight="400">机器人与环境接触</text><path d="M370 495L425 495" fill="none" stroke="#2473a6" stroke-width="3" marker-end="url(#arrow)"/><path d="M775 495L830 495" fill="none" stroke="#2473a6" stroke-width="3" marker-end="url(#arrow)"/><path d="M1005 585 L1005 605 L195 605 L195 585" fill="none" stroke="#278977" stroke-width="2" stroke-linejoin="round"/><path d="M195 600L195 582" fill="none" stroke="#278977" stroke-width="3" marker-end="url(#arrow)"/><text x="600" y="382" font-size="24" fill="#18364d" text-anchor="middle" font-weight="400">上排：机器人运动反馈闭环；下排：机器人接触力反馈闭环。</text><text x="30" y="636" font-size="19" fill="#607789" text-anchor="start" font-weight="400">原创控制框架；两种方案都需要反馈。信号因果方向不等于机器人与环境之间只有单向物理作用。</text></svg>

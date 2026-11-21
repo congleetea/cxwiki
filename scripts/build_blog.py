@@ -191,7 +191,7 @@ def add_heading_ids(rendered: str) -> tuple[str, list[tuple[str, str, int]]]:
         used[base] = count + 1
         ident = base if count == 0 else f"{base}-{count + 1}"
         if level in (2, 3):
-            headings.append((ident, plain, level))
+            headings.append((ident, inner, level))
         return f'<h{level} id="{ident}">{inner}</h{level}>'
 
     rendered = re.sub(r"<h([1-6])>([\s\S]*?)</h\1>", replace, rendered)
@@ -278,14 +278,13 @@ def header(page: Page, active: str = "") -> str:
       <a class=\"{('active' if active == '01-embodied-ai' else '')}\" href=\"{embodied}\">具身智能</a>
       <a class=\"{('active' if active == '02-classical-robotics' else '')}\" href=\"{robotics}\">经典机器人</a>
       <a href=\"{foundations}\">人工智能基础</a>
-      <a href=\"{home}#about\">关于</a>
     </nav>
   </div>
 </header>"""
 
 
 def footer(page: Page) -> str:
-    return f"""<footer class=\"site-footer\"><div><strong>cxwiki</strong> · 研究、概念与综述的 HTML 阅读版</div><div>来源与证据仍保存在 <code>raw/</code>，页面由本地静态生成器构建。</div></footer>"""
+    return f"""<footer class=\"site-footer\"><div><strong>cxwiki</strong> · 个人知识库</div></footer>"""
 
 
 def toc_html(page: Page) -> str:
@@ -294,7 +293,7 @@ def toc_html(page: Page) -> str:
         return ""
     items = []
     for ident, title, level in headings:
-        items.append(f'<li class=\"toc-level-{level}\"><a href=\"#{esc(ident)}\">{esc(title)}</a></li>')
+        items.append(f'<li class=\"toc-level-{level}\"><a href=\"#{esc(ident)}\">{title}</a></li>')
     return '<aside class="toc"><div class="eyebrow">本文目录</div><ol>' + "".join(items) + "</ol></aside>"
 
 
@@ -402,7 +401,7 @@ def extra_topic_page(topic: str, pages: list[Page], output: Path) -> str:
     relevant.sort(key=series_sort_key)
     page = Page(Path("/dev/null"), output, {}, topic_label(topic), "index", "")
     cards = "".join(ordered_card(p, output) for p in relevant)
-    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">个人知识库 · 主题目录</div><h1>{esc(topic_label(topic))}</h1><p>这个主题按文章目录直接浏览，后续可以继续拆分子目录。</p></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>内容目录</h2><span class=\"order-hint\">拖动左侧手柄调整顺序，顺序会自动保存在当前浏览器</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
+    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">个人知识库 · 主题目录</div><h1>{esc(topic_label(topic))}</h1></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>内容目录</h2><span class=\"order-hint\">拖动左侧手柄调整顺序，顺序会自动保存在当前浏览器</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
 
 
 def topic_index(category: str, topic: str, pages: list[Page], output: Path) -> str:
@@ -411,7 +410,7 @@ def topic_index(category: str, topic: str, pages: list[Page], output: Path) -> s
     relevant.sort(key=series_sort_key)
     page = Page(Path("/dev/null"), output, {}, topic, "index", "")
     cards = "".join(ordered_card(p, output) for p in relevant)
-    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · {esc(title)} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page, topic)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">{esc(title)} · 主题目录</div><h1>{esc(topic_label(topic))}</h1><p>从这里选择一篇文章进入阅读。目录页负责导航，文章页负责完整解释。</p></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>文章</h2><span class=\"order-hint\">拖动左侧手柄调整顺序，顺序会自动保存在当前浏览器</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(category + '/' + topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
+    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · {esc(title)} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page, topic)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">{esc(title)} · 主题目录</div><h1>{esc(topic_label(topic))}</h1></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>文章</h2><span class=\"order-hint\">拖动左侧手柄调整顺序，顺序会自动保存在当前浏览器</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(category + '/' + topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
 
 
 def category_index(category: str, pages: list[Page], output: Path) -> str:
@@ -449,7 +448,7 @@ def home_page(pages: list[Page], output: Path) -> str:
         label = topic_label(topic)
         description = {"01-embodied-ai": "VLA、动作生成、记忆与机器人学习", "02-classical-robotics": "运动学、动作重定向与约束求解"}.get(topic, "按概念与综述继续浏览")
         category_cards.append(f'<a class="category-card" href="{rel_url(output, target)}"><span class="category-symbol">{len(category_cards) + 1:02d}</span><div><div class="eyebrow">知识主题</div><h2>{esc(label)}</h2><p>{esc(description)}</p><span class="read-more">查看概念与综述 <span>→</span></span></div></a>')
-    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>cxwiki · 个人知识库</title><meta name="description" content="按主题、概念与综述组织的个人知识库"><link rel="stylesheet" href="{rel_url(output, SITE / 'assets/style.css')}"><script defer src="{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class="skip-link" href="#content">跳到正文</a>{header(page)}<main id="content"><section class="library-hero"><div class="eyebrow">个人知识库 · cxwiki</div><h1>先按主题进入，<br><em>再选择概念或综述。</em></h1><p>这里同时容纳技术研究、人文阅读和个人记录。每个主题下面都分成概念文章与主题综述，文章本身放在更深一层的目录里。</p></section><section class="category-section"><div class="section-heading"><div><div class="eyebrow">主题分类</div><h2>选择一个知识主题</h2></div><span>{len(topics)} 个主题</span></div><div class="category-grid">{''.join(category_cards)}</div></section><section class="method-note" id="about"><div><div class="eyebrow">阅读方法</div><h2>概念讲清楚，综述讲关系。</h2></div><p>未来新增人文、日记、工作记录等目录时，只要放入对应主题目录，生成器会继续按“主题 → 概念/综述 → 文章目录”组织页面。</p></section></main>{footer(page)}</body></html>"""
+    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>cxwiki · 个人知识库</title><meta name="description" content="按主题、概念与综述组织的个人知识库"><link rel="stylesheet" href="{rel_url(output, SITE / 'assets/style.css')}"><script defer src="{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class="skip-link" href="#content">跳到正文</a>{header(page)}<main id="content"><section class="library-hero"><div class="eyebrow">个人知识库 · cxwiki</div><h1>个人知识库</h1><p>概念讲清楚一种方法，综述讲清楚关系和整体</p></section><section class="category-section"><div class="section-heading"><div><div class="eyebrow">主题分类</div><h2>选择一个知识主题</h2></div><span>{len(topics)} 个主题</span></div><div class="category-grid">{''.join(category_cards)}</div></section></main>{footer(page)}</body></html>"""
 
 
 def topic_category_page(topic: str, pages: list[Page], output: Path) -> str:
@@ -458,13 +457,10 @@ def topic_category_page(topic: str, pages: list[Page], output: Path) -> str:
     sections = []
     for category, heading, subtitle in (("00-concepts", "概念文章", "单个对象的公式、流程、图示与实现边界"), ("01-comprehensive", "主题综述", "对象之间的关系、差异、优缺点与发展脉络")):
         relevant = [p for p in pages if p.source.is_relative_to(ROOT / "wiki" / category) and category_topic(p, category) == topic]
-        target = SITE / "wiki" / category / topic / "index.html"
-        if relevant:
-            href = rel_url(output, target)
-            sections.append(f'<a class="door-card" href="{href}"><span class="door-symbol">{"概" if category == "00-concepts" else "综"}</span><div><div class="eyebrow">{heading}</div><h2>{heading}</h2><p>{subtitle}</p><span class="read-more">进入目录 · {len(relevant)} 篇 <span>→</span></span></div></a>')
-        else:
-            sections.append(f'<div class="door-card empty"><span class="door-symbol">—</span><div><div class="eyebrow">{heading}</div><h2>{heading}</h2><p>这个主题暂时没有已迁移的文章。</p></div></div>')
-    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{esc(label)} · cxwiki</title><link rel="stylesheet" href="{rel_url(output, SITE / 'assets/style.css')}"><script defer src="{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class="skip-link" href="#content">跳到正文</a>{header(page)}<main id="content" class="listing-shell"><div class="listing-hero"><div class="eyebrow">主题入口</div><h1>{esc(label)}</h1><p>先选择文章层次，再进入对应的目录。</p></div><section class="listing-section"><div class="door-grid">{''.join(sections)}</div></section></main>{footer(page)}</body></html>"""
+        cards = "".join(ordered_card(p, output) for p in relevant)
+        content = cards or '<p class="empty-list">暂无文章。</p>'
+        sections.append(f'<section class="topic-column"><div class="section-heading"><h2>{heading}</h2><span>{len(relevant)} 篇</span></div><div class="card-grid article-list" data-order-key="{esc(category + "/" + topic)}">{content}</div></section>')
+    return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{esc(label)} · cxwiki</title><link rel="stylesheet" href="{rel_url(output, SITE / 'assets/style.css')}"><script defer src="{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class="skip-link" href="#content">跳到正文</a>{header(page)}<main id="content" class="listing-shell"><div class="listing-hero"><div class="eyebrow">主题入口</div><h1>{esc(label)}</h1></div><section class="listing-section"><div class="topic-columns">{''.join(sections)}</div></section></main>{footer(page)}</body></html>"""
 
 def copy_assets() -> None:
     assets = SITE / "assets"
@@ -537,8 +533,9 @@ def build() -> list[Page]:
     write_text(SITE / "wiki/series/pi/index.html", redirect_page("π 系列", "../../../series/pi/index.html"))
     write_text(SITE / "wiki/series/robotics/index.html", redirect_page("机器人学系列", "../../../series/robotics/index.html"))
     write_text(ROOT / "wiki/index.html", redirect_page("cxwiki 首页", "../index.html"))
-    write_text(ROOT / "wiki/series/pi/index.html", redirect_page("π 系列", "../../index.html#about"))
-    write_text(ROOT / "wiki/series/robotics/index.html", redirect_page("机器人学系列", "../../index.html#about"))
+    write_text(ROOT / "wiki/series/pi/index.html", redirect_page("π 系列", "../../index.html"))
+    write_text(ROOT / "wiki/series/robotics/index.html", redirect_page("机器人学系列", "../../index.html"))
+    write_text(SITE / "wiki/00-concepts/02-classical-robotics/rigid-body-kinematics.html", redirect_page("刚体运动学基础", "../../01-comprehensive/02-classical-robotics/rigid-body-kinematics.html"))
     return pages
 
 

@@ -3,7 +3,7 @@ title: 注意力机制
 id: attention-mechanism
 type: concept
 created: 2026-04-23
-last_updated: 2026-11-09
+last_updated: 2026-11-20
 stage: seedling
 verified_date:
 tags:
@@ -28,6 +28,65 @@ number headings: auto, first-level 1, max 6, _.1.1
 2. 先从第一性原理重建 QKV 设计（为什么 Q/K/V 分离、为什么用点积、为什么除以 $\sqrt{d_k}$、为什么用 softmax、为什么乘 V），再按注意力方向、范围、稀疏程度、多头机制、特殊模式五类梳理注意力变体。
 
 ---
+
+## 0. Transformer 经典架构：注意力在整张网络里做什么
+
+下面是 Vaswani 等在 *Attention Is All You Need* 中的 **Figure 1 原图**。左侧是编码器，右侧是解码器；两边都从下往上读。注意力不是完整 Transformer 的全部，图里还有嵌入、位置编码、前馈网络、残差与归一化。
+
+![Transformer 原论文 Figure 1：编码器与解码器完整架构](../../imgs/transformer-original-figure-1.png)
+
+*来源：Vaswani 等，2017，Attention Is All You Need，Figure 1（原图，非原创重绘）。[原论文图及上下文](https://arxiv.org/html/1706.03762v7#S3.F1)，[本地原始图片](../../imgs/transformer-original-figure-1.png)。论文授权声明允许在注明出处的学术／新闻作品中复制其图表。图中的重复标记表示层堆叠，具体基础配置为六层。*
+
+### 0.1. 沿着翻译任务读左右两条路径
+
+假设源句是 “I love robots”，目标是翻译成另一种语言。设源长度为 $n$，目标长度为 $m$，模型维度为 $d_{\mathrm{model}}$。
+
+**左边：先把整个源句编码成上下文表示。** 源 token 的嵌入加上位置编码，得到 $X\in\mathbb R^{n\times d_{\mathrm{model}}}$。编码器每层先做多头自注意力，让源句各位置相互读取，再做逐位置前馈网络；每个子层外都有残差与归一化。最上面的输出 $M\in\mathbb R^{n\times d_{\mathrm{model}}}$ 保留了源序列的位置维度，不是把整句压成一个向量。
+
+**右边：根据已经给出的目标前缀，预测下一个目标 token。** 底部 “Outputs (shifted right)” 不是模型偷看完整答案，而是把目标序列向右移动一位：例如输入是“起始符、我、爱”，监督预测则是“我、爱、机器人”。因果掩码确保每个位置只能读取这个位置及更早的解码输入。
+
+解码器每层比编码器多一个子层：
+
+1. **Masked Multi-Head Attention**：对目标前缀做因果自注意力。
+2. **Multi-Head Attention**：读取左侧编码器输出，是编码器—解码器交叉注意力。
+3. **Feed Forward**：对每个目标位置的表示做非线性变换。
+
+顶部 Linear 将每个目标位置的隐状态映射到词表维度，Softmax 得到下一个 token 的概率分布：
+
+$$p(y_i\mid y_{<i},x_{1:n})=\operatorname{softmax}(W_{\mathrm{out}}h_i+b_{\mathrm{out}}).$$
+
+这里按列向量写单位置输出，$h_i\in\mathbb R^{d_{\mathrm{model}}}$，$W_{\mathrm{out}}\in\mathbb R^{|\mathcal V|\times d_{\mathrm{model}}}$。模型结构与输入右移约定见 [原论文 §3.1–3.4](https://arxiv.org/html/1706.03762v7#S3)。本段是为读图展开的例子，不是论文评测样本。
+
+### 0.2. 图里三种注意力，区别在于 $Q,K,V$ 从哪里来
+
+| 图中位置 | $Q$ 来源 | $K,V$ 来源 | 允许看什么 |
+|---|---|---|---|
+| 编码器自注意力 | 当前层源表示 | 同一层源表示 | 整个源句的有效位置 |
+| 解码器因果自注意力 | 当前层目标表示 | 同一层目标表示 | 当前及过去的目标前缀位置 |
+| 编码器—解码器交叉注意力 | 解码器中间表示 | 编码器最终输出 $M$ | 整个源句的有效位置 |
+
+表中“来源”指线性投影之前的序列，**不代表投影后的 $Q,K,V$ 数值相等**。交叉注意力的目标与源长度可以不同：$QK^{\mathsf T}$ 自然得到 $m\times n$ 的分数矩阵，不需要把两条序列强行补成相同长度。
+
+例如翻译到“机器人”时，解码器一边利用已生成的“我、爱”，一边通过交叉注意力读取源句里与 robots 有关的信息。这里是帮助理解的解释，不保证每个头都会形成一一对应的词对齐。
+
+### 0.3. Add & Norm 和前馈层不是装饰
+
+原始 Transformer 使用 Post-LN 结构，一个子层可概括为：
+
+$$\operatorname{LayerNorm}\!\left(x+\operatorname{Dropout}(\operatorname{Sublayer}(x))\right).$$
+
+图中绕行箭头是残差通路，要求相加的特征维度一致。Feed Forward 则对每个位置使用相同参数：
+
+$$\operatorname{FFN}(x)=W_2\operatorname{ReLU}(W_1x+b_1)+b_2.$$
+
+这里按列向量写，$W_1\in\mathbb R^{d_{\mathrm{ff}}\times d_{\mathrm{model}}}$，$W_2\in\mathbb R^{d_{\mathrm{model}}\times d_{\mathrm{ff}}}$。注意力负责跨位置取信息，FFN 负责逐位置变换表示；两者分工不同。现代模型常改用 Pre-LN、RMSNorm 或门控 FFN，不能把这些变体反过来当成原图的精确定义。
+
+### 0.4. 训练能并行，生成通常逐 token 进行
+
+训练时真实目标序列已知，可以一次构造全部右移前缀，并用三角掩码并行算出各位置预测；**因果注意力不等于训练不能并行**。自回归推理时尚不知道未来 token，才通常需要逐步生成，并可用 KV cache 减少重复计算。
+
+GPT 类模型主要使用因果解码器堆栈，通常没有原图左侧编码器及读取该编码器的交叉注意力；BERT 类模型主要使用双向编码器堆栈。理解原图以后，才容易看懂这些删改了哪些路径。
+
 
 ## 1 QKV 核心思想与设计原理
 
@@ -158,7 +217,7 @@ $$
 - 对位置信息不敏感，需要额外添加位置编码
 - 容易过拟合，需要较多数据
 
-**典型应用**：BERT、GPT 编码器、ViT
+**典型应用**：BERT、GPT 的因果解码器、ViT
 
 ### 3.2 交叉注意力 (Cross-Attention)
 
@@ -175,7 +234,7 @@ $$
 
 **缺点**：
 - 需要额外的模态对齐信息
-- 两序列长度不同时计算需特殊处理
+- 需正确配置源序列 padding 掩码；两序列长度可以不同
 - 无法捕捉目标序列内部的依赖关系
 
 **典型应用**：
@@ -447,8 +506,8 @@ $$
 - 推理时可以利用 KV Cache 加速
 
 **缺点**：
-- 无法并行训练（推理时可以）
-- 训练效率低
+- 自回归推理通常逐 token 进行
+- 训练可用移位目标与因果掩码并行计算
 - 无法看到未来信息
 
 **典型应用**：GPT、LLaMA 等自回归语言模型
@@ -468,7 +527,7 @@ $$
 
 **缺点**：
 - 无法用于自回归生成（会泄露未来信息）
-- 推理时必须逐个生成
+- 不需要自回归的任务可一次处理完整序列
 - 不适合实时应用
 
 **典型应用**：BERT、编码器结构
@@ -647,6 +706,8 @@ def create_causal_mask(seq_len, device):
 ### 9.3 多头注意力
 
 ```python
+import torch.nn as nn
+
 class MultiHeadAttention(nn.Module):
     def __init__(self, d_model, num_heads):
         super().__init__()
@@ -667,7 +728,7 @@ class MultiHeadAttention(nn.Module):
         V = self.W_v(x).view(B, T, self.num_heads, self.d_k).transpose(1, 2)
 
         # 注意力计算
-        output, weights = standard_attention(Q, K, K, mask)
+        output, weights = standard_attention(Q, K, V, mask)
 
         # 合并头并输出
         output = output.transpose(1, 2).contiguous().view(B, T, C)
@@ -683,3 +744,8 @@ class MultiHeadAttention(nn.Module):
 - Performer-MPC 注意力 MPC 控制器 — 线性注意力的应用
 
 <!-- 反向链接 -->
+
+## 原始架构来源
+
+- [Attention Is All You Need](https://arxiv.org/abs/1706.03762)，Figure 1 与 §3。
+- [框架图来源及本次核验记录](../../../raw/entries/2026-11-20-transformer-architecture.md)。

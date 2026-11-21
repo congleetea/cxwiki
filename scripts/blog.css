@@ -70,3 +70,64 @@ nav a:hover, nav a.active { color: var(--ink); border-bottom-color: var(--orange
 .category-section { max-width: 1180px; margin: auto; padding: 25px 26px 74px; }.category-grid, .door-grid, .topic-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }.category-card, .door-card, .topic-card { display: grid; grid-template-columns: 68px 1fr; gap: 20px; min-height: 190px; padding: 29px; border: 1px solid var(--line); background: #fff; transition: transform .2s, box-shadow .2s; }.category-card:hover, .door-card:hover, .topic-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }.category-card h2, .door-card h2, .topic-card h2 { margin: 6px 0 8px; font-family: Georgia, "Noto Serif SC", serif; font-size: 28px; font-weight: 500; }.category-card p, .door-card p, .topic-card p { margin: 0 0 17px; color: var(--muted); font-size: 14px; }.category-symbol, .door-symbol, .topic-number { color: var(--blue); font-family: Georgia, serif; font-size: 29px; line-height: 1.2; }.door-symbol { display: grid; width: 52px; height: 52px; place-items: center; border-radius: 50%; color: #fff; background: var(--navy); font-size: 24px; }.door-card.empty { opacity: .55; }.topic-number { color: var(--orange); font-size: 24px; }
 @media (max-width: 900px) { .card-grid, .listing-section .card-grid { grid-template-columns: repeat(2, 1fr); }.article-layout { grid-template-columns: 1fr; }.article { grid-column: auto; }.toc { grid-column: auto; grid-row: auto; position: static; order: -1; max-height: none; padding: 12px 0 2px; border: 0; border-bottom: 1px solid var(--line); }.toc ol { display: flex; gap: 8px 18px; flex-wrap: wrap; }.toc li { margin: 0; }.toc li.toc-level-3 { padding-left: 0; } }
 @media (max-width: 650px) { .header-inner { height: 65px; padding: 0 18px; }.brand small { display: none; } nav { gap: 13px; font-size: 12px; }.home-hero, .listing-hero, .library-hero { padding: 58px 20px 45px; }.home-hero { display: block; min-height: auto; }.hero-orbit { width: 260px; margin-top: 50px; }.series-grid, .home-section, .method-note, .listing-section, .article-shell, .category-section { padding-left: 20px; padding-right: 20px; }.series-grid, .category-grid, .door-grid, .topic-grid { grid-template-columns: 1fr; }.card-grid, .listing-section .card-grid { grid-template-columns: 1fr; }.method-note { display: block; }.method-note p { margin-top: 20px; }.section-heading { align-items: start; flex-direction: column; gap: 7px; }.article-shell { padding-top: 40px; }.prose { margin-top: 35px; font-size: 15px; }.article-pager { grid-template-columns: 1fr; }.pager.next { text-align: left; }.site-footer { display: block; padding-left: 20px; padding-right: 20px; }.site-footer div + div { margin-top: 8px; } }
+
+/* Navigation uses continuous rows at every viewport width. */
+.category-grid, .door-grid, .topic-grid, .series-grid,
+.card-grid, .listing-section .card-grid { display: flex; flex-direction: column; gap: 0; }
+.category-card, .door-card, .topic-card, .series-card,
+.article-card, .article-list .article-card {
+  min-height: 0; padding: 18px 0; border: 0;
+  border-bottom: 1px solid var(--line); border-radius: 0;
+  background: transparent; box-shadow: none; transform: none;
+  transition: color .15s;
+}
+.category-card, .door-card, .topic-card, .series-card {
+  grid-template-columns: 40px minmax(0, 1fr); gap: 16px; align-items: center;
+}
+.category-card:hover, .door-card:hover, .topic-card:hover,
+.series-card:hover, .article-card:hover { transform: none; box-shadow: none; color: var(--blue); }
+.category-card h2, .door-card h2, .topic-card h2, .series-card h2 { margin: 0 0 4px; font-size: 22px; }
+.category-card p, .door-card p, .topic-card p, .series-card p { margin: 0; }
+.category-card .eyebrow, .door-card .eyebrow, .topic-card .eyebrow { display: none; }
+.category-card .read-more, .door-card .read-more, .topic-card .read-more { display: inline-block; margin-top: 4px; }
+.category-symbol, .topic-number, .series-symbol { font-size: 22px; }
+.door-symbol { width: auto; height: auto; display: block; color: var(--blue); background: transparent; border-radius: 0; font-size: 22px; }
+.article-card h3 { margin: 5px 0; font-size: 19px; }
+.article-card p { display: block; margin: 0 0 5px; }
+.article-card .read-more { margin-top: 0; }
+.article-list-item { border-bottom: 1px solid var(--line); }
+.article-list-item .article-card { border-bottom: 0; }
+.library-hero { padding-top: 42px; padding-bottom: 24px; }
+.library-hero h1 { font-size: clamp(28px, 4vw, 42px); }
+.listing-hero { padding-top: 42px; padding-bottom: 24px; }
+.listing-hero h1 { font-size: clamp(28px, 4vw, 42px); }
+.method-note { display: block; margin-top: 0; padding-top: 24px; padding-bottom: 32px; }
+.method-note p { margin-top: 12px; }
+
+/* Dense article directories, with both article types visible on topic pages. */
+.topic-columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 36px; }
+.topic-column { min-width: 0; }
+.topic-column .section-heading h2 { font-size: 24px; }
+.article-card, .article-list .article-card { display: flex; flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; padding: 10px 0; min-width: 0; }
+.article-card .card-top, .article-card p, .article-card .read-more { display: none; }
+.article-card h3 { margin: 0; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.article-card .card-institution { margin: 0; font-size: 12px; }
+.article-list-item { grid-template-columns: 18px minmax(0, 1fr); gap: 6px; }
+.drag-handle { font-size: 17px; padding: 4px 0; }
+@media (max-width: 750px) {
+  .topic-columns { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+}
+
+/* Keep title and institution on separate lines in every article directory. */
+.article-card, .article-list .article-card {
+  flex-direction: column;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 2px;
+}
+.article-card .card-institution { min-height: 1.45em; }
+
+.drag-handle { touch-action: none; user-select: none; min-width: 18px; min-height: 28px; }
+
+/* Keep the canonical tall architecture diagram readable. */
+.prose img[src$="transformer-original-figure-1.png"] { max-height: none; width: min(100%, 720px); }

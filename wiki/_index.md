@@ -16,7 +16,7 @@
 - [RTC 实时动作分块](00-concepts/01-embodied-ai/pi-rtc-real-time-chunking.md)
 - [π₀.₆ 与 RECAP 经验学习](00-concepts/01-embodied-ai/pi-06-recap.md)
 - [人类视频到机器人控制的迁移](00-concepts/01-embodied-ai/pi-human-to-robot.md)
-- [MEM 多尺度具身记忆](00-concepts/01-embodied-ai/pi-mem-memory.md)
+- [MEM 多尺度具身记忆](00-concepts/01-embodied-ai/pi-mem-memory.md)：高低层接口、语言摘要监督、视频时空注意力、本体历史与训练边界。
 - [RLT 强化学习 Token](00-concepts/01-embodied-ai/pi-rlt-token.md)
 - [π₀.₇ 可控通用策略](00-concepts/01-embodied-ai/pi-07-steerable.md)
 - [GR00T Action Cascade：VLM 与动作扩散系统如何协作](00-concepts/01-embodied-ai/nvidia-gr00t-action-cascade.md)
@@ -33,9 +33,14 @@
 
 - [机器人动作重定向综述](01-comprehensive/02-classical-robotics/motion-retargeting-overview.md)：表示与形态差异 → 带约束微分 IK → GMR / PyRoki / FRAX → 物理执行与评估。
 
+- [刚体运动学基础](01-comprehensive/02-classical-robotics/rigid-body-kinematics.md)：位姿、速度、加速度、动力学与接触控制的关系和阅读路线。
+
 ## 概念与工具 · 经典机器人
 
-- [刚体运动学基础](00-concepts/02-classical-robotics/rigid-body-kinematics.md)：坐标系、旋转、齐次变换、角速度与刚体点速度。
+- [刚体位姿与坐标变换](00-concepts/02-classical-robotics/rigid-body-pose.md)
+- [刚体速度与加速度](00-concepts/02-classical-robotics/rigid-body-velocity-acceleration.md)
+- [刚体的力、力矩与动力学](00-concepts/02-classical-robotics/rigid-body-dynamics.md)
+- [阻抗控制与导纳控制](00-concepts/02-classical-robotics/impedance-admittance-control.md)
 - [FRAX 与微分 IK](00-concepts/02-classical-robotics/frax-differential-ik.md)
 
 ## 概念 · 人工智能基础
@@ -50,9 +55,13 @@
 - [PEFT 参数高效微调](00-concepts/03-ai-foundations/peft.md)
 - [多卡训练原理](00-concepts/03-ai-foundations/multi-gpu-training.md)
 
+- [Online Learning、Offline Learning、On-policy 与 Off-policy](00-concepts/03-ai-foundations/online-offline-learning.md)：数据采集、固定数据训练、BC 与离线 RL 的区别。
+
+- [VAE 与 CVAE：从重建数据到生成多种可能](00-concepts/03-ai-foundations/vae-cvae.md)：潜变量、ELBO、重参数化、条件生成与机器人应用。
+
 ## 主题综述 · 人工智能基础
 
-- [强化学习基础](01-comprehensive/03-ai-foundations/reinforcement-learning-basics.md)：保留旧库中用户编辑的完整讲解与公式推导。
+- [强化学习基础](01-comprehensive/03-ai-foundations/reinforcement-learning-basics.md)：保留完整讲解与 LaTeX 公式推导，重绘八张学习路线、交互与数值算法示意图。
 
 ## 来源与维护
 
@@ -60,3 +69,5 @@
 - [动作重定向来源与证据](../raw/entries/2026-11-05-motion-retargeting.md)
 - [GR00T 2 来源与证据](../raw/entries/2026-11-10-nvidia-gr00t-2.md)
 - [更新记录](logs/2026-11-10.md)
+
+- [界面更新记录：纵向列表](logs/2026-11-20.md)

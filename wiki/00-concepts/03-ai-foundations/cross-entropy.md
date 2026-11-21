@@ -87,16 +87,16 @@ $$CE = -\frac{1}{N}\sum_{i=1}^{N}\log(p_{i, \text{correct}})$$
 
 ## 7. 与 VAE/CVAE 的关系
 
-在 VAE与CVAE变分自编码器 的训练目标中，ELBO 的重建项本质上就是交叉熵。VAE 用交叉熵衡量解码器重建数据的质量，配合 [KL散度](kl-divergence.md) 正则项约束潜在空间。
+在 [VAE 与 CVAE](vae-cvae.md) 中，ELBO 的重建项是期望对数似然。对独立 Bernoulli 观测，负重建项对应二元交叉熵；对固定方差高斯观测，则对应按方差加权的平方误差。不能把所有重建损失都当成同一种交叉熵；另有 [KL 散度](kl-divergence.md) 项约束近似后验相对先验的偏离。
 
 ## 8. 参考
 
 - [KL散度](kl-divergence.md) - 交叉熵 = 熵 + KL散度
-- VAE与CVAE变分自编码器 - ELBO 中的重建项即交叉熵
+- [VAE 与 CVAE](vae-cvae.md) - 重建项取决于观测似然
 - GeeksforGeeks, "What Is CrossEntropy Loss Function?"
 
 <!-- 反向链接 -->
 ## 9. 反向链接
 
 - [KL散度](kl-divergence.md) - KL散度页面中包含交叉熵与KL散度的关系
-- VAE与CVAE变分自编码器 - ELBO 重建项即交叉熵
+- [VAE 与 CVAE](vae-cvae.md) - 重建似然与交叉熵的关系
