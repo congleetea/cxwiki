@@ -14,7 +14,7 @@ bash build.sh
 
 再次运行相同命令会复用环境，跳过已完成的安装；依赖清单变动或依赖缺失时重新安装。**网页每次都会重新生成**，以包含最新的 Markdown、图片和样式。安装失败不会标为成功，修复网络或权限后直接重试。无需手动激活虚拟环境，也无需安装绘图、GPU 或 Node.js 依赖。
 
-生成后可以双击根目录 `index.html`。更推荐启动本地预览：
+生成后可以双击`site/index.html`。更推荐启动本地预览：
 
 ```bash
 bash build.sh --serve
@@ -43,13 +43,13 @@ python scripts/build_blog.py
 
 Windows 激活虚拟环境使用 `.venv\Scripts\activate`。以后每次使用新终端时，先激活环境。
 
-生成完成后直接用浏览器打开根目录 `index.html`，或启动本地静态服务：
+生成完成后直接用浏览器打开`site/index.html`，或启动本地静态服务：
 
 ```bash
-python -m http.server 8000 --bind 127.0.0.1
+python scripts/preview_blog.py --port 8000
 ```
 
-然后访问 <http://127.0.0.1:8000/>，按 `Ctrl+C` 停止服务。该服务只供阅读，尚不支持网页保存文章。
+然后访问 <http://127.0.0.1:8000/>，按 `Ctrl+C` 停止服务。该服务支持拖动排序保存到本机仓库；跨电脑同步仍需提交、推送排序文件。
 
 ## 修改文章
 
@@ -57,7 +57,7 @@ python -m http.server 8000 --bind 127.0.0.1
 2. 运行 `python scripts/build_blog.py`。
 3. 刷新浏览器；如果样式仍旧，使用强制刷新。
 
-不要直接编辑 `site/` 或生成的 `index.html`：构建会重新创建 `site/`，覆盖这些文件。在 HTML 页面点击“编辑、保存”并同步 Markdown 的功能目前尚未实现。
+不要直接编辑 `site/` 中生成的 HTML：构建会重新创建 `site/`，覆盖这些文件。在 HTML 页面点击“编辑、保存”并同步 Markdown 的功能目前尚未实现。
 
 文章 frontmatter 可以填写标题、稳定 ID、日期、标签和 `institution`（主体机构）。同系列使用稳定 ASCII 前缀，例如 `pi-*`、`nvidia-*`；中文标题保留在正文。新增文章后维护 `wiki/_index.md`，运行生成器即可更新主题文章目录。新主题会生成分类页；当前顶部导航仍需在 `scripts/build_blog.py` 中添加入口和中文名称。
 
@@ -71,13 +71,13 @@ python -m http.server 8000 --bind 127.0.0.1
 
 改完上述文件后同样运行生成器。KaTeX 脚本、字体和样式已随仓库保存，公式排版不需要联网。
 
-目录顺序可以保存到仓库的 `wiki/article-order.json`，随 Git 同步，生成后的静态站点会使用该顺序。
+目录顺序可以保存到仓库的 `site/article-order.json`，随 Git 同步，生成后的静态站点会使用该顺序。
 
 ### 拖动后自动固定顺序
 
-用 `bash build.sh --serve` 打开博客，拖动文章后会自动保存到仓库并重新生成网页，页面显示“顺序已固定”，无需点击其他按钮。之前在同一浏览器、同一访问地址拖动过的旧顺序，也会在打开对应目录时自动保存。
+用 `bash build.sh --serve` 打开博客，拖动文章后会自动保存到仓库并重新生成网页，页面显示“已保存到 site/article-order.json”，无需点击其他按钮。页面加载时直接读取该文件；重新构建也会保留它，不再使用浏览器缓存保存排序。
 
-生成的 `site/` 已包含固定顺序，可直接部署。其他电脑使用源码生成时，将 `wiki/article-order.json` 随 Git 同步即可。纯静态文件无法写回仓库，因此调整顺序请使用上述本地预览入口。
+生成的 `site/` 已包含固定顺序，可直接部署。其他电脑使用源码生成时，将 `site/article-order.json` 随 Git 同步即可。纯静态文件无法写回仓库，因此调整顺序请使用上述本地预览入口。
 
 ## 本地论文与图片
 

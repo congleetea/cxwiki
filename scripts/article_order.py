@@ -6,7 +6,7 @@ from pathlib import Path
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
-ORDER_FILE = ROOT / 'wiki/article-order.json'
+ORDER_FILE = ROOT / 'site/article-order.json'
 
 def validate_orders(value):
     if not isinstance(value, dict):

@@ -1,6 +1,7 @@
 # Generated HTML and copied assets. Rebuild with:
 # python scripts/build_blog.py
-/site/
+/site/*
+!/site/article-order.json
 /index.html
 /wiki/index.html
 /wiki/series/

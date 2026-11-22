@@ -15,7 +15,7 @@ from pathlib import Path
 import mistune
 import yaml
 
-from article_order import load_orders, apply_order
+from article_order import load_orders, apply_order, save_orders, ORDER_FILE
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -494,9 +494,11 @@ def redirect_page(title: str, target: str) -> str:
 
 
 def build() -> list[Page]:
+    orders = load_orders()
     if SITE.exists():
         shutil.rmtree(SITE)
     SITE.mkdir(parents=True)
+    save_orders(ORDER_FILE, orders)
     pages: list[Page] = []
     for source in markdown_sources():
         meta, body = parse_frontmatter(source)
@@ -528,9 +530,10 @@ def build() -> list[Page]:
                     dirs_exist_ok=True, ignore=shutil.ignore_patterns("*.txt"))
 
     write_text(SITE / "index.html", home_page(pages, SITE / "index.html"))
-    # Keep a top-level, double-clickable entry point while also making site/
-    # independently deployable.
-    write_text(ROOT / "index.html", home_page(pages, ROOT / "index.html"))
+    # Remove obsolete generated entry points; all HTML lives under site/.
+    for legacy in ("index.html", "README.html", "wiki/index.html",
+                   "wiki/series/pi/index.html", "wiki/series/robotics/index.html"):
+        (ROOT / legacy).unlink(missing_ok=True)
     topics = sorted({category_topic(p, category) for category in ("00-concepts", "01-comprehensive") for p in pages if p.source.is_relative_to(ROOT / "wiki" / category)})
     for topic in topics:
         category_output = SITE / "categories" / topic / "index.html"
@@ -547,9 +550,6 @@ def build() -> list[Page]:
     write_text(SITE / "wiki/index.html", redirect_page("cxwiki 首页", "../index.html"))
     write_text(SITE / "wiki/series/pi/index.html", redirect_page("π 系列", "../../../series/pi/index.html"))
     write_text(SITE / "wiki/series/robotics/index.html", redirect_page("机器人学系列", "../../../series/robotics/index.html"))
-    write_text(ROOT / "wiki/index.html", redirect_page("cxwiki 首页", "../index.html"))
-    write_text(ROOT / "wiki/series/pi/index.html", redirect_page("π 系列", "../../index.html"))
-    write_text(ROOT / "wiki/series/robotics/index.html", redirect_page("机器人学系列", "../../index.html"))
     write_text(SITE / "wiki/00-concepts/02-classical-robotics/rigid-body-kinematics.html", redirect_page("刚体运动学基础", "../../01-comprehensive/02-classical-robotics/rigid-body-kinematics.html"))
     return pages
 

@@ -27,14 +27,17 @@
   headings.forEach((heading) => observer.observe(heading));
 })();
 
-(() => {
+(async () => {
   const lists = [...document.querySelectorAll('.article-list[data-order-key]')];
   if (!lists.length) return;
-  const prefix = 'cxwiki-order:';
-  const read = (key) => {
-    try { return JSON.parse(localStorage.getItem(prefix + key) || 'null'); }
-    catch { return null; }
-  };
+  const script = document.currentScript;
+  const orderUrl = new URL('../article-order.json', script.src);
+  let orders = {};
+  try {
+    const response = await fetch(orderUrl, {cache: 'no-store'});
+    if (!response.ok) throw new Error('排序文件读取失败');
+    orders = await response.json();
+  } catch { /* file:// reading falls back to the order embedded during build. */ }
   const idsFor = (list) => [...list.querySelectorAll(':scope > .article-list-item')]
     .map((item) => item.dataset.articleId);
   const toolbar = document.createElement('div');
@@ -58,7 +61,7 @@
         });
         const result = await response.json();
         if (!response.ok || result.saved !== true) throw new Error(result.error || 'static');
-        status.textContent = result.published === false ? result.error : '顺序已固定';
+        status.textContent = result.published === false ? result.error : '已保存到 site/article-order.json';
       } catch {
         status.textContent = '无法固定：请用 bash build.sh --serve 打开的页面调整顺序。';
       }
@@ -66,19 +69,10 @@
     return queue;
   };
   lists.forEach((list) => {
-    const revision = list.dataset.orderRevision || 'default';
     const key = list.dataset.orderKey;
     const items = () => [...list.querySelectorAll(':scope > .article-list-item')];
-    const save = () => {
-      const ids = idsFor(list);
-      try { localStorage.setItem(prefix + key, JSON.stringify({revision, ids})); }
-      catch { /* The repository API can still save when browser storage is unavailable. */ }
-      persist({[key]: ids});
-    };
-    const stored = read(key);
-    // Old browser arrays are imported only before a shared order exists.
-    const saved = Array.isArray(stored) ? (revision === 'default' ? stored : []) :
-      (stored?.revision === revision && Array.isArray(stored.ids) ? stored.ids : []);
+    const save = () => persist({[key]: idsFor(list)});
+    const saved = Array.isArray(orders[key]) ? orders[key] : [];
     if (saved.length) {
       const original = items();
       const byId = new Map(original.map((item) => [item.dataset.articleId, item]));
@@ -91,8 +85,6 @@
       original.forEach((item) => {
         if (!included.has(item.dataset.articleId)) list.appendChild(item);
       });
-      if (revision === 'default' && ['http:', 'https:'].includes(location.protocol))
-        persist({[key]: idsFor(list)});
     }
     let dragged = null;
     list.addEventListener('pointerdown', (event) => {

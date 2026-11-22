@@ -7,6 +7,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'scripts'))
 import article_order
 
 class OrderTest(unittest.TestCase):
+    def test_order_file_is_in_standalone_site(self):
+        self.assertEqual(article_order.ORDER_FILE, article_order.ROOT / "site/article-order.json")
+
     def test_saved_order_keeps_new_articles_and_ignores_removed_ids(self):
         self.assertEqual(article_order.apply_order(['a','b','c'], ['removed','b','a']), ['b','a','c'])
     def test_rejects_invalid_or_duplicate_order(self):

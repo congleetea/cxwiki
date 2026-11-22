@@ -120,7 +120,7 @@ printf '\n生成网页……\n'
 "$venv_python" scripts/build_blog.py
 "$venv_python" scripts/check_blog.py
 "$venv_python" scripts/check_wiki.py
-printf '\n完成！首页：%s/index.html\n独立部署目录：%s/site/\n' "$repo_dir" "$repo_dir"
+printf '\n完成！首页：%s/index.html\n独立部署目录：%s/site/\n' "$repo_dir/site" "$repo_dir"
 if ((serve)); then
     printf '\n预览：http://127.0.0.1:%s/\n按 Ctrl+C 停止服务。\n' "$port"
     exec "$venv_python" scripts/preview_blog.py --port "$port"

@@ -31,7 +31,7 @@ def main() -> int:
         print("site/ does not exist; run python scripts/build_blog.py first", file=sys.stderr)
         return 1
     errors: list[str] = []
-    pages = ([ROOT / "index.html"] if (ROOT / "index.html").exists() else []) + sorted(SITE.rglob("*.html"))
+    pages = sorted(SITE.rglob("*.html"))
     if not pages:
         errors.append("site contains no HTML pages")
     for page in pages:
