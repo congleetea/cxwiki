@@ -15,6 +15,8 @@ number headings: auto, first-level 1, max 6, _.1.1
 
 # 注意力机制
 
+按步骤学习完整网络，可从 [Transformer 图解系列：整体框架与各模块的作用](transformer-00-overview.md) 开始；该系列包含完整架构、计算图和本地播放动画。本文继续保留注意力变体的横向索引。
+
 ## 概述
 
 ### 背景

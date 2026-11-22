@@ -123,6 +123,6 @@ printf '\n生成网页……\n'
 printf '\n完成！首页：%s/index.html\n独立部署目录：%s/site/\n' "$repo_dir" "$repo_dir"
 if ((serve)); then
     printf '\n预览：http://127.0.0.1:%s/\n按 Ctrl+C 停止服务。\n' "$port"
-    exec "$venv_python" -m http.server "$port" --bind 127.0.0.1 --directory "$repo_dir/site"
+    exec "$venv_python" scripts/preview_blog.py --port "$port"
 fi
 printf '\n需要本地预览时运行：bash build.sh --serve\n'

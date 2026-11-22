@@ -7,6 +7,8 @@
 - [π 系列 VLA：从连续动作到可控通用策略](01-comprehensive/01-embodied-ai/pi-series-overview.md)：时间线、模型主线、方法支线、差异与阅读顺序。
 - [NVIDIA GR00T 系列：从双系统 VLA 到世界动作模型](01-comprehensive/01-embodied-ai/nvidia-gr00t-series-overview.md)：GR00T N1–N1.7、GR00T 2 WAM、EgoScale、SONIC、RoboTTT 与智能体路线的关系。
 
+- [机器人价值函数与奖励模型：从技能可行性到策略改进](01-comprehensive/01-embodied-ai/robot-value-reward-overview.md)：按首次公开时间整理八个方法，比较评分对象、监督、部署与策略改进接口。
+
 ## 概念 · 具身智能
 
 - [π₀：连续动作流模型](00-concepts/01-embodied-ai/pi-0-flow-vla.md)
@@ -28,6 +30,18 @@
 - [ASPIRE：面向机器人的智能体技能发现](00-concepts/01-embodied-ai/nvidia-aspire.md)
 
 - [Spectral Skills：可组合全身运动技能（项目预览）](00-concepts/01-embodied-ai/spectral-skills-preview.md)
+
+### 机器人价值与奖励
+
+- [机器人价值函数基础](00-concepts/01-embodied-ai/robot-value-functions.md)
+- 2022-04-04：[SayCan：用技能价值约束语言规划](00-concepts/01-embodied-ai/robot-value-2022-saycan.md)
+- 2024-11-07：[GVL：让视觉语言模型从打乱的视频中判断任务进度](00-concepts/01-embodied-ai/robot-value-2024-gvl.md)
+- 2025-09-29：[SARM：用任务阶段对齐长程操作进度](00-concepts/01-embodied-ai/robot-value-2025-09-sarm.md)
+- 2025-12-29：[Robo-Dopamine：从相对进度到策略不变奖励塑造](00-concepts/01-embodied-ai/robot-value-2025-12-robo-dopamine.md)
+- 2026-02-22：[TOPReward：读取 Token 概率估计机器人任务进度](00-concepts/01-embodied-ai/robot-value-2026-02-topreward.md)
+- 2026-03-02：[Robometer：用轨迹比较学习可迁移的机器人奖励](00-concepts/01-embodied-ai/robot-value-2026-03-robometer.md)
+- 2026-04-03：[ARM：从进步、退步与停滞学习操作反馈](00-concepts/01-embodied-ai/robot-value-2026-04-arm.md)
+- 2026-06-09：[SARM2：可复用动作阶段与奖励驱动的策略改进](00-concepts/01-embodied-ai/robot-value-2026-06-sarm2.md)
 
 ## 主题综述 · 经典机器人
 
@@ -58,6 +72,19 @@
 - [Online Learning、Offline Learning、On-policy 与 Off-policy](00-concepts/03-ai-foundations/online-offline-learning.md)：数据采集、固定数据训练、BC 与离线 RL 的区别。
 
 - [VAE 与 CVAE：从重建数据到生成多种可能](00-concepts/03-ai-foundations/vae-cvae.md)：潜变量、ELBO、重参数化、条件生成与机器人应用。
+
+### Transformer 图解系列
+
+- [Transformer 00：整体框架与各模块的作用](00-concepts/03-ai-foundations/transformer-00-overview.md)：先看全貌，再逐模块深入。
+
+- [Transformer 01：Token、嵌入与上下文表示](00-concepts/03-ai-foundations/transformer-01-tokens-embeddings.md)
+- [Transformer 02：Self-Attention：从 QKV 到加权读取](00-concepts/03-ai-foundations/transformer-02-self-attention.md)
+- [Transformer 03：Multi-Head Attention 与 Transformer Block](00-concepts/03-ai-foundations/transformer-03-multihead-block.md)
+- [Transformer 04：经典 Encoder–Decoder 架构](00-concepts/03-ai-foundations/transformer-04-encoder-decoder.md)
+- [Transformer 05：位置编码：从正弦信号到 RoPE](00-concepts/03-ai-foundations/transformer-05-position-encoding.md)
+- [Transformer 06：训练与自回归生成](00-concepts/03-ai-foundations/transformer-06-training-generation.md)
+- [Transformer 07：KV cache 与注意力计算效率](00-concepts/03-ai-foundations/transformer-07-kv-cache-efficiency.md)
+- [Transformer 08：BERT、GPT、ViT 与多模态接口](00-concepts/03-ai-foundations/transformer-08-model-families.md)
 
 ## 主题综述 · 人工智能基础
 

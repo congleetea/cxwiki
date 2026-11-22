@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import html
+import hashlib
+import json
 import os
 import re
 import shutil
@@ -12,6 +14,8 @@ from pathlib import Path
 
 import mistune
 import yaml
+
+from article_order import load_orders, apply_order
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -259,7 +263,7 @@ def series_sort_key(page: Page) -> tuple[int, str, str]:
     stem = page.source.stem
     if page.series == "pi" and stem in PI_ARTICLE_ORDER:
         return (PI_ARTICLE_ORDER.index(stem), "", page.title)
-    return (len(PI_ARTICLE_ORDER) + 1, meta_date(page), page.title)
+    return (len(PI_ARTICLE_ORDER) + 1, str(page.meta.get("published") or meta_date(page)), page.title)
 
 
 def nav_path(page: Page, target: Path) -> str:
@@ -356,6 +360,17 @@ def ordered_card(page: Page, from_page: Path) -> str:
     return f'<div class="article-list-item" draggable="true" data-article-id="{esc(identifier)}"><button class="drag-handle" type="button" aria-label="拖动调整顺序" title="拖动调整顺序">⠿</button>{card(page, from_page)}</div>'
 
 
+def order_revision(key: str) -> str:
+    saved = load_orders().get(key)
+    return hashlib.sha256(json.dumps(saved).encode()).hexdigest()[:16] if saved is not None else "default"
+
+
+def ordered_cards(pages: list[Page], output: Path, key: str) -> str:
+    by_id = {str(p.meta.get("id") or p.source.stem): p for p in pages}
+    ids = apply_order(list(by_id), load_orders().get(key, []))
+    return "".join(ordered_card(by_id[ident], output) for ident in ids)
+
+
 def category_topic(page: Page, category: str) -> str:
     relative = page.source.relative_to(ROOT / "wiki" / category)
     return relative.parts[0] if len(relative.parts) > 1 else "根目录"
@@ -400,8 +415,8 @@ def extra_topic_page(topic: str, pages: list[Page], output: Path) -> str:
             relevant.append(page)
     relevant.sort(key=series_sort_key)
     page = Page(Path("/dev/null"), output, {}, topic_label(topic), "index", "")
-    cards = "".join(ordered_card(p, output) for p in relevant)
-    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">个人知识库 · 主题目录</div><h1>{esc(topic_label(topic))}</h1></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>内容目录</h2><span class=\"order-hint\">拖动左侧手柄调整顺序，顺序会自动保存在当前浏览器</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
+    cards = ordered_cards(relevant, output, topic)
+    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">个人知识库 · 主题目录</div><h1>{esc(topic_label(topic))}</h1></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>内容目录</h2><span class=\"order-hint\">拖动左侧手柄调整顺序</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(topic)}\" data-order-revision=\"{order_revision(topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
 
 
 def topic_index(category: str, topic: str, pages: list[Page], output: Path) -> str:
@@ -409,8 +424,8 @@ def topic_index(category: str, topic: str, pages: list[Page], output: Path) -> s
     relevant = [p for p in pages if p.source.is_relative_to(ROOT / "wiki" / category) and category_topic(p, category) == topic]
     relevant.sort(key=series_sort_key)
     page = Page(Path("/dev/null"), output, {}, topic, "index", "")
-    cards = "".join(ordered_card(p, output) for p in relevant)
-    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · {esc(title)} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page, topic)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">{esc(title)} · 主题目录</div><h1>{esc(topic_label(topic))}</h1></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>文章</h2><span class=\"order-hint\">拖动左侧手柄调整顺序，顺序会自动保存在当前浏览器</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(category + '/' + topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
+    cards = ordered_cards(relevant, output, category + "/" + topic)
+    return f"""<!doctype html><html lang=\"zh-CN\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>{esc(topic_label(topic))} · {esc(title)} · cxwiki</title><link rel=\"stylesheet\" href=\"{rel_url(output, SITE / 'assets/style.css')}"><script defer src=\"{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page, topic)}<main id=\"content\" class=\"listing-shell\"><div class=\"listing-hero\"><div class=\"eyebrow\">{esc(title)} · 主题目录</div><h1>{esc(topic_label(topic))}</h1></div><section class=\"listing-section\"><div class=\"section-heading\"><div><h2>文章</h2><span class=\"order-hint\">拖动左侧手柄调整顺序</span></div><span>{len(relevant)} 篇</span></div><div class=\"card-grid article-list\" data-order-key=\"{esc(category + '/' + topic)}\" data-order-revision=\"{order_revision(category + '/' + topic)}\">{cards}</div></section></main>{footer(page)}</body></html>"""
 
 
 def category_index(category: str, pages: list[Page], output: Path) -> str:
@@ -457,9 +472,9 @@ def topic_category_page(topic: str, pages: list[Page], output: Path) -> str:
     sections = []
     for category, heading, subtitle in (("00-concepts", "概念文章", "单个对象的公式、流程、图示与实现边界"), ("01-comprehensive", "主题综述", "对象之间的关系、差异、优缺点与发展脉络")):
         relevant = [p for p in pages if p.source.is_relative_to(ROOT / "wiki" / category) and category_topic(p, category) == topic]
-        cards = "".join(ordered_card(p, output) for p in relevant)
+        cards = ordered_cards(relevant, output, category + "/" + topic)
         content = cards or '<p class="empty-list">暂无文章。</p>'
-        sections.append(f'<section class="topic-column"><div class="section-heading"><h2>{heading}</h2><span>{len(relevant)} 篇</span></div><div class="card-grid article-list" data-order-key="{esc(category + "/" + topic)}">{content}</div></section>')
+        sections.append(f'<section class="topic-column"><div class="section-heading"><h2>{heading}</h2><span>{len(relevant)} 篇</span></div><div class="card-grid article-list" data-order-key="{esc(category + "/" + topic)}" data-order-revision="{order_revision(category + "/" + topic)}">{content}</div></section>')
     return f"""<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{esc(label)} · cxwiki</title><link rel="stylesheet" href="{rel_url(output, SITE / 'assets/style.css')}"><script defer src="{rel_url(output, SITE / 'assets/blog.js')}"></script></head><body><a class="skip-link" href="#content">跳到正文</a>{header(page)}<main id="content" class="listing-shell"><div class="listing-hero"><div class="eyebrow">主题入口</div><h1>{esc(label)}</h1></div><section class="listing-section"><div class="topic-columns">{''.join(sections)}</div></section></main>{footer(page)}</body></html>"""
 
 def copy_assets() -> None:

@@ -28,20 +28,75 @@
 })();
 
 (() => {
-  document.querySelectorAll('.article-list[data-order-key]').forEach((list) => {
-    const storageKey = `cxwiki-order:${list.dataset.orderKey}`;
+  const lists = [...document.querySelectorAll('.article-list[data-order-key]')];
+  if (!lists.length) return;
+  const prefix = 'cxwiki-order:';
+  const read = (key) => {
+    try { return JSON.parse(localStorage.getItem(prefix + key) || 'null'); }
+    catch { return null; }
+  };
+  const idsFor = (list) => [...list.querySelectorAll(':scope > .article-list-item')]
+    .map((item) => item.dataset.articleId);
+  const toolbar = document.createElement('div');
+  toolbar.className = 'order-toolbar';
+  const status = document.createElement('span');
+  status.setAttribute('role', 'status');
+  status.textContent = '';
+  toolbar.append(status);
+  const section = lists[0].closest('.listing-section') || lists[0].parentElement;
+  section.prepend(toolbar);
+  let queue = Promise.resolve();
+  const persist = (patch) => {
+    queue = queue.then(async () => {
+      status.textContent = '正在固定排序…';
+      try {
+        if (!['http:', 'https:'].includes(location.protocol)) throw new Error('static');
+        const response = await fetch('/__cxwiki/orders', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(patch),
+        });
+        const result = await response.json();
+        if (!response.ok || result.saved !== true) throw new Error(result.error || 'static');
+        status.textContent = result.published === false ? result.error : '顺序已固定';
+      } catch {
+        status.textContent = '无法固定：请用 bash build.sh --serve 打开的页面调整顺序。';
+      }
+    });
+    return queue;
+  };
+  lists.forEach((list) => {
+    const revision = list.dataset.orderRevision || 'default';
+    const key = list.dataset.orderKey;
     const items = () => [...list.querySelectorAll(':scope > .article-list-item')];
-    const save = () => localStorage.setItem(storageKey, JSON.stringify(items().map((item) => item.dataset.articleId)));
-    const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
-    if (Array.isArray(saved) && saved.length) {
-      const byId = new Map(items().map((item) => [item.dataset.articleId, item]));
-      saved.forEach((id) => byId.get(id) && list.appendChild(byId.get(id)));
-      items().forEach((item) => { if (!saved.includes(item.dataset.articleId)) list.appendChild(item); });
+    const save = () => {
+      const ids = idsFor(list);
+      try { localStorage.setItem(prefix + key, JSON.stringify({revision, ids})); }
+      catch { /* The repository API can still save when browser storage is unavailable. */ }
+      persist({[key]: ids});
+    };
+    const stored = read(key);
+    // Old browser arrays are imported only before a shared order exists.
+    const saved = Array.isArray(stored) ? (revision === 'default' ? stored : []) :
+      (stored?.revision === revision && Array.isArray(stored.ids) ? stored.ids : []);
+    if (saved.length) {
+      const original = items();
+      const byId = new Map(original.map((item) => [item.dataset.articleId, item]));
+      const included = new Set();
+      saved.forEach((id) => {
+        if (byId.has(id) && !included.has(id)) {
+          list.appendChild(byId.get(id)); included.add(id);
+        }
+      });
+      original.forEach((item) => {
+        if (!included.has(item.dataset.articleId)) list.appendChild(item);
+      });
+      if (revision === 'default' && ['http:', 'https:'].includes(location.protocol))
+        persist({[key]: idsFor(list)});
     }
     let dragged = null;
-    let handle = null;
     list.addEventListener('pointerdown', (event) => {
-      handle = event.target.closest('.drag-handle');
+      const handle = event.target.closest('.drag-handle');
       if (!handle || event.button !== 0) return;
       event.preventDefault();
       dragged = handle.closest('.article-list-item');
@@ -62,7 +117,6 @@
       if (!dragged) return;
       dragged.classList.remove('is-dragging');
       dragged = null;
-      handle = null;
       save();
     };
     list.addEventListener('pointerup', finish);

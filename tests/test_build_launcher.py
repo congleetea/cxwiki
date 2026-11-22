@@ -83,8 +83,7 @@ class LauncherTest(unittest.TestCase):
     def test_preview_serves_site_on_localhost(self):
         result = self.run_launcher('--serve', '--port', '8081')
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertIn('-m http.server 8081 --bind 127.0.0.1 --directory ' +
-                      str(self.root / 'site'), self.log.read_text())
+        self.assertIn('scripts/preview_blog.py --port 8081', self.log.read_text())
 
     def test_help_and_invalid_port_have_no_side_effects(self):
         self.assertEqual(self.run_launcher('--help').returncode, 0)

@@ -131,3 +131,10 @@ nav a:hover, nav a.active { color: var(--ink); border-bottom-color: var(--orange
 
 /* Keep the canonical tall architecture diagram readable. */
 .prose img[src$="transformer-original-figure-1.png"] { max-height: none; width: min(100%, 720px); }
+
+.order-toolbar { display: flex; gap: 8px 14px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; font-size: 12px; color: var(--muted); }
+.order-toolbar button { padding: 5px 10px; border: 1px solid var(--line); background: transparent; color: var(--blue); cursor: pointer; font: inherit; }
+.order-toolbar button:hover { border-color: var(--blue); }
+
+/* Tall framework and chronology figures retain readable labels. */
+.prose img[src$="tf-encoder-decoder.png"], .prose img[src$="robot-values-timeline.png"] { max-height: none; width: min(100%, 1100px); }
