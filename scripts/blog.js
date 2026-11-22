@@ -72,7 +72,8 @@
     const key = list.dataset.orderKey;
     const items = () => [...list.querySelectorAll(':scope > .article-list-item')];
     const save = () => persist({[key]: idsFor(list)});
-    const saved = Array.isArray(orders[key]) ? orders[key] : [];
+    const ranks = orders[key] || {};
+    const saved = Array.isArray(ranks) ? ranks : Object.keys(ranks).sort((a, b) => ranks[b] - ranks[a]);
     if (saved.length) {
       const original = items();
       const byId = new Map(original.map((item) => [item.dataset.articleId, item]));
@@ -82,9 +83,7 @@
           list.appendChild(byId.get(id)); included.add(id);
         }
       });
-      original.forEach((item) => {
-        if (!included.has(item.dataset.articleId)) list.appendChild(item);
-      });
+      // Unlisted articles remain before the saved articles.
     }
     let dragged = null;
     list.addEventListener('pointerdown', (event) => {

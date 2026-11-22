@@ -1,1 +1,72 @@
-{}
+{
+  "00-concepts/01-embodied-ai": {
+    "fast-action-tokenization": 26624,
+    "knowledge-insulation-vla": 24576,
+    "mem-multi-scale-memory": 20480,
+    "nvidia-ardy": 5120,
+    "nvidia-aspire": 9216,
+    "nvidia-egoscale": 8192,
+    "nvidia-gr00t-2-world-action-model": 3072,
+    "nvidia-gr00t-action-cascade": 2048,
+    "nvidia-robottt": 6144,
+    "nvidia-sonic": 7168,
+    "pi-human-to-robot": 21504,
+    "pi0-flow-vla": 27648,
+    "pi05-open-world": 25600,
+    "pi06-recap": 22528,
+    "pi07-steerable-generalist": 18432,
+    "real-time-chunking": 23552,
+    "reinforcement-learning-token": 19456,
+    "robot-value-2022-saycan": 17408,
+    "robot-value-2024-gvl": 16384,
+    "robot-value-2025-09-sarm": 15360,
+    "robot-value-2025-12-robo-dopamine": 14336,
+    "robot-value-2026-02-topreward": 13312,
+    "robot-value-2026-03-robometer": 12288,
+    "robot-value-2026-04-arm": 11264,
+    "robot-value-2026-06-sarm2": 10240,
+    "robot-value-functions": 1024,
+    "spectral-skills-preview": 4096
+  },
+  "00-concepts/02-classical-robotics": {
+    "frax-differential-ik": 5120,
+    "impedance-admittance-control": 1024,
+    "rigid-body-dynamics": 3072,
+    "rigid-body-pose": 4096,
+    "rigid-body-velocity-acceleration": 2048
+  },
+  "00-concepts/03-ai-foundations": {
+    "activation-function": 20480,
+    "attention-mechanism": 10240,
+    "cnn": 19456,
+    "cross-entropy-loss": 15360,
+    "kl-divergence": 18432,
+    "markov-decision-process": 13312,
+    "multi-gpu-training": 14336,
+    "online-offline-learning": 12288,
+    "peft-lora": 17408,
+    "rnn": 16384,
+    "transformer-00-overview": 9216,
+    "transformer-01-tokens-embeddings": 8192,
+    "transformer-02-self-attention": 7168,
+    "transformer-03-multihead-block": 6144,
+    "transformer-04-encoder-decoder": 5120,
+    "transformer-05-position-encoding": 4096,
+    "transformer-06-training-generation": 3072,
+    "transformer-07-kv-cache-efficiency": 2048,
+    "transformer-08-model-families": 1024,
+    "vae-cvae": 11264
+  },
+  "01-comprehensive/01-embodied-ai": {
+    "nvidia-gr00t-series-overview": 3072,
+    "pi-series": 4096,
+    "robot-value-reward-overview": 1024
+  },
+  "01-comprehensive/02-classical-robotics": {
+    "motion-retargeting-survey": 3072,
+    "rigid-body-kinematics": 2048
+  },
+  "01-comprehensive/03-ai-foundations": {
+    "reinforcement-learning-basics": 1024
+  }
+}

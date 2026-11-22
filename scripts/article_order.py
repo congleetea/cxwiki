@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import math
 from pathlib import Path
 import tempfile
 
@@ -14,6 +15,12 @@ def validate_orders(value):
     for key, ids in value.items():
         if not isinstance(key, str) or not key or len(key) > 200:
             raise ValueError('无效目录键')
+        if isinstance(ids, dict):
+            if any(not isinstance(i, str) or not i or len(i)>200 or isinstance(n, bool) or not isinstance(n, (int, float)) or not math.isfinite(n) for i,n in ids.items()):
+                raise ValueError('文章编号必须为有限数字')
+            if len(set(ids.values())) != len(ids):
+                raise ValueError('文章编号不能重复')
+            continue
         if not isinstance(ids, list) or any(not isinstance(i, str) or not i or len(i)>200 for i in ids):
             raise ValueError('文章顺序必须为非空字符串 ID 的数组')
         if len(ids) != len(set(ids)):
@@ -25,16 +32,50 @@ def load_orders(path=ORDER_FILE):
         return {}
     return validate_orders(json.loads(path.read_text(encoding='utf-8')))
 
+def rank_order(ids, saved):
+    # Legacy arrays migrate without changing their displayed order.
+    if isinstance(saved, list):
+        saved = {ident: (len(saved)-i)*1024 for i, ident in enumerate(saved)}
+    ranks = dict(saved)
+    missing = [ident for ident in ids if ident not in ranks]
+    top = max(ranks.values(), default=0)
+    for ident in reversed(missing):
+        top += 1024
+        ranks[ident] = top
+    current = sorted(ids, key=lambda ident: ranks[ident], reverse=True)
+    if current == ids:
+        return ranks
+    # A drag moves one article; keep all other numbers unchanged.
+    for moved in ids:
+        if [i for i in current if i != moved] != [i for i in ids if i != moved]:
+            continue
+        at = ids.index(moved)
+        high = ranks[ids[at-1]] if at else None
+        low = ranks[ids[at+1]] if at+1 < len(ids) else None
+        number = low+1024 if high is None else high-1024 if low is None else (high+low)/2
+        if (high is None or number < high) and (low is None or number > low):
+            ranks[moved] = number
+            return ranks
+    # Only bulk reorder or exhausted floating-point gaps need renumbering.
+    ranks.update({ident: (len(ids)-i)*1024 for i,ident in enumerate(ids)})
+    return ranks
+
+
 def apply_order(ids, saved):
+    if isinstance(saved, dict):
+        ranks = rank_order(ids, saved)
+        return sorted(ids, key=lambda ident: ranks[ident], reverse=True)
+
     present=set(ids)
     chosen=[i for i in dict.fromkeys(saved) if i in present]
     used=set(chosen)
-    return chosen+[i for i in ids if i not in used]
+    return [i for i in ids if i not in used]+chosen
 
 def save_orders(path, patch):
     validate_orders(patch)
     combined=load_orders(path)
-    combined.update(patch)
+    for key, value in patch.items():
+        combined[key] = rank_order(value, combined.get(key, {})) if isinstance(value, list) else value
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile('w', encoding='utf-8', dir=path.parent, delete=False) as f:
         temp=Path(f.name)

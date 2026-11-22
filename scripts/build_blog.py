@@ -15,7 +15,7 @@ from pathlib import Path
 import mistune
 import yaml
 
-from article_order import load_orders, apply_order, save_orders, ORDER_FILE
+from article_order import load_orders, apply_order, save_orders, ORDER_FILE, rank_order
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -367,7 +367,11 @@ def order_revision(key: str) -> str:
 
 def ordered_cards(pages: list[Page], output: Path, key: str) -> str:
     by_id = {str(p.meta.get("id") or p.source.stem): p for p in pages}
-    ids = apply_order(list(by_id), load_orders().get(key, []))
+    orders = load_orders()
+    ids = apply_order(list(by_id), orders.get(key, []))
+    ranks = rank_order(ids, orders.get(key, {}))
+    if orders.get(key) != ranks:
+        save_orders(ORDER_FILE, {key: ranks})
     return "".join(ordered_card(by_id[ident], output) for ident in ids)
 
 
