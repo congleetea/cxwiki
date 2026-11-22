@@ -23,6 +23,7 @@ venv/
 !.env.example
 /.vscode/
 /.idea/
+/.obsidian/
 
 # OS metadata, editor backups, and incomplete downloads
 .DS_Store
