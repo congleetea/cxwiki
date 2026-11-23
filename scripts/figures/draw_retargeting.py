@@ -3,7 +3,7 @@ from pathlib import Path
 from html import escape
 import argparse
 
-OUT = Path(__file__).resolve().parents[1] / 'wiki' / 'imgs'
+OUT = Path(__file__).resolve().parents[2] / 'wiki' / 'imgs'
 BLUE, CYAN, PURPLE, GREEN, RED = '#07569b', '#087fca', '#7542c8', '#099773', '#e06450'
 INK, MUTED = '#103858', '#4f6980'
 

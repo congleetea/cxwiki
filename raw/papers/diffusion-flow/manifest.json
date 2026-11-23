@@ -1,0 +1,26 @@
+{
+  "ddim.pdf": {
+    "sha256": "07cb8796d7c100bf7c02bc575f16aab72c32630a8f85abd54ad45dc4f63e80fb",
+    "bytes": 10857218
+  },
+  "ddpm.pdf": {
+    "sha256": "aee5e07a802e8dfd2a386374c94fd61d1d056cb7e1e0fec4f28e8120ff5d8505",
+    "bytes": 10267274
+  },
+  "diffusion-policy.pdf": {
+    "sha256": "75a57946e2cef790775ca5c667b00befc8ea7d64c3a02c5ced3e3d173354640c",
+    "bytes": 5834180
+  },
+  "flow-matching.pdf": {
+    "sha256": "5eeb39ba516396924aba4787452f9d0abdee88467a4d0c264d9f66cad0c5ee14",
+    "bytes": 25147129
+  },
+  "rectified-flow.pdf": {
+    "sha256": "d81790cb6988ef480002adcc84000d4f44855b11fb868001fd53aad133bc3a74",
+    "bytes": 18024983
+  },
+  "score-sde.pdf": {
+    "sha256": "b244b740e60628d01bc3d4b98d721c2343be1fb9b67ad22593c8555e66f4d4a6",
+    "bytes": 26918820
+  }
+}

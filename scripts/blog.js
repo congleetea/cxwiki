@@ -86,26 +86,57 @@
       // Unlisted articles remain before the saved articles.
     }
     let dragged = null;
-    list.addEventListener('pointerdown', (event) => {
-      const handle = event.target.closest('.drag-handle');
-      if (!handle || event.button !== 0) return;
-      event.preventDefault();
-      dragged = handle.closest('.article-list-item');
-      dragged.classList.add('is-dragging');
-      list.setPointerCapture(event.pointerId);
-    });
-    list.addEventListener('pointermove', (event) => {
+    let pointerY = 0;
+    let scrollFrame = null;
+    let previousFrame = null;
+    const reorder = () => {
       if (!dragged) return;
       const target = items().find((item) => {
         const box = item.getBoundingClientRect();
-        return item !== dragged && event.clientY >= box.top && event.clientY <= box.bottom;
+        return item !== dragged && pointerY >= box.top && pointerY <= box.bottom;
       });
       if (!target) return;
       const box = target.getBoundingClientRect();
-      list.insertBefore(dragged, event.clientY < box.top + box.height / 2 ? target : target.nextSibling);
+      list.insertBefore(dragged, pointerY < box.top + box.height / 2 ? target : target.nextSibling);
+    };
+    const autoScroll = (timestamp) => {
+      if (!dragged) return;
+      const elapsed = previousFrame === null ? 1 / 60 : Math.min((timestamp - previousFrame) / 1000, 0.05);
+      previousFrame = timestamp;
+      const edge = Math.min(100, window.innerHeight / 4);
+      // Ramp speed toward either edge, up to 900 pixels per second.
+      const direction = pointerY < edge ? -Math.min(1, (edge - pointerY) / edge) :
+        pointerY > window.innerHeight - edge ? Math.min(1, (pointerY - window.innerHeight + edge) / edge) : 0;
+      if (direction) {
+        window.scrollBy({top: direction * 900 * elapsed, behavior: 'instant'});
+        // Scroll changes row positions even when the pointer is stationary.
+        reorder();
+      }
+      scrollFrame = requestAnimationFrame(autoScroll);
+    };
+    list.addEventListener('pointerdown', (event) => {
+      const handle = event.target.closest('.drag-handle');
+      if (!handle || event.button !== 0 || dragged) return;
+      event.preventDefault();
+      pointerY = event.clientY;
+      dragged = handle.closest('.article-list-item');
+      dragged.classList.add('is-dragging');
+      list.classList.add('is-sorting');
+      list.setPointerCapture(event.pointerId);
+      previousFrame = null;
+      scrollFrame = requestAnimationFrame(autoScroll);
+    });
+    list.addEventListener('pointermove', (event) => {
+      if (!dragged) return;
+      pointerY = event.clientY;
+      reorder();
     });
     const finish = () => {
       if (!dragged) return;
+      cancelAnimationFrame(scrollFrame);
+      scrollFrame = null;
+      previousFrame = null;
+      list.classList.remove('is-sorting');
       dragged.classList.remove('is-dragging');
       dragged = null;
       save();

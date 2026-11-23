@@ -326,6 +326,8 @@ def article_body(page: Page, pages: list[Page]) -> str:
     else:
         tags = "".join(f'<span class="tag">{esc(tag)}</span>' for tag in tag_list(page.meta))
     date_value = meta_date(page)
+    organization = institution_label(page)
+    institution_markup = f'<div class="article-institution">主体机构：{esc(organization)}</div>' if organization else ""
     series_name = "π 系列" if page.series == "pi" else "经典机器人" if page.series == "robotics" else "来源"
     prev_next = '<div class="article-pager">'
     if previous:
@@ -343,15 +345,33 @@ def article_body(page: Page, pages: list[Page]) -> str:
 <body><a class=\"skip-link\" href=\"#content\">跳到正文</a>{header(page, 'comprehensive' if page.kind == 'comprehensive' else 'concepts')}
 <main id=\"content\" class=\"article-shell\"><div class=\"article-layout\"><article class=\"article\">
   <div class=\"eyebrow\">{esc(series_name)} · {esc(page.kind)}</div><h1>{esc(page.title)}</h1>
-  <div class=\"article-meta\"><time datetime=\"{esc(date_value)}\">更新于 {esc(date_value)}</time><span>·</span><span>{len(page.headings or [])} 个章节</span></div><div class=\"article-institution\">主体机构：{esc(page.meta.get("institution") or "未注明")}</div><div class=\"tags\">{tags}</div>
+  <div class=\"article-meta\"><time datetime=\"{esc(date_value)}\">更新于 {esc(date_value)}</time><span>·</span><span>{len(page.headings or [])} 个章节</span></div>{institution_markup}<div class=\"tags\">{tags}</div>
   <div class=\"prose\">{page.html}</div>{source_links(page)}{prev_next}
 </article>{toc_html(page)}</div></main>{footer(page)}</body></html>"""
 
 
+def institution_label(page: Page) -> str:
+    value = str(page.meta.get("institution") or "").strip()
+    if value in {"综述", "多机构", "未注明"} or value.startswith("多机构 ·"):
+        return ""
+    return value
+
+
+def publication_markup(page: Page) -> str:
+    # Publication metadata must never fall back to the wiki editing date.
+    value = str(page.meta.get("published") or "")
+    match = re.fullmatch(r"(\d{4})-(0[1-9]|1[0-2])(?:-\d{2})?", value)
+    if not match:
+        return ""
+    year, month = match.groups()
+    return f'<time datetime="{year}-{month}" title="首次公开年月">{year}年{int(month)}月</time>'
+
+
 def card(page: Page, from_page: Path) -> str:
     kind = "综述" if page.kind == "comprehensive" else "概念" if page.kind == "concept" else "工具"
-    organization = page.meta.get("institution") or ""
-    organization_markup = f'<div class="card-institution">{esc(organization)}</div>' if organization else ""
+    organization = institution_label(page)
+    details = " · ".join(part for part in (publication_markup(page), esc(organization)) if part)
+    organization_markup = f'<div class="card-institution">{details}</div>' if details else ""
     return f"""<a class=\"article-card\" href=\"{rel_url(from_page, page.output)}\"><div class=\"card-top\"><span class=\"card-kind\">{kind}</span><time>{esc(meta_date(page))}</time></div><h3>{esc(page.title)}</h3>{organization_markup}<p>{esc(page.excerpt)}</p><span class=\"read-more\">阅读文章 <span>→</span></span></a>"""
 
 

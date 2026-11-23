@@ -4,6 +4,7 @@ id: nvidia-ardy
 type: concept
 created: 2026-11-07
 last_updated: 2026-11-08
+published: "2026-07-09"
 stage: budding
 verified_date: 2026-11-08
 institution: NVIDIA × ETH Zürich（苏黎世联邦理工学院）

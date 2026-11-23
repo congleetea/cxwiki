@@ -59,6 +59,8 @@
 
 ## 概念 · 人工智能基础
 
+- [从扩散模型到流匹配：从噪声到机器人动作](00-concepts/03-ai-foundations/diffusion-flow-action-generation.md)：从双路线例子讲清加噪、score、速度场、概率流与动作块执行。
+
 - [KL 散度](00-concepts/03-ai-foundations/kl-divergence.md)
 - [交叉熵损失函数](00-concepts/03-ai-foundations/cross-entropy.md)
 - [马尔可夫决策过程 MDP](00-concepts/03-ai-foundations/mdp.md)
@@ -98,3 +100,5 @@
 - [更新记录](logs/2026-11-10.md)
 
 - [界面更新记录：纵向列表](logs/2026-11-20.md)
+
+- [目录发布日期显示更新](logs/2026-11-23.md)

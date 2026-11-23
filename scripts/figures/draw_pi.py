@@ -1,7 +1,7 @@
 from pathlib import Path
 from html import escape
 from playwright.sync_api import sync_playwright
-OUT=Path(__file__).resolve().parents[1]/'wiki/imgs'; OUT.mkdir(parents=True,exist_ok=True)
+OUT=Path(__file__).resolve().parents[2]/'wiki/imgs'; OUT.mkdir(parents=True,exist_ok=True)
 BLUE='#07569b'; CYAN='#087fca'; PURPLE='#7542c8'; GREEN='#099773'; RED='#df624d'; INK='#103858'; BG='#f3f7fc'; MUTED='#557087'
 def fig(name,title,subtitle,panels,footer):
     W,H=1600,900

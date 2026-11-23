@@ -18,7 +18,7 @@
 - 全系列除 RoPE 局部二维几何外，统一行向量约定；RoPE 局部列向量与右乘转置的对应在正文说明。
 - 注意力手算、缓存容量、在线 softmax 重写与置换等变说明是教学推导；不声称为原论文某次实验的测量结果。
 - 原始 Transformer Figure 1 沿用已有清晰来源图，按论文开头 Google 的图表授权声明注明出处。另作中文 SVG／PNG 重绘，标明来源；不改写原始图片。
-- 新增二十六张解释性 SVG／PNG，六个 MP4 动画及其静态首帧 SVG／PNG，源脚本为 `scripts/draw_transformer_series.py`。所有公式由 LaTeX 数学源经排版器转成 SVG 路径，再栅格化与编码；没有生成式图片绘制公式。
+- 新增二十六张解释性 SVG／PNG，六个 MP4 动画及其静态首帧 SVG／PNG，源脚本为 `scripts/figures/draw_transformer_series.py`。所有公式由 LaTeX 数学源经排版器转成 SVG 路径，再栅格化与编码；没有生成式图片绘制公式。
 - 动画是分阶段的慢速说明，不是真实 GPU 执行时间线。页面使用本地 H.264 MP4，原生播放控件可暂停、拖动、重播，不依赖外站视频。
 - 不同注意力头的颜色不作为固定语义职责；热图不作为模型解释的因果证据。
 - 未运行上述论文的完整训练或基准测试；只验证教学例子、结构检查、渲染和本地动画播放。
@@ -30,4 +30,4 @@
 - [Transformer 01：Token、嵌入与上下文表示](../../wiki/00-concepts/03-ai-foundations/transformer-01-tokens-embeddings.md)。
 - [Transformer 04：经典 Encoder–Decoder 架构](../../wiki/00-concepts/03-ai-foundations/transformer-04-encoder-decoder.md)。
 
-- 补充系列开篇整体概念讲解：翻译任务全流程、经典原图、模块职责与训练／生成关系。两张新增图稿由 `scripts/draw_transformer_intro.py` 重建；原有详细篇保留稳定编号和链接。
+- 补充系列开篇整体概念讲解：翻译任务全流程、经典原图、模块职责与训练／生成关系。两张新增图稿由 `scripts/figures/draw_transformer_intro.py` 重建；原有详细篇保留稳定编号和链接。

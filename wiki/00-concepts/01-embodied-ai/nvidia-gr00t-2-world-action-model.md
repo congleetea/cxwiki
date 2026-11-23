@@ -4,6 +4,7 @@ id: nvidia-gr00t-2-world-action-model
 type: concept
 created: 2026-11-10
 last_updated: 2026-11-10
+published: "2026-11"
 stage: budding
 verified_date: 2026-11-10
 institution: NVIDIA Research · NVIDIA GEAR

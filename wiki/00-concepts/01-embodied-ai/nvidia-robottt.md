@@ -4,6 +4,7 @@ id: nvidia-robottt
 type: concept
 created: 2026-11-07
 last_updated: 2026-11-07
+published: "2026-07"
 stage: budding
 verified_date: 2026-11-07
 institution: NVIDIA Research · GEAR Lab

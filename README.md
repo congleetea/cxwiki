@@ -75,7 +75,7 @@ python scripts/preview_blog.py --port 8000
 
 ### 拖动后自动固定顺序
 
-用 `bash build.sh --serve` 打开博客，拖动文章后会自动保存到仓库并重新生成网页，页面显示“已保存到 site/article-order.json”，无需点击其他按钮。页面加载时直接读取该文件；重新构建也会保留它，不再使用浏览器缓存保存排序。
+用 `bash build.sh --serve` 打开博客，拖动文章靠近窗口顶部或底部时会自动滚动，松手后会自动保存到仓库并重新生成网页，页面显示“已保存到 site/article-order.json”，无需点击其他按钮。页面加载时直接读取该文件；重新构建也会保留它，不再使用浏览器缓存保存排序。
 
 生成的 `site/` 已包含固定顺序，可直接部署。其他电脑使用源码生成时，将 `site/article-order.json` 随 Git 同步即可。纯静态文件无法写回仓库，因此调整顺序请使用上述本地预览入口。
 
@@ -93,7 +93,7 @@ python -m pip install -r requirements-dev.txt
 python -m playwright install chromium
 ```
 
-基础概念图可用 `python scripts/draw_foundations.py --png` 重绘。图内公式使用 LaTeX 数学语法，排版为 SVG 矢量路径后导出 PNG，不依赖阅读端安装公式字体；中文排版使用 Noto Sans CJK 字体。
+基础概念图可用 `python scripts/figures/draw_foundations.py --png` 重绘。图内公式使用 LaTeX 数学语法，排版为 SVG 矢量路径后导出 PNG，不依赖阅读端安装公式字体；中文排版使用 Noto Sans CJK 字体。
 
 ## 检查与提交
 
@@ -133,3 +133,9 @@ site/                       构建结果（不提交）
 ```
 
 [仓库版 wiki skill](.agents/skills/wiki/SKILL.md) 随 Git 保存。本机 `~/.codex/skills/wiki/` 是安装副本；其他电脑如需安装，可将仓库版复制到自己的 Codex skills 目录。skill 中 ingest、absorb 等是工作类型标签，不是终端命令。
+
+## 云端阅读站点
+
+`tx` 的部署、访问认证和更新步骤见 [部署记录](deploy/README.md)。后续更新运行 `bash scripts/deploy_tx.sh`。
+
+脚本职责与文章制图目录见 [scripts/README.md](scripts/README.md)。

@@ -2,7 +2,7 @@
 
 日期：2026-11-09。按用户要求将旧配图和 ASCII 字符示意图改为原创矢量图，保留实际代码与数值算例。
 
-- 脚本：`scripts/draw_foundations.py`，执行 `python scripts/draw_foundations.py --png` 同时生成 SVG 与 2 倍 PNG。
+- 脚本：`scripts/figures/draw_foundations.py`，执行 `python scripts/figures/draw_foundations.py --png` 同时生成 SVG 与 2 倍 PNG。
 - 图保存于 `wiki/imgs/foundations-*`，覆盖人工智能基础及刚体运动学；并非论文原图或实验结果。
 - 核对图中文字、箭头和正文，修正卷积数值示例为 −6、KL 示例为约 0.635；本次图示重绘不表示对全部旧文完成事实核验。
 

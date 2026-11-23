@@ -1,5 +1,5 @@
 """Transformer teaching figures and offline MP4 animations. All math is LaTeX paths.
-Run: python3 scripts/draw_transformer_series.py (requires Chromium, ffmpeg).
+Run: python3 scripts/figures/draw_transformer_series.py (requires Chromium, ffmpeg).
 """
 from draw_foundations import Fig, BLUE, PURPLE, GREEN, ORANGE, MUTED, OUT
 from pathlib import Path

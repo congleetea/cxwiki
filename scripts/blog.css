@@ -138,3 +138,6 @@ nav a:hover, nav a.active { color: var(--ink); border-bottom-color: var(--orange
 
 /* Tall framework and chronology figures retain readable labels. */
 .prose img[src$="tf-encoder-decoder.png"], .prose img[src$="robot-values-timeline.png"] { max-height: none; width: min(100%, 1100px); }
+
+/* Reordering must not make browser scroll anchoring fight edge scrolling. */
+.article-list.is-sorting { overflow-anchor: none; }

@@ -13,9 +13,21 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .coverage
+.coverage.*
+coverage.xml
 htmlcov/
+.hypothesis/
+.tox/
+.nox/
+.cache/
+.ipynb_checkpoints/
 .venv/
 venv/
+
+# Browser testing artifacts (not the test scripts themselves)
+/test-results/
+/playwright-report/
+/blob-report/
 
 # Local secrets and machine-specific settings
 .env
@@ -24,6 +36,15 @@ venv/
 /.vscode/
 /.idea/
 /.obsidian/
+.netrc
+*.netrc
+.htpasswd
+*.htpasswd
+/deploy/**/*.key
+/deploy/**/*.pem
+/deploy/**/*.crt
+/deploy/**/*.p12
+/deploy/**/*.pfx
 
 # OS metadata, editor backups, and incomplete downloads
 .DS_Store
@@ -33,14 +54,18 @@ Thumbs.db
 *.swo
 *.part
 *.crdownload
+*.tmp
+*.temp
+*.bak
+/*.log
+/deploy/*.log
 
 # Keep wiki Markdown, raw evidence/PDFs, figures,
 # scripts/vendor assets, skills, and documentation under version control.
 
 # Redundant landing page and local implementation plans
 /README.html
-/docs/plans/
-/docs/superpowers/plans/
+/docs/
 
 # Code checkouts are local-only; retain the directory placeholder.
 /raw/codes/*

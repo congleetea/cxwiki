@@ -4,6 +4,7 @@ id: mem-multi-scale-memory
 type: concept
 created: 2026-11-06
 last_updated: 2026-11-20
+published: "2026-03-04"
 stage: budding
 verified_date: 2026-11-20
 institution: Physical Intelligence

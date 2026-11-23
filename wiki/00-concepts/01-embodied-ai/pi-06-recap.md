@@ -4,6 +4,7 @@ id: pi06-recap
 type: concept
 created: 2026-11-06
 last_updated: 2026-11-06
+published: "2025-11-18"
 stage: budding
 verified_date: 2026-11-06
 institution: Physical Intelligence

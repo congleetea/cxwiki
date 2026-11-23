@@ -1,5 +1,5 @@
 """Original readable SVG diagrams and Chromium PNG exports for foundation notes.
-Run: python scripts/draw_foundations.py [--png]
+Run: python scripts/figures/draw_foundations.py [--png]
 """
 from pathlib import Path
 from html import escape
@@ -34,7 +34,7 @@ def label_font(size):
  return ImageFont.truetype('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc', size)
 
 
-OUT=Path(__file__).resolve().parents[1]/'wiki/imgs'
+OUT=Path(__file__).resolve().parents[2]/'wiki/imgs'
 INK='#18364d'; BLUE='#2473a6'; PURPLE='#8061bb'; GREEN='#278977'; ORANGE='#cf7446'; MUTED='#607789'
 COLORS=[BLUE,PURPLE,GREEN,ORANGE]
 class Fig:

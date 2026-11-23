@@ -5,7 +5,6 @@ type: concept
 created: 2026-11-21
 last_updated: 2026-11-21
 verified_date: 2026-11-21
-published: 2026-11-21
 stage: budding
 institution: 多机构
 tags: [机器人学习, 价值函数, 奖励模型]

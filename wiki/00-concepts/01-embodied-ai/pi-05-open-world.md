@@ -4,6 +4,7 @@ id: pi05-open-world
 type: concept
 created: 2026-11-06
 last_updated: 2026-11-06
+published: "2025-04-22"
 stage: budding
 verified_date: 2026-11-06
 institution: Physical Intelligence

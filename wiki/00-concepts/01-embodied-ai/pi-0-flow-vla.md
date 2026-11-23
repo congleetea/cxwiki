@@ -4,6 +4,7 @@ id: pi0-flow-vla
 type: concept
 created: 2026-11-06
 last_updated: 2026-11-06
+published: "2024-10-31"
 stage: budding
 verified_date: 2026-11-06
 institution: Physical Intelligence
