@@ -21,6 +21,11 @@ class OrderTest(unittest.TestCase):
         self.assertEqual(result['b'], 20)
         self.assertGreater(result['c'], 30)
 
+    def test_existing_ranks_override_input_order_without_renumbering(self):
+        ranks = {"a": 30, "b": 20, "c": 10}
+        self.assertEqual(article_order.apply_order(["c", "b", "a"], ranks), ["a", "b", "c"])
+        self.assertEqual(ranks, {"a": 30, "b": 20, "c": 10})
+
     def test_order_file_is_in_standalone_site(self):
         self.assertEqual(article_order.ORDER_FILE, article_order.ROOT / "site/article-order.json")
 

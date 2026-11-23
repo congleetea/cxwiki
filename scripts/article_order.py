@@ -63,8 +63,8 @@ def rank_order(ids, saved):
 
 def apply_order(ids, saved):
     if isinstance(saved, dict):
-        ranks = rank_order(ids, saved)
-        return sorted(ids, key=lambda ident: ranks[ident], reverse=True)
+        # Building must honor stored ranks, not reinterpret source order as a drag.
+        saved = sorted(saved, key=saved.get, reverse=True)
 
     present=set(ids)
     chosen=[i for i in dict.fromkeys(saved) if i in present]
