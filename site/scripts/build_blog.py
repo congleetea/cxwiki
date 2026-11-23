@@ -18,8 +18,8 @@ import yaml
 from article_order import load_orders, apply_order, save_orders, ORDER_FILE, rank_order
 
 
-ROOT = Path(__file__).resolve().parents[1]
-SITE = ROOT / "site"
+ROOT = Path(__file__).resolve().parents[2]
+SITE = ROOT / "site" / "public"
 PI_ARTICLE_ORDER = [
     "pi-series-overview",
     "pi-0-flow-vla",
@@ -504,7 +504,7 @@ def topic_category_page(topic: str, pages: list[Page], output: Path) -> str:
 def copy_assets() -> None:
     assets = SITE / "assets"
     assets.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(ROOT / "scripts" / "blog.js", assets / "blog.js") if (ROOT / "scripts" / "blog.js").exists() else None
+    shutil.copy2(ROOT / "site" / "scripts" / "blog.js", assets / "blog.js") if (ROOT / "site" / "scripts" / "blog.js").exists() else None
     shutil.copytree(ROOT / "wiki" / "imgs", SITE / "wiki" / "imgs", dirs_exist_ok=True)
 
 
@@ -540,9 +540,9 @@ def build() -> list[Page]:
     # Theme files are checked into scripts so a build is reproducible from a clean site/.
     assets = SITE / "assets"
     assets.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(ROOT / "scripts" / "blog.js", assets / "blog.js")
-    shutil.copy2(ROOT / "scripts" / "blog.css", assets / "style.css")
-    shutil.copytree(ROOT / "scripts" / "vendor" / "katex", assets / "katex", dirs_exist_ok=True)
+    shutil.copy2(ROOT / "site" / "scripts" / "blog.js", assets / "blog.js")
+    shutil.copy2(ROOT / "site" / "scripts" / "blog.css", assets / "style.css")
+    shutil.copytree(ROOT / "site" / "scripts" / "vendor" / "katex", assets / "katex", dirs_exist_ok=True)
     shutil.copytree(ROOT / "wiki" / "imgs", SITE / "wiki" / "imgs", dirs_exist_ok=True)
     # Code snapshots are linked from evidence pages; keep them available for
     # local browsing without converting source files into article pages.
@@ -554,10 +554,6 @@ def build() -> list[Page]:
                     dirs_exist_ok=True, ignore=shutil.ignore_patterns("*.txt"))
 
     write_text(SITE / "index.html", home_page(pages, SITE / "index.html"))
-    # Remove obsolete generated entry points; all HTML lives under site/.
-    for legacy in ("index.html", "README.html", "wiki/index.html",
-                   "wiki/series/pi/index.html", "wiki/series/robotics/index.html"):
-        (ROOT / legacy).unlink(missing_ok=True)
     topics = sorted({category_topic(p, category) for category in ("00-concepts", "01-comprehensive") for p in pages if p.source.is_relative_to(ROOT / "wiki" / category)})
     for topic in topics:
         category_output = SITE / "categories" / topic / "index.html"
@@ -575,6 +571,7 @@ def build() -> list[Page]:
     write_text(SITE / "wiki/series/pi/index.html", redirect_page("π 系列", "../../../series/pi/index.html"))
     write_text(SITE / "wiki/series/robotics/index.html", redirect_page("机器人学系列", "../../../series/robotics/index.html"))
     write_text(SITE / "wiki/00-concepts/02-classical-robotics/rigid-body-kinematics.html", redirect_page("刚体运动学基础", "../../01-comprehensive/02-classical-robotics/rigid-body-kinematics.html"))
+    shutil.copy2(ORDER_FILE, SITE / "article-order.json")
     return pages
 
 

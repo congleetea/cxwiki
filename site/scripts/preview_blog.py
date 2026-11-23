@@ -15,7 +15,7 @@ from article_order import ROOT, ORDER_FILE, load_orders, save_orders
 LOCK=threading.Lock()
 
 def rebuild_site():
-    subprocess.run([sys.executable, str(ROOT / 'scripts/build_blog.py')],
+    subprocess.run([sys.executable, str(ROOT / 'site/scripts/build_blog.py')],
                    cwd=ROOT, check=True, timeout=120)
 
 
@@ -136,7 +136,7 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--port',type=int,default=8000)
     args=parser.parse_args()
-    handler=partial(PreviewHandler,directory=str(ROOT/'site'))
+    handler=partial(PreviewHandler,directory=str(ROOT/'site/public'))
     with ThreadingHTTPServer(('127.0.0.1',args.port),handler) as server:
         print(f'预览：http://127.0.0.1:{args.port}/；拖动顺序自动写入仓库，Ctrl+C 停止。',flush=True)
         try:server.serve_forever()

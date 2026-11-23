@@ -1,5 +1,4 @@
--r requirements.txt
-# Optional: regenerate PNG figures or run browser checks.
+# Optional article-figure rendering and animation dependencies.
 playwright>=1.40,<2
 matplotlib>=3.7,<4
 Pillow>=9,<13

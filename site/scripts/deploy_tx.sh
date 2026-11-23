@@ -18,7 +18,7 @@ release_path="/var/www/cxwiki/releases/$release_id"
 ssh -o BatchMode=yes tx "sudo -n nginx -t && sudo -n test -s /etc/nginx/cxwiki.htpasswd && sudo -n mkdir '$release_path' && sudo -n chown ubuntu:ubuntu '$release_path'"
 rsync -az --no-owner --no-group --chmod=D755,F644 \
     --link-dest=/var/www/cxwiki/current --info=stats2 \
-    site/ "tx:$release_path/"
+    public/ "tx:$release_path/"
 ssh -o BatchMode=yes tx "test -s '$release_path/index.html' && printf '%s\\n' '$commit_id' > '$release_path/.deploy-commit' && sudo -n ln -s '$release_path' '/var/www/cxwiki/current.next-$release_id' && sudo -n mv -Tf '/var/www/cxwiki/current.next-$release_id' /var/www/cxwiki/current"
 ssh -o BatchMode=yes tx "test \"\$(readlink -f /var/www/cxwiki/current)\" = '$release_path' && sudo -n find /var/www/cxwiki/releases -mindepth 1 -maxdepth 1 -type d ! -path '$release_path' -exec rm -rf -- {} +"
 printf '已更新 tx：%s\n访问：https://43.138.240.151/\n' "$release_path"

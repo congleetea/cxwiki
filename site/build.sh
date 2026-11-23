@@ -5,7 +5,7 @@ trap 'printf "\n失败：第 %s 行执行失败。修复上方错误后，重新
 
 usage() {
     cat <<'EOF'
-用法：bash build.sh [--serve] [--port 8000]
+用法：bash site/build.sh [--serve] [--port 8000]
 
 首次运行自动准备 Python 虚拟环境和网页依赖，然后生成并检查网页。
 再次运行复用环境；依赖清单变化或依赖缺失时才重新安装。
@@ -17,7 +17,7 @@ usage() {
 Ubuntu 缺少 Python 或 venv 时会用 sudo apt-get 安装所需系统组件。
 若已装有 uv，则可用它创建环境，无需 sudo；脚本不会额外安装 uv。
 请以普通用户运行，勿用 sudo 执行整个脚本。
-构建会重新创建 site/，请编辑 wiki/ 中的源文章。
+构建会重新创建 site/public/，请编辑 wiki/ 中的源文章。
 EOF
 }
 serve=0
@@ -120,9 +120,9 @@ printf '\n生成网页……\n'
 "$venv_python" scripts/build_blog.py
 "$venv_python" scripts/check_blog.py
 "$venv_python" scripts/check_wiki.py
-printf '\n完成！首页：%s/index.html\n独立部署目录：%s/site/\n' "$repo_dir/site" "$repo_dir"
+printf '\n完成！首页：%s/index.html\n独立部署目录：%s/\n' "$repo_dir/public" "$repo_dir/public"
 if ((serve)); then
     printf '\n预览：http://127.0.0.1:%s/\n按 Ctrl+C 停止服务。\n' "$port"
     exec "$venv_python" scripts/preview_blog.py --port "$port"
 fi
-printf '\n需要本地预览时运行：bash build.sh --serve\n'
+printf '\n需要本地预览时运行：bash site/build.sh --serve\n'

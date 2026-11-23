@@ -9,8 +9,8 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 
-ROOT = Path(__file__).resolve().parents[1]
-SITE = ROOT / "site"
+ROOT = Path(__file__).resolve().parents[2]
+SITE = ROOT / "site" / "public"
 
 
 def local_targets(page: Path) -> list[tuple[str, Path]]:
@@ -28,7 +28,7 @@ def local_targets(page: Path) -> list[tuple[str, Path]]:
 
 def main() -> int:
     if not SITE.exists():
-        print("site/ does not exist; run python scripts/build_blog.py first", file=sys.stderr)
+        print("site/ does not exist; run python site/scripts/build_blog.py first", file=sys.stderr)
         return 1
     errors: list[str] = []
     pages = sorted(SITE.rglob("*.html"))

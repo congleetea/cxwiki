@@ -1,0 +1,3 @@
+-r requirements.txt
+# Browser regression checks
+playwright>=1.40,<2

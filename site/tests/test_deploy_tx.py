@@ -14,7 +14,7 @@ class DeployTxTest(unittest.TestCase):
         self.addCleanup(self.tmp.cleanup)
         self.root = Path(self.tmp.name)
         (self.root/'scripts').mkdir()
-        (self.root/'site').mkdir()
+        (self.root/'public').mkdir()
         shutil.copy2(ROOT/'scripts/deploy_tx.sh', self.root/'scripts/deploy_tx.sh')
         (self.root/'build.sh').write_text('echo build >> "$EVENTS"\n')
         for args in [('init', '-q'), ('config', 'user.email', 'test@example.com'), ('config', 'user.name', 'Test'), ('add', '.'), ('commit', '-qm', 'initial')]:

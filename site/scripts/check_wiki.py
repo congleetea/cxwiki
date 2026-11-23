@@ -1,6 +1,6 @@
 """Check local Markdown targets, page IDs, figures and archived-source hashes.
 
-Run from any directory: python scripts/check_wiki.py
+Run from any directory: python site/scripts/check_wiki.py
 Only structural checks; technical claims require source review.
 """
 from pathlib import Path
@@ -11,13 +11,13 @@ import re
 import sys
 import xml.etree.ElementTree as ET
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 errors = []
 links = 0
 page_ids = {}
 
 for path in sorted(ROOT.rglob('*.md')):
-    if '.git' in path.parts or 'raw' in path.parts and 'codes' in path.parts:
+    if any(part in {'.git', '.venv', 'node_modules', '__pycache__'} for part in path.parts) or path.is_relative_to(ROOT / 'site/public') or 'raw' in path.parts and 'codes' in path.parts:
         continue
     text = path.read_text()
     # The repository uses inline Markdown links, without embedded parentheses

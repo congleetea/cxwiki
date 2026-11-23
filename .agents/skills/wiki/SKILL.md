@@ -9,7 +9,7 @@ description: 在 cxwiki 中吸收论文、代码和链接，编写中文概念�
 
 当前新库：`/home/xuancong/gitlab/cxwiki`。旧库：`/home/xuancong/gitlab/cwiki`，只作阅读线索；不要修改它。先读目标库的 `AGENTS.md` 与 `wiki/_index.md`，定位相关文章，避免每个来源都生成一篇重复摘要。
 
-`raw/` 保存来源与证据，`wiki/` 保存理解。沿用 `00-concepts/` 与 `01-comprehensive/`，下分 `01-embodied-ai/`、`02-classical-robotics/` 等主题；新目录只在确实有文章时创建。图片在 `wiki/imgs/`，更新记录在 `wiki/logs/`。HTML 是用户的正式阅读入口：`site/index.html` 是唯一博客首页，生成的 `site/` 可独立部署；Markdown 可以保留作编辑输入和证据审阅，不作为最终阅读入口。博客导航按“主题 → 概念/综述 → 文章目录 → 文章”组织，新增人文、日记或其他主题时沿用同一层级。
+`raw/` 保存来源与证据，`wiki/` 保存理解。沿用 `00-concepts/` 与 `01-comprehensive/`，下分 `01-embodied-ai/`、`02-classical-robotics/` 等主题；新目录只在确实有文章时创建。图片在 `wiki/imgs/`，更新记录在 `wiki/logs/`。网页相关的源码、工具、依赖、测试和部署配置统一放在 `site/`；`site/public/` 仅保存生成结果。HTML 是用户的正式阅读入口：`site/public/index.html` 是唯一博客首页，生成的 `site/public/` 可独立部署；Markdown 可以保留作编辑输入和证据审阅，不作为最终阅读入口。博客导航按“主题 → 概念/综述 → 文章目录 → 文章”组织，新增人文、日记或其他主题时沿用同一层级。
 
 用户默认希望直接完成可审阅的文章。材料充分时自行选择合理结构；只有缺失信息实质影响任务时才提问。不要在读完材料后只交一个写作计划。
 

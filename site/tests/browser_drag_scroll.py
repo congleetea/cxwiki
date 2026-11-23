@@ -1,4 +1,5 @@
-"""Run with a Python environment containing Playwright: python3 tests/browser_drag_scroll.py."""
+"""Run with a Python environment containing Playwright: python3 site/tests/browser_drag_scroll.py."""
+import json
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -20,7 +21,7 @@ def main():
             if path.endswith('/assets/blog.js'):
                 request.fulfill(body=(ROOT/'scripts/blog.js').read_text(), content_type='text/javascript')
             elif path.endswith('/article-order.json'):
-                request.fulfill(body='{}', content_type='application/json')
+                request.fulfill(body=json.dumps({'test': {f'a{i}': (69 if i == 0 else 70 if i == 1 else 70-i) for i in range(70)}}), content_type='application/json')
             elif path.endswith('/__cxwiki/orders'):
                 saved.append(request.request.post_data_json)
                 request.fulfill(body='{"saved":true,"published":true}', content_type='application/json')
@@ -29,6 +30,8 @@ def main():
         page.route('http://cxwiki.test/**', route)
         page.goto('http://cxwiki.test/')
         page.wait_for_selector('.order-toolbar', state='attached')
+        assert page.locator('.article-list-item').first.get_attribute('data-article-id') == 'a1', 'Larger rank must appear first'
+        assert page.locator('.article-list-item').last.get_attribute('data-article-id') == 'a69', 'Smaller rank must appear last'
         handle = page.locator('[data-article-id="a40"] .drag-handle')
         handle.scroll_into_view_if_needed()
         box = handle.bounding_box()
@@ -55,7 +58,7 @@ def main():
         page.wait_for_timeout(100)
         assert len(saved) == 2, 'Each drag must save exactly once'
         browser.close()
-        print('PASS: upward/downward edge scrolling, stationary pointer reordering, release stops scrolling, single save')
+        print('PASS: descending frontend ranks, upward/downward edge scrolling, stationary pointer reordering, release stops scrolling, single save')
 
 
 if __name__ == '__main__':

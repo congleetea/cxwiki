@@ -6,7 +6,7 @@ import math
 from pathlib import Path
 import tempfile
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 ORDER_FILE = ROOT / 'site/article-order.json'
 
 def validate_orders(value):

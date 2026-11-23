@@ -1,7 +1,6 @@
 # Generated HTML and copied assets. Rebuild with:
 # python scripts/build_blog.py
-/site/*
-!/site/article-order.json
+/site/public/
 /index.html
 /wiki/index.html
 /wiki/series/
@@ -25,9 +24,9 @@ htmlcov/
 venv/
 
 # Browser testing artifacts (not the test scripts themselves)
-/test-results/
-/playwright-report/
-/blob-report/
+/site/test-results/
+/site/playwright-report/
+/site/blob-report/
 
 # Local secrets and machine-specific settings
 .env
@@ -40,11 +39,11 @@ venv/
 *.netrc
 .htpasswd
 *.htpasswd
-/deploy/**/*.key
-/deploy/**/*.pem
-/deploy/**/*.crt
-/deploy/**/*.p12
-/deploy/**/*.pfx
+/site/deploy/**/*.key
+/site/deploy/**/*.pem
+/site/deploy/**/*.crt
+/site/deploy/**/*.p12
+/site/deploy/**/*.pfx
 
 # OS metadata, editor backups, and incomplete downloads
 .DS_Store
@@ -58,10 +57,10 @@ Thumbs.db
 *.temp
 *.bak
 /*.log
-/deploy/*.log
+/site/deploy/*.log
 
 # Keep wiki Markdown, raw evidence/PDFs, figures,
-# scripts/vendor assets, skills, and documentation under version control.
+# site source/vendor assets, skills, and documentation under version control.
 
 # Redundant landing page and local implementation plans
 /README.html
