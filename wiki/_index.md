@@ -68,10 +68,10 @@
 - [RNN 循环神经网络](00-concepts/03-ai-foundations/rnn.md)
 - [注意力机制及变体](00-concepts/03-ai-foundations/attention-mechanisms.md)
 - [激活函数](00-concepts/03-ai-foundations/activation-functions.md)
-- [PEFT 参数高效微调](00-concepts/03-ai-foundations/peft.md)
+- [PEFT 参数高效微调](00-concepts/03-ai-foundations/peft.md)：图解全量微调的参数更新，区分训练与多任务部署开销。
 - [多卡训练原理](00-concepts/03-ai-foundations/multi-gpu-training.md)
 
-- [Online Learning、Offline Learning、On-policy 与 Off-policy](00-concepts/03-ai-foundations/online-offline-learning.md)：数据采集、固定数据训练、BC 与离线 RL 的区别。
+- [Online Learning、Offline Learning、On-policy 与 Off-policy](00-concepts/03-ai-foundations/online-offline-learning.md)：交互数据与参数更新、两个分类维度、BC 与离线 RL 的区别。
 
 - [VAE 与 CVAE：从重建数据到生成多种可能](00-concepts/03-ai-foundations/vae-cvae.md)：潜变量、ELBO、重参数化、条件生成与机器人应用。
 

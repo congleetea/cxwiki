@@ -13,7 +13,7 @@ bash site/build.sh --serve
 
 一键脚本准备 Python 3.10+ 与 `site/.venv/`，安装 `site/requirements.txt` 后生成并校验网页。环境已有依赖时跳过安装；缺少 Ubuntu 系统组件时仍可能需要 sudo。端口可用 `--port 8080` 指定。
 
-阅读入口为 `site/public/index.html`。推荐打开预览服务 http://127.0.0.1:8000/，支持拖动排序保存和视频范围请求。纯静态页面仅支持阅读，不能写回文件。
+阅读入口为 `site/public/index.html`。推荐打开预览服务 http://127.0.0.1:8000/，支持拖动排序保存和视频范围请求。直接打开本地 HTML 或静态站点也支持拖动排序；浏览器会保存顺序，写回仓库文件需点击保存按钮。
 
 ```text
 site/
@@ -39,13 +39,14 @@ site/
 
 排序只以 `site/article-order.json` 为源数据，形式为“目录 → 文章 ID → 数字”。编号大的在上、小的在下；新增文章使用更大的编号，已有编号不变。拖动通常仅修改被移动文章的编号，插入中间时取相邻编号的中值。
 
-本地预览中拖动文章靠近窗口边缘会自动滚动；松手后保存排序文件并重新生成网页。生成器把最新排序复制到 `site/public/article-order.json`，浏览器从站点根目录读取副本。跨电脑同步需提交、推送排序源文件，另一台电脑拉取后重新构建。
+本地预览中拖动文章靠近窗口边缘会自动滚动；松手后保存排序文件并重新生成网页。只保留 `site/article-order.json` 一份排序文件；预览直接通过接口读取和保存它，生成的静态 HTML 已按该文件排序，不再复制 JSON。直接打开 HTML 或访问静态 HTTP/HTTPS 网站时，拖动顺序自动保存在当前浏览器，刷新和返回目录仍有效。点击“保存到排序文件”，在支持本地文件访问的浏览器（如 Chromium）中选择唯一的 `site/article-order.json`，即可合并修改；不支持文件选择写入的浏览器会导出临时修改补丁，用 `python3 site/scripts/article_order.py 路径/article-order-changes.json` 合并到源文件。跨电脑同步需提交、推送排序源文件，另一台电脑拉取后重新构建。
 
 ## 检查
 
 ```bash
 site/.venv/bin/python -m unittest discover -s site/tests
 python3 site/tests/browser_drag_scroll.py
+python3 site/tests/browser_file_order.py
 ```
 
 浏览器回归脚本需要 Playwright 和 Chromium，普通构建无需安装绘图环境。可在 site 虚拟环境安装 `site/requirements-dev.txt` 并运行 `playwright install chromium`。

@@ -571,7 +571,6 @@ def build() -> list[Page]:
     write_text(SITE / "wiki/series/pi/index.html", redirect_page("π 系列", "../../../series/pi/index.html"))
     write_text(SITE / "wiki/series/robotics/index.html", redirect_page("机器人学系列", "../../../series/robotics/index.html"))
     write_text(SITE / "wiki/00-concepts/02-classical-robotics/rigid-body-kinematics.html", redirect_page("刚体运动学基础", "../../01-comprehensive/02-classical-robotics/rigid-body-kinematics.html"))
-    shutil.copy2(ORDER_FILE, SITE / "article-order.json")
     return pages
 
 

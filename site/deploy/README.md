@@ -27,7 +27,7 @@ bash site/scripts/deploy_tx.sh
 
 ## 排序与编辑
 
-服务器目前提供受密码保护的静态阅读站点，不开放预览服务的写入 API。排序在本机通过 `bash site/build.sh --serve` 调整并保存到 `site/article-order.json`，再执行部署脚本。云端直接拖动不能写回服务器文件。
+服务器目前提供受密码保护的静态阅读站点，不开放预览服务的写入 API。排序在本机通过 `bash site/build.sh --serve` 调整并保存到 `site/article-order.json`，再执行部署脚本。静态云端页面拖动后自动保存在当前浏览器；可点击“保存到排序文件”选择本地仓库的排序 JSON，或导出补丁后合并。云端静态站点本身不直接写回服务器上的文件。
 
 ## 检查
 

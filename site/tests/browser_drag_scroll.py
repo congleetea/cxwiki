@@ -20,15 +20,15 @@ def main():
             path = request.request.url
             if path.endswith('/assets/blog.js'):
                 request.fulfill(body=(ROOT/'scripts/blog.js').read_text(), content_type='text/javascript')
-            elif path.endswith('/article-order.json'):
+            elif path.endswith('/__cxwiki/orders') and request.request.method == 'GET':
                 request.fulfill(body=json.dumps({'test': {f'a{i}': (69 if i == 0 else 70 if i == 1 else 70-i) for i in range(70)}}), content_type='application/json')
             elif path.endswith('/__cxwiki/orders'):
                 saved.append(request.request.post_data_json)
                 request.fulfill(body='{"saved":true,"published":true}', content_type='application/json')
             else:
                 request.fulfill(body=html, content_type='text/html')
-        page.route('http://cxwiki.test/**', route)
-        page.goto('http://cxwiki.test/')
+        page.route('http://localhost/**', route)
+        page.goto('http://localhost/')
         page.wait_for_selector('.order-toolbar', state='attached')
         assert page.locator('.article-list-item').first.get_attribute('data-article-id') == 'a1', 'Larger rank must appear first'
         assert page.locator('.article-list-item').last.get_attribute('data-article-id') == 'a69', 'Smaller rank must appear last'
